@@ -1,0 +1,18 @@
+.standard{
+    outline: red dashed 2px;
+    width: 100px;
+}
+.left{
+    align-items: center;
+}
+
+.imageSize{
+    height: 50px;
+    width: 50px;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8
+}
+.center{
+    text-align: center;
+}
