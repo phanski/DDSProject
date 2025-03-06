@@ -1,8 +1,10 @@
 /*
 * Boilerplate code 
 */
-let PlayerEnergy = 10
-let PlayerTimeSeconds = 0
+let GameState = {
+    PlayerEnergy: 10,
+    PlayerTimeSeconds: 0
+}
 let TimerInterval = undefined
 
 
@@ -19,6 +21,15 @@ function LoadPlayerData() {
  */
 function SavePlayerData() {
     // TODO 
+}
+
+/**
+ * Updates room name in info bar
+ * @param {string} roomName 
+ */
+function SetRoomName(roomName) {
+    let roomNameDisplay = document.getElementById("RoomName")
+    roomNameDisplay.textContent = roomName
 }
 
 /**
@@ -70,8 +81,8 @@ function SetBackgroundImage(ImageURL) {
  */
 function UpdateTimerDisplay() {
     let TimeDisplay = document.getElementById("PlayerTime")
-    let timeSeconds = PlayerTimeSeconds % 60
-    let timeMinutes = Math.floor(PlayerTimeSeconds / 60)
+    let timeSeconds = GameState.PlayerTimeSeconds % 60
+    let timeMinutes = Math.floor(GameState.PlayerTimeSeconds / 60)
 
     let TimerValue = `${timeMinutes}:${("" + timeSeconds).padStart(2, "0")}`
     TimeDisplay.textContent = TimerValue
@@ -82,7 +93,7 @@ function UpdateTimerDisplay() {
  */
 function UpdateEnergyDisplay() {
     let EnergyDisplay = document.getElementById("PlayerEnergy")
-    EnergyDisplay.textContent = PlayerEnergy
+    EnergyDisplay.textContent = GameState.PlayerEnergy
 }
 
 /**
@@ -91,12 +102,12 @@ function UpdateEnergyDisplay() {
  * @returns False if amount is greater than current player energy. True otherwise
  */
 function RemoveEnergy(amount) {
-    if (amount > PlayerEnergy) return false
+    if (amount > GameState.PlayerEnergy) return false
 
-    PlayerEnergy -= amount
+    GameState.PlayerEnergy -= amount
 
-    if (PlayerEnergy === 0) {
-        // TODO: Fail State
+    if (GameState.PlayerEnergy === 0) {
+        FailGame(2)
     }
     UpdateEnergyDisplay()
     return true
@@ -108,9 +119,9 @@ function RemoveEnergy(amount) {
  * @returns False if amount would increase player energy above 100. True otherwise
  */
 function AddEnergy(amount) {
-    if (PlayerEnergy + amount > 100) return false
+    if (GameState.PlayerEnergy + amount > 100) return false
 
-    PlayerEnergy += amount
+    GameState.PlayerEnergy += amount
 
     UpdateEnergyDisplay()
     return true
@@ -129,16 +140,36 @@ function TransitionToRoom(roomNumber) {
     window.location.href = `/Room/Room${roomNumber}/room.html`
 }
 
-
-
 /**
- * Updates room name in info bar
- * @param {string} roomName 
+ * Fails the player for their current run
+ * @param {integer} reason 1 - Ran out of time | 2 - Ran out of energy
  */
-function SetRoomName(roomName) {
-    let roomNameDisplay = document.getElementById("RoomName")
-    roomNameDisplay.textContent = roomName
+function FailGame(reason) {
+    let GameWindow = document.getElementById("GameWindow")
+    if (reason === 1) {
+        const TimeFailPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>You\'ve ran out of time</h1><div style="display: flex; justify-content: space-around; max-width: 300px; width: 100%;"><button id="NewRunButton">New Run</button><button id="ReturnHomeButton">Return to Home</button></div></div></div>'
+        GameWindow.setHTMLUnsafe(GameWindow.getHTML() + TimeFailPopup)
+        
+    } else {
+        const EnergyFailPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>You\'ve ran out of energy</h1><div style="display: flex; justify-content: space-around; max-width: 300px; width: 100%;"><button id="NewRunButton">New Run</button><button id="ReturnHomeButton">Return to Home</button></div></div></div>'
+        GameWindow.setHTMLUnsafe(GameWindow.getHTML() + EnergyFailPopup)
+    }
+    let NewRunButton = document.getElementById("NewRunButton")
+
+    NewRunButton.addEventListener('click', () => {
+        // TODO: Restart game from start (clear session storage)
+    })
+
+    let ReturnHomeButton = document.getElementById("ReturnHomeButton")
+
+    ReturnHomeButton.addEventListener('click', () => {
+        // TODO: get correct home page path
+        window.location.href = "/home"
+    })
+
+    clearInterval(TimerInterval)
 }
+
 
 /**
  * Syncs room with current player data and starts timer
@@ -148,16 +179,16 @@ function InitRoom() {
     
     UpdateEnergyDisplay()
 
-    //TODO: sync current run time
+    //TODO: sync current run time from local data
     
     TimerInterval = setInterval(() => {
-        PlayerTimeSeconds += 1
+        GameState.PlayerTimeSeconds += 1
         UpdateTimerDisplay()
 
         const FiveMinutes = 5 * 60
 
-        if (PlayerTimeSeconds > FiveMinutes) {
-            // TODO: Fail state
+        if (GameState.PlayerTimeSeconds > FiveMinutes) {
+            FailGame(1)
         }
     }, 1000)
 
