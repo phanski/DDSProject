@@ -1,29 +1,17 @@
-// Example option actions
+/*
+* Boilerplate code 
+*/
+let PlayerEnergy = 10
+let PlayerTimeSeconds = 0
+let TimerInterval = undefined
 
-function ShowMessage(messageText) {
-    let message = document.getElementById("Message")
-    message.style.display = "block"
-    message.children[0].textContent = messageText
+
+/**
+ * Loads player data from session storage to sync time and energy
+ */
+function LoadPlayerData() {
+    // TODO
 }
-
-function HideMessage() {
-    let message = document.getElementById("Message")
-
-    message.style.display = "none"
-}
-
-function ShowObject(imageURL) {
-    let objectPopup = document.getElementById("FocusedObject")
-    objectPopup.style.display = "block"
-    objectPopup.children[0].src = imageURL
-}
-
-function HideObject() {
-    let objectPopup = document.getElementById("FocusedObject")
-    objectPopup.style.display = "none"
-}
-
-
 
 /**
  * Adds option for user to select their next action
@@ -70,29 +58,119 @@ function SetBackgroundImage(ImageURL) {
 }
 
 /**
- * Loads current player state from local storage and syncs up room
+ * Gets stored timer value and updates info bar
  */
-function LoadPlayerState() {
+function UpdateTimerDisplay() {
+    let TimeDisplay = document.getElementById("PlayerTime")
+    let timeSeconds = PlayerTimeSeconds % 60
+    let timeMinutes = Math.floor(PlayerTimeSeconds / 60)
 
+    let TimerValue = `${timeMinutes}:${("" + timeSeconds).padStart(2, "0")}`
+    TimeDisplay.textContent = TimerValue
 }
 
-window.addEventListener('load', StartRoom)
+/**
+ * Get's current stored player energy and updates info bar
+ */
+function UpdateEnergyDisplay() {
+    let EnergyDisplay = document.getElementById("PlayerEnergy")
+    EnergyDisplay.textContent = PlayerEnergy
+}
+
+/**
+ * Removes energy from player, ensuring it doesn't go negative and fails game if energy drops to 0
+ * @param {integer} amount 
+ * @returns False if amount is greater than current player energy. True otherwise
+ */
+function RemoveEnergy(amount) {
+    if (amount > PlayerEnergy) return false
+
+    PlayerEnergy -= amount
+
+    if (PlayerEnergy === 0) {
+        // TODO: Fail State
+    }
+    UpdateEnergyDisplay()
+    return true
+}
+
+/**
+ * Adds energy to player
+ * @param {integer} amount 
+ * @returns False if amount would increase player energy above 100. True otherwise
+ */
+function AddEnergy(amount) {
+    if (PlayerEnergy + amount > 100) return false
+
+    PlayerEnergy += amount
+
+    UpdateEnergyDisplay()
+    return true
+}
+
+/**
+ * Transitions to another room safely, ensuring cleanup of any boilerplate functions
+ * @param {integer} roomNumber 
+ */
+function TransitionToRoom(roomNumber) {
+    // Cleared to ensure timer doesn't tick while user is waiting for room to load
+    clearInterval(TimerInterval)
+}
+
+/**
+ * Updates room name in info bar
+ * @param {string} roomName 
+ */
+function SetRoomName(roomName) {
+    let roomNameDisplay = document.getElementById("RoomName")
+    roomNameDisplay.textContent = roomName
+}
+
+/**
+ * Syncs room with current player data and starts timer
+ */
+function InitRoom() {
+    LoadPlayerData()
+    
+    UpdateEnergyDisplay()
+
+    //TODO: sync current run time
+    
+    TimerInterval = setInterval(() => {
+        PlayerTimeSeconds += 1
+        UpdateTimerDisplay()
+    }, 1000)
+
+    StartRoom()
+}
+
+window.addEventListener('load', InitRoom)
+
+/* 
+* Boilerplate code end
+*/
 
 //EDIT BELOW HERE
-
 
 /**
  * Main Function which is called when room page is loaded
  */
 function StartRoom() {
-    LoadPlayerState()
     
-    //EDIT BELOW HERE
-    AddOption("Show Messsage", () => ShowMessage('New Option'))
-    AddOption("Hide Message", HideMessage)
-    AddOption("Show Object", () => ShowObject(`https://imgs.search.brave.com/Uv7PjPwToss4YP4krNPTTauC8y1Iq7BXFAWSoknkpAI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTEv/ODE0LzU2Ny9zbWFs/bC9yb2xsLW9mLXll/bGxvdy1zY290Y2gt/dGFwZS0zZC1oaWdo/LXF1YWxpdHktcGhv/dG8tcG5nLnBuZw`))
-    AddOption("Hide Object", () => HideObject())
-    AddOption("Clear Options", () => ClearOptions("You may not make an action now"))
+    
+    // AddOption("Show Messsage", () => ShowMessage('New Option'))
+    // AddOption("Hide Message", HideMessage)
+    // AddOption("Show Object", () => ShowObject(`https://imgs.search.brave.com/Uv7PjPwToss4YP4krNPTTauC8y1Iq7BXFAWSoknkpAI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTEv/ODE0LzU2Ny9zbWFs/bC9yb2xsLW9mLXll/bGxvdy1zY290Y2gt/dGFwZS0zZC1oaWdo/LXF1YWxpdHktcGhv/dG8tcG5nLnBuZw`))
+    // AddOption("Hide Object", () => HideObject())
+    // AddOption("Clear Options", () => ClearOptions("You may not make an action now"))
+    // AddOption("Clear Options", () => ClearOptions())s
+
+
+
+    AddOption("Add Energy", () => AddEnergy(5))
+    AddOption("Remove Energy", () => RemoveEnergy(5))
+    // AddOption("Change Room", () => TransitionToRoom(3))
     SetBackgroundImage("/Assets/scaryimageREMOVE--------------------------.webp")
+    SetRoomName("Living Room")
 }
 
