@@ -7,10 +7,18 @@ let TimerInterval = undefined
 
 
 /**
- * Loads player data from session storage to sync time and energy
+ * Loads player data from session storage to sync time and energy.
+ * TODO: If sessions storage doesn't exist redirect to landing page
  */
 function LoadPlayerData() {
     // TODO
+}
+
+/**
+ * Saves player data to session storage and asynchronously to database
+ */
+function SavePlayerData() {
+    // TODO 
 }
 
 /**
@@ -109,13 +117,19 @@ function AddEnergy(amount) {
 }
 
 /**
- * Transitions to another room safely, ensuring cleanup of any boilerplate functions
+ * Transitions to another room safely, ensuring data is saved to transfer to new room
  * @param {integer} roomNumber 
  */
 function TransitionToRoom(roomNumber) {
     // Cleared to ensure timer doesn't tick while user is waiting for room to load
     clearInterval(TimerInterval)
+
+    SavePlayerData()
+
+    window.location.href = `/Room/Room${roomNumber}/room.html`
 }
+
+
 
 /**
  * Updates room name in info bar
@@ -139,6 +153,12 @@ function InitRoom() {
     TimerInterval = setInterval(() => {
         PlayerTimeSeconds += 1
         UpdateTimerDisplay()
+
+        const FiveMinutes = 5 * 60
+
+        if (PlayerTimeSeconds > FiveMinutes) {
+            // TODO: Fail state
+        }
     }, 1000)
 
     StartRoom()
