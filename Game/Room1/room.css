@@ -1,0 +1,106 @@
+#GameWindow {
+    display: grid;
+    height: 95vh;
+    grid-template-rows: 80% 20%;
+    grid-template-columns: auto;
+    margin: auto;
+    border:  2px solid black;
+    
+}
+
+* {
+    border-radius: 9px;
+}
+
+#GameView {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 0px -400px;
+    text-align: center;
+    border-radius: 0px;
+    position: relative;
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: 12% 73% 15%;
+}
+
+#Message {
+    grid-row: 3;
+    width: 50%;
+    background-color: #888C;
+    margin: 10px auto;
+    border: black 2px solid;
+
+    /* Room starts with no message */
+    display: none;
+}
+
+#FocusedObject {
+    height: 80%;
+    aspect-ratio: 1/1;
+    background-color: #44444499;
+    margin: 2em auto;
+
+    /* Room starts with no object */
+    display: none;
+}
+
+#FocusedObject >img {
+    height: 100%;
+}
+
+
+#InfoBar {
+    background-color: blue;
+    margin: 0.2em;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto;
+    border: 2px solid black;
+}
+
+#InfoBar > * {
+    font-size: 1.5em;
+    font-weight: 900;
+    text-align: center;
+    margin: auto;
+}
+
+#UserOptions {
+    background-color: green;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    border-radius: 0px;
+    border-top: 2px solid black;
+}
+
+.UserOption {
+    padding: 20px 80px;
+    margin: 20px;
+    border: 5px solid black;
+    cursor: pointer;
+    user-select: none;
+}
+
+.UserOption:hover {
+    background-color: #00FD00;
+}
+
+#Timer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    grid-column: 3;
+    grid-row: 1;
+}
+
+
+#Timer > button {
+    padding: 0 .4em;
+    margin: auto -30px auto 30px;
+    font-size: 1.5em;
+}
