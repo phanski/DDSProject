@@ -8,6 +8,14 @@ let GameState = {
 let TimerInterval = undefined
 
 
+const DatabaseConnectionData = {
+    url: 'https://phanisek01.webhosting1.eeecs.qub.ac.uk/dbConnector.php',
+    hostname: "localhost",
+    username: "phanisek01", // ! Enter own username
+    password: "nDKM7BtMSYYxWc9F",// ! Enter own password
+    database: "phanisek01", // ! Change to group DB when uploading
+}
+
 /**
  * Loads player data from session storage to sync time and energy.
  * TODO: If sessions storage doesn't exist redirect to landing page. -
@@ -165,7 +173,10 @@ function FailGame(reason) {
 
     ReturnHomeButton.addEventListener('click', () => {
         // TODO: get correct home page path
-        window.location.href = "/home"
+        
+        // ! DEBUG: 
+        // window.location.href = "/home"
+        alert("No home page")
     })
 
     clearInterval(TimerInterval)
@@ -190,9 +201,6 @@ function PauseGame() {
     pauseTimeDisplay.textContent = TimerValue
 
     clearInterval(TimerInterval)
-
-    // DEBUG
-    // setTimeout(ResumeGame, 1000)
 }
 
 function ResumeGame() {
@@ -234,6 +242,66 @@ function InitRoom() {
 
 window.addEventListener('load', InitRoom)
 
+
+/**
+ * Sends a SQL query to the database defined at the start of the file
+ * @param {string} SQLQuery 
+ * @returns Promise. Successful if SQL query succeeds, Rejects if there is error at any part of the request
+ */
+async function executeDatabaseQuery(SQLQuery) {
+    // Create a URLSearchParams object to store form input values in a key-value format
+    let params = new URLSearchParams();
+    params.append('hostname', DatabaseConnectionData.hostname);
+    params.append('username', DatabaseConnectionData.username);
+    params.append('password', DatabaseConnectionData.password);
+    params.append('database', DatabaseConnectionData.database);
+    params.append('query', SQLQuery);
+
+    const DBPromise = new Promise((resolve, reject) => {
+        try {
+            let fetchPromise = fetch(DatabaseConnectionData.url, {
+                method: 'POST',
+                body: params
+            }); 
+    
+            fetchPromise.then((result) => {
+                result.json().then((jsonResult) => {
+                    if (jsonResult.error) {
+                        console.log(jsonResult.error.toString());
+                        reject(jsonResult.error.toString())
+                    }
+                    else if (jsonResult.data) {
+                        
+                        resolve(jsonResult.data)
+                    }
+                    else {
+                        if (jsonResult.affected_rows !== undefined) {
+                            
+                            resolve({
+                                success: jsonResult.success,
+                                affected_rows: jsonResult.affected_rows
+                            })
+                        } else {
+                            
+                            resolve({
+                                success: jsonResult.success,
+                            })
+                        }
+                    }
+                }) 
+            })
+        
+    
+            
+        } catch (error) {
+            console.error('Error parsing JSON:', error);
+            reject(error)
+        }
+    })
+
+    return DBPromise
+}
+
 /* 
 * Boilerplate code end
 */
@@ -253,11 +321,14 @@ function StartRoom() {
     // AddOption("Clear Options", () => ClearOptions("You may not make an action now"))
     // AddOption("Clear Options", () => ClearOptions())
 
-
-
     AddOption("Add Energy", () => AddEnergy(5))
     AddOption("Remove Energy", () => RemoveEnergy(5))
-    // AddOption("Change Room", () => TransitionToRoom(3))
+    AddOption("DB Test", () => {
+        executeDatabaseQuery("SELECT * FROM testUsers").then((result) => {
+            alert(result)
+        })
+        
+    })
     SetBackgroundImage("/Assets/scaryimageREMOVE--------------------------.webp")
     SetRoomName("Living Room")
 }
