@@ -182,11 +182,14 @@ function FailGame(reason) {
     clearInterval(TimerInterval)
 }
 
+/**
+ * Pauses the timer and displays a pause menu
+ */
 function PauseGame() {
     let GameWindow = document.getElementById("GameWindow")
 
-    const TimeFailPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>Game Paused</h1><h2>Current Time : <span id="PauseScreenTime"></span></h2><div style="display: flex; justify-content: space-around; max-width: 500px; width: 100%;"><button class="OverlayButton" id="ResumeButton">Resume</button><button class="OverlayButton" id="ReturnHomeButton">Return to Home</button></div></div></div>'
-    GameWindow.insertAdjacentHTML('beforeend', TimeFailPopup)
+    const PauseMenuPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>Game Paused</h1><h2>Current Time : <span id="PauseScreenTime"></span></h2><div style="display: flex; justify-content: space-around; max-width: 500px; width: 100%;"><button class="OverlayButton" id="ResumeButton">Resume</button><button class="OverlayButton" id="ReturnHomeButton">Return to Home</button></div></div></div>'
+    GameWindow.insertAdjacentHTML('beforeend', PauseMenuPopup)
 
     let resumeButton = document.getElementById('ResumeButton')
     resumeButton.addEventListener('click', ResumeGame)
@@ -203,6 +206,9 @@ function PauseGame() {
     clearInterval(TimerInterval)
 }
 
+/**
+ * Resumes the game timer and removes the pause menu overlay
+ */
 function ResumeGame() {
     StartTimer()
     let GameWindow = document.getElementById("GameWindow")
@@ -211,6 +217,8 @@ function ResumeGame() {
     GameWindow.removeChild(Overlay)
 }
  
+
+
 function StartTimer() {
     TimerInterval = setInterval(() => {
         GameState.PlayerTimeSeconds += 1
@@ -249,7 +257,6 @@ window.addEventListener('load', InitRoom)
  * @returns Promise. Successful if SQL query succeeds, Rejects if there is error at any part of the request
  */
 async function executeDatabaseQuery(SQLQuery) {
-    // Create a URLSearchParams object to store form input values in a key-value format
     let params = new URLSearchParams();
     params.append('hostname', DatabaseConnectionData.hostname);
     params.append('username', DatabaseConnectionData.username);
@@ -281,18 +288,14 @@ async function executeDatabaseQuery(SQLQuery) {
                                 success: jsonResult.success,
                                 affected_rows: jsonResult.affected_rows
                             })
-                        } else {
-                            
+                        } else {   
                             resolve({
                                 success: jsonResult.success,
                             })
                         }
                     }
                 }) 
-            })
-        
-    
-            
+            }) 
         } catch (error) {
             console.error('Error parsing JSON:', error);
             reject({
@@ -328,7 +331,7 @@ function StartRoom() {
     AddOption("Remove Energy", () => RemoveEnergy(5))
     AddOption("DB Test", () => {
         executeDatabaseQuery("SELECT * FROM testUsers").then((result) => {
-            alert(result)
+            console.log(result)
         })
         
     })
