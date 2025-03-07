@@ -10,7 +10,8 @@ let TimerInterval = undefined
 
 /**
  * Loads player data from session storage to sync time and energy.
- * TODO: If sessions storage doesn't exist redirect to landing page
+ * TODO: If sessions storage doesn't exist redirect to landing page. -
+ * TODO: - Only allow beginning from landing page to ensure data is loaded from database before starting
  */
 function LoadPlayerData() {
     // TODO
@@ -52,7 +53,7 @@ function AddOption(OptionTitle, OptionAction) {
 
 /**
  * Removes all options from user
- * @param {string} emptyMessage Optional Message to show instead of options
+ * @param {string=} emptyMessage Optional Message to show instead of options
  */
 function ClearOptions(emptyMessage) {
     let Options = document.getElementById("UserOptions")
@@ -173,13 +174,12 @@ function FailGame(reason) {
 
 /**
  * Syncs room with current player data and starts timer
+ * Separated to ensure boilerplate code remains unedited
  */
 function InitRoom() {
     LoadPlayerData()
     
     UpdateEnergyDisplay()
-
-    //TODO: sync current run time from local data
     
     TimerInterval = setInterval(() => {
         GameState.PlayerTimeSeconds += 1
@@ -214,7 +214,7 @@ function StartRoom() {
     // AddOption("Show Object", () => ShowObject(`https://imgs.search.brave.com/Uv7PjPwToss4YP4krNPTTauC8y1Iq7BXFAWSoknkpAI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTEv/ODE0LzU2Ny9zbWFs/bC9yb2xsLW9mLXll/bGxvdy1zY290Y2gt/dGFwZS0zZC1oaWdo/LXF1YWxpdHktcGhv/dG8tcG5nLnBuZw`))
     // AddOption("Hide Object", () => HideObject())
     // AddOption("Clear Options", () => ClearOptions("You may not make an action now"))
-    // AddOption("Clear Options", () => ClearOptions())s
+    // AddOption("Clear Options", () => ClearOptions())
 
 
 
