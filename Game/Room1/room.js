@@ -268,15 +268,15 @@ async function executeDatabaseQuery(SQLQuery) {
                 result.json().then((jsonResult) => {
                     if (jsonResult.error) {
                         console.log(jsonResult.error.toString());
-                        reject(jsonResult.error.toString())
+                        // Passes result directly to not complicate handling result
+                        reject(jsonResult)
                     }
                     else if (jsonResult.data) {
-                        
-                        resolve(jsonResult.data)
+                        // Passes result directly to not complicate handling result
+                        resolve(jsonResult)
                     }
                     else {
                         if (jsonResult.affected_rows !== undefined) {
-                            
                             resolve({
                                 success: jsonResult.success,
                                 affected_rows: jsonResult.affected_rows
@@ -295,7 +295,10 @@ async function executeDatabaseQuery(SQLQuery) {
             
         } catch (error) {
             console.error('Error parsing JSON:', error);
-            reject(error)
+            reject({
+                error: true,
+                errorReason: error
+            })
         }
     })
 
