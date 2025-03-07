@@ -148,12 +148,12 @@ function TransitionToRoom(roomNumber) {
 function FailGame(reason) {
     let GameWindow = document.getElementById("GameWindow")
     if (reason === 1) {
-        const TimeFailPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>You\'ve ran out of time</h1><div style="display: flex; justify-content: space-around; max-width: 300px; width: 100%;"><button id="NewRunButton">New Run</button><button id="ReturnHomeButton">Return to Home</button></div></div></div>'
-        GameWindow.setHTMLUnsafe(GameWindow.getHTML() + TimeFailPopup)
+        const TimeFailPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>You\'ve ran out of time</h1><div style="display: flex; justify-content: space-around; max-width: 500px; width: 100%;"><button class="OverlayButton" id="NewRunButton">New Run</button><button class="OverlayButton" id="ReturnHomeButton">Return to Home</button></div></div></div>'
+        GameWindow.insertAdjacentHTML('beforeend', TimeFailPopup)
         
     } else {
-        const EnergyFailPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>You\'ve ran out of energy</h1><div style="display: flex; justify-content: space-around; max-width: 300px; width: 100%;"><button id="NewRunButton">New Run</button><button id="ReturnHomeButton">Return to Home</button></div></div></div>'
-        GameWindow.setHTMLUnsafe(GameWindow.getHTML() + EnergyFailPopup)
+        const EnergyFailPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>You\'ve ran out of energy</h1><div style="display: flex; justify-content: space-around; max-width: 500px; width: 100%;"><button class="OverlayButton" id="NewRunButton">New Run</button><button class="OverlayButton" id="ReturnHomeButton">Return to Home</button></div></div></div>'
+        GameWindow.insertAdjacentHTML('beforeend', EnergyFailPopup)
     }
     let NewRunButton = document.getElementById("NewRunButton")
 
@@ -171,16 +171,39 @@ function FailGame(reason) {
     clearInterval(TimerInterval)
 }
 
+function PauseGame() {
+    let GameWindow = document.getElementById("GameWindow")
 
-/**
- * Syncs room with current player data and starts timer
- * Separated to ensure boilerplate code remains unedited
- */
-function InitRoom() {
-    LoadPlayerData()
+    const TimeFailPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>Game Paused</h1><h2>Current Time : <span id="PauseScreenTime"></span></h2><div style="display: flex; justify-content: space-around; max-width: 500px; width: 100%;"><button class="OverlayButton" id="ResumeButton">Resume</button><button class="OverlayButton" id="ReturnHomeButton">Return to Home</button></div></div></div>'
+    GameWindow.insertAdjacentHTML('beforeend', TimeFailPopup)
+
+    let resumeButton = document.getElementById('ResumeButton')
+    resumeButton.addEventListener('click', ResumeGame)
+
+    let pauseTimeDisplay = document.getElementById('PauseScreenTime')
+    let timeSeconds = GameState.PlayerTimeSeconds % 60
+    let timeMinutes = Math.floor(GameState.PlayerTimeSeconds / 60)
+
+    let TimerValue = `${timeMinutes}:${("" + timeSeconds).padStart(2, "0")}`
     
-    UpdateEnergyDisplay()
     
+    pauseTimeDisplay.textContent = TimerValue
+
+    clearInterval(TimerInterval)
+
+    // DEBUG
+    // setTimeout(ResumeGame, 1000)
+}
+
+function ResumeGame() {
+    StartTimer()
+    let GameWindow = document.getElementById("GameWindow")
+    let Overlay = GameWindow.lastChild
+    
+    GameWindow.removeChild(Overlay)
+}
+ 
+function StartTimer() {
     TimerInterval = setInterval(() => {
         GameState.PlayerTimeSeconds += 1
         UpdateTimerDisplay()
@@ -192,6 +215,20 @@ function InitRoom() {
         }
     }, 1000)
 
+}
+
+
+/**
+ * Syncs room with current player data and starts timer
+ * Separated to ensure boilerplate code remains unedited
+ */
+function InitRoom() {
+    document.getElementById("PauseButton").addEventListener('click', PauseGame)
+
+    LoadPlayerData()
+    UpdateEnergyDisplay()    
+    StartTimer()
+    
     StartRoom()
 }
 

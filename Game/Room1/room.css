@@ -151,3 +151,16 @@ body {
     width: 100%;
     height: 100%;
 }
+
+.OverlayButton {
+    padding: .5em;
+    margin: auto 1em;
+    border-radius: 9px;
+    font-size: 1.4em;
+    width: 100%;
+}
+
+.OverlayButton:hover {
+    background-color: #00FD00;
+    cursor: pointer;
+}
