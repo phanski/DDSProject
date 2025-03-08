@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mystery Manor: The Parlor</title>
+  <link rel="stylesheet" href="mystery-room.css">
+</head>
+<body>
+  <header>
+    <h1>The Parlor</h1>
+    <p>You step into a dusty, dimly lit parlor. A grand painting, an antique clock, and a curious control panel beckon you to uncover their secrets.</p>
+  </header>
+
+  <!-- Room description -->
+  <section id="room-description">
+    <p>The centerpiece of the room is a control panel mounted on an ornate wooden cabinet. It has a series of labeled buttons and two adjustable dials. A note on the wall reads, "Only those who dare to press the right sequence and set the dials as the clock strikes truth shall unlock the path forward."</p>
+  </section>
+
+  <!-- Puzzle Panel -->
+  <section id="puzzle-panel">
+    <h2>The Control Panel</h2>
+    <div id="display">
+      <p id="clueText">Enter the correct sequence and adjust the dials to unlock the secret door.</p>
+      <p id="puzzleFeedback"></p>
+    </div>
+    <!-- Buttons for the sequence -->
+    <div id="buttons">
+      <button data-value="A">A</button>
+      <button data-value="B">B</button>
+      <button data-value="C">C</button>
+      <button data-value="D">D</button>
+    </div>
+    <!-- Dial controls -->
+    <div id="dials">
+      <label for="dial1">Dial 1:</label>
+      <input type="range" id="dial1" min="0" max="9" value="0">
+      <label for="dial2">Dial 2:</label>
+      <input type="range" id="dial2" min="0" max="9" value="0">
+    </div>
+    <!-- Submission button -->
+    <button id="submitPuzzle">Submit</button>
+  </section>
+
+  <script src="mystery-room.js"></script>
+</body>
+</html>
