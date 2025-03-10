@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <style>
+        body {
+            text-align: center;
+            font-size: 1.5em;
+        }
+
+        p {
+            font-size: 1.5rem;
+        }
+
+        main {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            max-width: 1200px;
+            margin: auto;
+        }
+        
+        .buttons {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .buttons > button, a {
+            width: 80%;
+            max-width: 300px;
+            margin: 10px auto;
+        }
+
+        
+        a, button {
+            padding: .5rem;
+            border-radius: 10px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            background-color: grey;
+            border: black 2px solid;
+            color: black;
+            text-decoration: none;
+        }
+
+    </style>
+    <head>
+        <script src="https://kit.fontawesome.com/93f8221981.js" crossorigin="anonymous"></script>
+
+    </head>
+    <body>
+        <h1>Delete Account</h1>
+        <h2 style="color:red">This action is <span style="font-weight: 900;">IRREVERSIBLE</span></h2>
+        <h2>All data will be deleted including:</h2>
+        <ul style="max-width: 300px; width: 30%; margin: auto">
+            <li>Lifetime Stats</li>
+            <li>Current Run Data</li>
+            <li>Leaderboard Entries</li>
+        </ul>
+        <h2>Are you Sure?</h2>
+        <div class="buttons">
+            <button style="background-color: rgb(255, 27, 27);">Delete Account <i class="fa-solid fa-trash"></i></button>
+            <button onclick="{
+                document.location.pathname = '';
+            }">Return To Account <i class="fa-solid fa-arrow-left"></i></button>
+        </div>
+    </body>
+</html>
