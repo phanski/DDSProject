@@ -1,0 +1,13 @@
+.login {
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    display: block;
+    margin: 100px;
+}
+
+.Buttons {
+
+}
