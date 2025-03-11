@@ -3,16 +3,19 @@ document.addEventListener("DOMContentLoaded", function() {
   const buttons = document.querySelectorAll("#buttons button");
   const feedback = document.getElementById("puzzleFeedback");
   const submitBtn = document.getElementById("submitPuzzle");
+  const dialSection = document.getElementById("dial-section");
   const dial1 = document.getElementById("dial1");
   const dial2 = document.getElementById("dial2");
 
-  // Variables to track the puzzle state
+  // Track current puzzle phase: 1 = button sequence, 2 = dial adjustment
+  let phase = 1;
   let sequenceInput = "";
-  const correctSequence = "BADC"; // Example correct sequence
-  const correctDial1 = 3; // Expected number (as a number)
-  const correctDial2 = 7; // Expected number (as a number)
+  const correctSequence = "BADC"; // Correct button pattern
+  const forbiddenPattern = "BAAD"; // Forbidden code
+  const correctDial1 = 3;
+  const correctDial2 = 7;
 
-  // Utility function: count characters in correct positions
+  // Utility: count matching characters in correct positions
   function countSequenceMatches(input, correct) {
     let matches = 0;
     for (let i = 0; i < Math.min(input.length, correct.length); i++) {
@@ -23,61 +26,76 @@ document.addEventListener("DOMContentLoaded", function() {
     return matches;
   }
 
-  // Utility function: create themed feedback for the dials
+  // Utility: themed hint for sequence input
+  function getSequenceHint(input) {
+    const matches = countSequenceMatches(input, correctSequence);
+    if (matches === 0) {
+      return "The symbols remain a jumbled enigma.";
+    } else if (matches < correctSequence.length) {
+      return `You have ${matches} symbol(s) resonating with the hidden code.`;
+    }
+    return "";
+  }
+
+  // Utility: themed feedback for dial values
   function getDialFeedback(current, correct, dialName) {
-    let diff = Math.abs(current - correct);
+    const diff = Math.abs(current - correct);
     if (diff === 0) {
-      return `The ${dialName} is perfectly aligned.`;
+      return `The ${dialName} aligns perfectly.`;
     } else if (diff === 1) {
-      return `The ${dialName} shimmers almost in tune.`;
+      return `The ${dialName} shimmers almost in harmony.`;
     } else if (current < correct) {
-      return `The ${dialName} seems too low, as if yearning to rise.`;
+      return `The ${dialName} seems too low, yearning to rise.`;
     } else {
-      return `The ${dialName} is set too high, echoing in the void.`;
+      return `The ${dialName} is set too high, lost in the void.`;
     }
   }
 
-  // Handle button clicks to build the sequence
+  // Handle button clicks (active only in Phase 1)
   buttons.forEach(button => {
     button.addEventListener("click", function() {
-      const value = button.getAttribute("data-value");
-      sequenceInput += value;
-      feedback.textContent = "Current Sequence: " + sequenceInput;
+      if (phase === 1) {
+        const value = button.getAttribute("data-value");
+        sequenceInput += value;
+        feedback.textContent = "Current Sequence: " + sequenceInput;
+      }
     });
   });
 
-  // Handle puzzle submission
+  // Handle submit button click (acts for both phases)
   submitBtn.addEventListener("click", function() {
-    // Read current dial values as numbers
-    const currentDial1 = parseInt(dial1.value, 10);
-    const currentDial2 = parseInt(dial2.value, 10);
-    
-    // Check if both the button sequence and dials are exactly correct
-    if (sequenceInput === correctSequence &&
-        currentDial1 === correctDial1 &&
-        currentDial2 === correctDial2) {
-      feedback.textContent = "Success! The secret door creaks open as the mechanisms click into place.";
-      // Here you might trigger a transition to the next room or update the game state
-    } else {
-      // Determine how close the sequence is
-      const sequenceMatches = countSequenceMatches(sequenceInput, correctSequence);
-      let sequenceHint = "";
-      if (sequenceMatches === 0) {
-        sequenceHint = "The symbols seem utterly foreign.";
-      } else if (sequenceMatches < correctSequence.length) {
-        sequenceHint = `You have ${sequenceMatches} symbol(s) in harmony with the hidden code.`;
+    if (phase === 1) {
+      // Phase 1: Process button sequence
+      if (sequenceInput === forbiddenPattern) {
+        feedback.textContent = "A chilling wind howls... You have invoked the forbidden sequence 'DEATH'. The manor condemns you! Restarting...";
+        setTimeout(() => window.location.reload(), 3000);
+        return;
       }
-      
-      // Create feedback for the dials
-      const dial1Feedback = getDialFeedback(currentDial1, correctDial1, "first dial");
-      const dial2Feedback = getDialFeedback(currentDial2, correctDial2, "second dial");
-
-      // Provide an overall themed hint to guide the user
-      feedback.textContent = `The control panel hums with enigmatic energy. ${sequenceHint} ` +
-                             `${dial1Feedback} ${dial2Feedback} Adjust your inputs and try once more.`;
-      
-      // Reset the sequence for a new attempt
-      sequenceInput = "";
+      if (sequenceInput === correctSequence) {
+        feedback.textContent = "The hidden symbols resonate... The control panel reveals the secret dials!";
+        // Reveal the dials and transition to Phase 2
+        dialSection.style.display = "block";
+        // Optionally hide the button panel since it's no longer needed
+        document.getElementById("buttons").style.display = "none";
+        phase = 2;
+        // Clear sequence input for clarity (if needed)
+        sequenceInput = "";
+      } else {
+        const hint = getSequenceHint(sequenceInput);
+        feedback.textContent = `The control panel murmurs: "${hint}" Try again.`;
+        sequenceInput = ""; // Reset sequence input for a new attempt
+      }
+    } else if (phase === 2) {
+      // Phase 2: Process dial values
+      const currentDial1 = parseInt(dial1.value, 10);
+      const currentDial2 = parseInt(dial2.value, 10);
+      if (currentDial1 === correctDial1 && currentDial2 === correctDial2) {
+        feedback.textContent = "The mechanisms click into place, and the secret door creaks open...";
+      } else {
+        const dial1Feedback = getDialFeedback(currentDial1, correctDial1, "first dial");
+        const dial2Feedback = getDialFeedback(currentDial2, correctDial2, "second dial");
+        feedback.textContent = `The dials whisper: "${dial1Feedback} ${dial2Feedback}" Adjust them carefully.`;
+      }
     }
   });
 });
