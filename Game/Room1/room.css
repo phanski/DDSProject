@@ -28,7 +28,7 @@ body {
 #GameView {
     background-repeat: no-repeat;
     background-size: cover;
-    background-position: 0px -400px;
+    background-position: 0px 0px;
     text-align: center;
     border-radius: 0px;
     position: relative;
