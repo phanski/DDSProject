@@ -378,8 +378,6 @@ function StartRoom() {
     //     setTimeout(ShowOptions, 1000);
         
     // })
-    // AddOption("Show Object", () => ShowObject(`https://imgs.search.brave.com/Uv7PjPwToss4YP4krNPTTauC8y1Iq7BXFAWSoknkpAI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTEv/ODE0LzU2Ny9zbWFs/bC9yb2xsLW9mLXll/bGxvdy1zY290Y2gt/dGFwZS0zZC1oaWdo/LXF1YWxpdHktcGhv/dG8tcG5nLnBuZw`))
-    // AddOption("Hide Object", () => HideObject())
     // AddOption("Clear Options", () => ClearOptions("You may not make an action now"))
     // AddOption("Clear Options", () => ClearOptions())
 
