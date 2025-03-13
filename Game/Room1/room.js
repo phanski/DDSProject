@@ -391,7 +391,7 @@ function StartRoom() {
     //     })
         
     // })
-    // SetBackgroundImage("/Assets/scaryimageREMOVE--------------------------.webp")
-    // SetRoomName("Living Room")
+    SetBackgroundImage("/Assets/scaryimageREMOVE--------------------------.webp")
+    SetRoomName("Living Room")
 }
 
