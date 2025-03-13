@@ -31,7 +31,10 @@
                 <label>PassWord:
                     <input type="password" id="password" name="password" required>
                 </label>
-                <button type="submit">Start</button>
+                <label>Re-enter Password: 
+                    <input type="password" id="passwordCheck" name="chech" required>
+                </label>
+                <button type="submit">register</button>
 
             </form>
         </div>
@@ -39,7 +42,7 @@
         
         <script>
             document.getElementById('button2').onclick = function(){
-                window.location.href = "website.html";
+                window.location.href = "menu.html";
             }
 
             document.getElementById('loginForm').addEventListener("submit" , function(event){
@@ -47,7 +50,9 @@
 
                 let userName = document.getElementById('userName').value;
                 let password = document.getElementById('password').value;
+                let passwordCheck = document.getElementById('passwordCheck').value;
 
+                if (password === passwordCheck) {
             fetch("https://your-server.com/save-data", {
                 method: "POST", 
                 headers: {"Content-Type": "application/json"},
@@ -56,7 +61,7 @@
                 .then(response => response.json())
                 .then(data => alert("Data saved successfully!"))
                 .catch(error => console.error("Error:", error));
-            });
+            }});
 
 
 

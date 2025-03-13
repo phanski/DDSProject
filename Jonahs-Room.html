@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Caesar Cipher Room</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: white;
+            text-align: center;
+            margin: 20px;
+        }
+        h1 {
+            font-size: 2em;
+        }
+        #cipher-container {
+            margin-top: 50px;
+        }
+        input {
+            padding: 10px;
+            margin: 10px;
+            font-size: 1em;
+            border-radius: 8px;
+            border: none;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 1em;
+            background-color: #555;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #777;
+        }
+        #message {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        #solver {
+            margin-top: 30px;
+            max-height: 30px; /* Reduced height to show fewer options */
+            overflow-y: auto;
+            border: 1px solid #555;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Caesar Cipher Room</h1>
+
+    <div id="cipher-container">
+        <p>Decode the message to escape:</p>
+        <p id="encodedMessage"></p>
+
+        <input type="text" id="userInput" placeholder="Enter the password">
+        <button onclick="checkPassword()">Submit</button>
+        <button onclick="goBack()">Back</button>
+
+        <div id="message"></div>
+
+        <h2>Caesar Cipher Solver</h2>
+        <div id="solver"></div>
+    </div>
+
+    <script>
+        // Caesar cipher encoding function
+        function caesarCipher(str, shift) {
+            return str.replace(/[a-z]/gi, (char) => {
+                const offset = char === char.toUpperCase() ? 65 : 97;
+                return String.fromCharCode(((char.charCodeAt(0) - offset + shift) % 26 + 26) % 26 + offset);
+            });
+        }
+
+        // Set up the encoded message
+        const password = "escape while you can";
+        const encodedMessage = caesarCipher(password, 3); // Shift by 3
+        document.getElementById("encodedMessage").textContent = encodedMessage;
+
+        function checkPassword() {
+            const userInput = document.getElementById("userInput").value.toLowerCase();
+            const message = document.getElementById("message");
+
+            if (userInput === password) {
+                message.textContent = "Correct! You have escaped the room.";
+            } else {
+                message.textContent = "Incorrect password. Try again.";
+            }
+        }
+
+        function goBack() {
+            window.location.href = 'menu.html'; // Adjust to your menu page
+        }
+
+        // Generate Caesar cipher solver
+        function generateSolver() {
+            const solver = document.getElementById("solver");
+            for (let i = 0; i < 26; i++) {
+                const decoded = caesarCipher(encodedMessage, 26 - i);
+                const p = document.createElement("p");
+                p.textContent = `Shift ${i}: ${decoded}`;
+                solver.appendChild(p);
+            }
+        }
+
+        generateSolver();
+
+    </script>
+
+</body>
+</html>

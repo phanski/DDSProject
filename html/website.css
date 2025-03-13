@@ -1,7 +1,16 @@
-/* Outline for debugging */
-/* .standard { 
+
+ /* .standard { 
     outline: white dashed 1px;
 } */
+
+/* 100 enregy to begin and every action consumes 5 energy */
+/*
+create middle slide for login register and leadrerbourds
+register page and start layout of actual game
+*/
+
+
+
 
 /* Centering text */
 .center {
@@ -35,18 +44,38 @@
 
 /* Page background an fonts and color */
 body {
-    background-image: url("HandOnWall.jpeg");
+    /* background-image: url("HandOnWall.jpeg"); */
+    background-image: url(Images/HandOnWall.jpeg);
+    /* background-size: 100%; */
     
     background-color: #cccccc;
     font-family: 'Creepster', cursive;
     text-shadow: 4px 4px 10px black;
     color:red
 
+    }
+.row {
+    display: flex;             /* Enables Flexbox */
+    flex-direction: row;       /* Stack items horizontally */
+    align-items: center;       /* Centers items vertically */
+    justify-content: center;   /* Centers items horizontally */
     
+    /* Position in the middle of the screen */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    
+    gap: 300px;
+    
+}
+.button {
 
+    height: 100px;
+    width: 150px;
 
 }
-
 /* Puts text at bottom of the screen*/
 .lore-text {
     position: absolute;
@@ -134,6 +163,38 @@ form {
     border-radius: 10px;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
+}
+.leaderboard-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+.leaderboard {
+    border: 2px solid #555;
+    border-radius: 12px;
+    padding: 20px;
+    width: 40%;
+    background-color: #333;
+}
+.leaderboard h2 {
+    margin-top: 0;
+}
+.back-button {
+    margin-top: 30px;
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #555;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+back-button:hover {
+    background-color: #777;
+}
+.personal-run {
+    margin-top: 20px;
+    font-weight: bold;
 }
 
 
