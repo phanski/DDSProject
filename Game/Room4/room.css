@@ -43,7 +43,9 @@ body {
     background-color: #888C;
     margin: 10px auto;
     border: black 2px solid;
-
+    margin: 10px auto;
+    padding: 0px 20px;
+    
     /* Room starts with no message */
     display: none;
 }

@@ -39,12 +39,11 @@ body {
 
 #Message {
     grid-row: 3;
-    width: 50%;
+    width: fit-content;
+    max-width: 90%;
     border: black 2px solid;
     background-color: #404040;
     color: #aaaaaa;
-    margin: 10px auto;
-    
     
     font-family: monospace;
     border-radius: 10px;

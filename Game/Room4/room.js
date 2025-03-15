@@ -224,7 +224,7 @@ function StartTimer() {
         GameState.PlayerTimeSeconds += 1
         UpdateTimerDisplay()
 
-        const FiveMinutes = 100 * 60 /*change back to 5 minutes or whatever time*/
+        const FiveMinutes = 100 * 60
 
         if (GameState.PlayerTimeSeconds > FiveMinutes) {
             FailGame(1)
@@ -308,18 +308,28 @@ async function executeDatabaseQuery(SQLQuery) {
     return DBPromise
 }
 
+/**
+ * Shows a message in the predefined message popup
+ * @param {string} messageText 
+ */
 function ShowMessage(messageText) {
     let message = document.getElementById("Message")
     message.style.display = "block"
     message.children[0].textContent = messageText
 }
 
+/**
+ * Hides the message popup from the user
+ */
 function HideMessage() {
     let message = document.getElementById("Message")
 
     message.style.display = "none"
 }
 
+/**
+ * Removes options bar from user to allow for more room for UI
+ */
 function HideOptions() {
     let OptionsBar = document.getElementById("UserOptions")
     OptionsBar.style.display = "none;"
@@ -331,6 +341,10 @@ function HideOptions() {
     GameView.style.gridTemplateRows = "9.6% 78.4% 12%"
 }
 
+
+/**
+ * Shows options bar to user
+ */
 function ShowOptions() {
     let OptionsBar = document.getElementById("UserOptions")
     OptionsBar.style.display = ""
@@ -348,6 +362,11 @@ function ShowOptions() {
 
 //EDIT BELOW HERE
 
+// temporary function - made this because ShowMessage("abc"); setTimeout(ShowMessage("xyz"), 1000) didnt work and was too lazy to fix it
+function delay(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+  }
+
 
 
 
@@ -355,30 +374,112 @@ function ShowOptions() {
 /**
  * Main Function which is called when room page is loaded
  */
+
 function StartRoom() {
+    SetRoomName("Small, Dark Room");
+    ShowMessage("You enter a small, dark room. There is a table in the centre with a note on it, and a door opposite to you.");
     
-    
-    AddOption("Read the note", () => ShowMessage('It reads "LRRR".'));
+    AddOption("Read the note", () => {
+        ShowMessage('It reads "LRRR"');
+        // HideOptions();
+        delay(1000).then(() => {
+            // ShowOptions();
+            ShowMessage("You enter a small, dark room. There is a table in the centre with a note on it, and a door opposite to you.");
+        });
+    });
+
     AddOption("Go through the door", () => {
-        ShowMessage('You find yourself in a narrow corridor which stretches to your left and right.');
+        // HideOptions();
+        // setTimeout(ShowOptions, 2000);
+        SetRoomName("Corridor #1");
+        ShowMessage('You find yourself in a narrow corridor which extends to your left and right.');
         ClearOptions();
-        AddOption("Go left", () => ShowMessage('Left'));
-        AddOption("Go right", () => ShowMessage('Right'));
+
+        // incorrect #1
+        AddOption("Go right", () => {
+            ShowMessage('You hit a dead end. You turn back.');
+            // HideOptions();
+            delay(1000).then(() => {
+                // ShowOptions();
+                ShowMessage('Retracing your steps, you are back in the narrow corridor which still extends to your left and right.');
+            });
+        });
+
+        // correct #1
+        AddOption("Go left", () => {
+            SetRoomName("Corridor #2");
+            ShowMessage('You now find yourself in another narrow corridor which extends to your left and right.');
+            ClearOptions();
+
+            // incorrect #2
+            AddOption("Go left", () => {
+                ShowMessage('You hit a dead end. You turn back.');
+                // HideOptions();
+                delay(1000).then(() => {
+                    // ShowOptions();
+                    ShowMessage('You are back in the second narrow corridor which, surprisingly, still extends to your left and right.');
+                });
+            });
+
+            // correct #2
+            AddOption("Go right", () => {
+                SetRoomName("Corridor #3");
+                ShowMessage('You find yourself in yet another narrow corridor which extends to your left and right.');
+                ClearOptions();
+
+                // incorrect #3
+                AddOption("Go left", () => {
+                    ShowMessage('You hit a dead end. You turn back.');
+                    // HideOptions();
+                    delay(1000).then(() => {
+                        // ShowOptions();
+                        ShowMessage('You retrace your steps back to the third narrow corridor, which still extends to your left and right.');
+                    });
+                });
+
+                // correct #3
+                AddOption("Go right", () => {
+                    SetRoomName("Corridor #4");
+                    ShowMessage('You find yourself in yet another narrow corridor which extends to your left and right.');
+                    ClearOptions();
+    
+                    // incorrect #4
+                    AddOption("Go left", () => {
+                        ShowMessage('You hit a dead end. You turn back.');
+                        // HideOptions();
+                        delay(1000).then(() => {
+                            // ShowOptions();
+                            ShowMessage('You retrace your steps back to the fourth narrow corridor, which still extends to your left and right.');
+                        });
+                    });
+    
+                    // correct #4
+                    AddOption("Go right", () => {
+                        SetRoomName("End?");
+                        ShowMessage('Congratulations! You made it to the end. You see a door in front of you.');
+                        ClearOptions();
+                        AddOption("Exit room", () => alert("Room finished"));
+                        
+                    });
+                });
+            });
+        });
+
         
+
         // HideOptions();
         // setTimeout(ShowOptions, 1000);
     });
 
     // TODO:
-    //GetOptions
-    //RemoveOptions(); to remove the "Read the note" and "Go through the door" options
+    // GetOptions
+    // RemoveOptions(); to remove the "Read the note" and "Go through the door" options
 
     // AddOption("Hide Options", () => {
     //     HideOptions();
     //     setTimeout(ShowOptions, 1000);
-        
     // })
-    
+
     // // AddOption("Clear Options", () => ClearOptions("You may not make an action now"))
     // AddOption("Clear Options", () => ClearOptions())
 
@@ -388,8 +489,8 @@ function StartRoom() {
     //     executeDatabaseQuery("SELECT * FROM testUsers").then((result) => {
     //         console.log(result)
     //     })
-        
     // })
-    SetBackgroundImage("/Assets/scaryimageREMOVE--------------------------.webp")
-    SetRoomName("Living Room")
+
+    // SetBackgroundImage("/Assets/scaryimageREMOVE--------------------------.webp")
+    
 }
