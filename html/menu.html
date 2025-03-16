@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>Menu Page</title>
+
+        <link href="website.css" rel="stylesheet" type="text/css"/>
+
+         <!-- Link to font -->
+        <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+        <!-- Link to font -->
+    </head>
+    <body class="standard Opacity">
+        <div class="center"> <!-- Title -->
+            <h1>Title of game</h1>
+        </div>
+
+        
+
+        <div class="standard  row"> <!-- Image in center --> <!-- Enter button center -->
+            <!-- <img class=" Opacity size" src="Ghost.png" alt="Test Image"> -->
+            
+            <button class="button" id="login">Login</button> <!-- Can be changed-->
+            <button class="button" id="register">Register</button>
+            <button class="button" id="leader">Leaderboards</button>
+        </div>
+
+       <script>
+            document.getElementById('login').onclick = function(){
+                window.location.href = "loginScreen.html"
+
+            }
+            document.getElementById('register').onclick = function(){
+                window.location.href = "register.html"
+            }
+            document.getElementById('leader').onclick = function(){
+                window.location.href = "leaderboard.html"
+            }
+            
+        </script>
+    </body>
+</html>

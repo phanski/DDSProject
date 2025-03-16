@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>Game Page</title>
+
+        <link href="website.css" rel="stylesheet" type="text/css"/>
+
+         <!-- Link to font -->
+        <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+        <!-- Link to font -->
+    </head>
+    <body class="standard Opacity">
+        <div class="center"> <!-- Title -->
+            <h1>Title of game</h1>
+        </div>
+
+        <div class="standard image-column Opacity"> <!-- Images on left -->
+            <img src="./Images/smallTestimage.jpg" alt="Test Image"> <!-- image 1 --> 
+            <img src="./Images/smallTestimage.jpg" alt="Test Image"> <!-- image 2 --> 
+            <img src="./Images/smallTestimage.jpg" alt="Test Image"> <!-- image 3 --> 
+        </div>
+
+        <div class="standard middle"> <!-- Image in center --> <!-- Enter button center -->
+            <!-- <img class=" Opacity size" src="Ghost.png" alt="Test Image"> -->
+            
+            <button id="button1">Play Game</button> <!-- Can be changed-->
+        </div>
+
+        <div class="right standard"> <!-- Credits on right -->
+            <p>Game people</p> <br><!-- Maybe a table? -->
+            <p>Ben - something </p> <br>
+            <p>Jack - something </p> <br>
+            <p>Jonah - something </p> <br>
+            <p>Kavyadeep - something </p> <br>
+            <p>Peter - something </p> <br>
+            <p>Ryan - something </p> <br>
+        </table> 
+        </div>
+
+        <div class="lore-text standard"> <!-- Lore text at bottom center -->
+            <p>You wake up in a room, all you remember is being in the woods and someone chasing you until you see a mansion.<br>Will you be able to escape the masion before the thing chasing you catches up or will you surrender to the thing...</p> <!-- Add text -->
+        </div>
+        <div class="lore-text2 standard"> <!-- Lore text at bottom center -->
+            <p>This is a text-based horror game where you must solve cryptic clues to navigate your way through the eerie, abandoned mansion. Shadows lurk in every corner, whispers echo through the halls, and every choice you make could bring you closer to the truth—or your doom. Can you uncover the mansion’s dark secrets before it’s too late?</p> <!-- Add text -->
+        </div>
+        <script>
+            document.getElementById('button1').onclick = function(){
+                window.location.href = "menu.html"
+            }
+        </script>
+    </body>
+</html>
