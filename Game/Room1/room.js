@@ -146,7 +146,7 @@ function TransitionToRoom(roomNumber) {
 
     SavePlayerData()
 
-    window.location.href = `/Room/Room${roomNumber}/room.html`
+    window.location.href = `/Game/Room${roomNumber}/room.html`
 }
 
 /**
@@ -364,8 +364,9 @@ function ShowOptions() {
 
 
 
-function ShowBooksOnFloor() {
 
+function FirstBookChoice() {
+    ClearOptions()
     ShowMessage("There are 3 books and the ground and 3 pages ripped out")
 
     AddOption("Read first page", () => {
@@ -373,7 +374,7 @@ function ShowBooksOnFloor() {
         // TODO: Display page image when made
         // Chapter 3. Page 29. First Word - Never
 
-        AddOption("Return to other pages", ShowBooksOnFloor)
+        AddOption("Return to other pages", FirstBookChoice)
     })
 
     AddOption("Read second page", () => {
@@ -381,7 +382,7 @@ function ShowBooksOnFloor() {
         // TODO: Display page image when made
         // Chapter 1. Page 6. First Word - Rather
 
-        AddOption("Return to other pages", ShowBooksOnFloor)
+        AddOption("Return to other pages", FirstBookChoice)
     })
 
     AddOption("Read third page", () => {
@@ -389,28 +390,47 @@ function ShowBooksOnFloor() {
         // TODO: Display page image when made
         // Chapter 2. Page 1. First Word - Understandably
 
-        AddOption("Return to other pages", ShowBooksOnFloor)
+        AddOption("Return to other pages", FirstBookChoice)
     })
-}
-
-function FirstBookChoice() {
-    ClearOptions()
-
-    ShowBooksOnFloor()
-
     AddOption("Return to locked box", BoxChoice)
 }
 
 function SecondBookChoice () {
     ClearOptions()
+    ShowMessage("There are 3 books and the ground and 3 pages ripped out")
 
-    ShowBooksOnFloor()
+    AddOption("Read first page", () => {
+        ClearOptions()
+        // TODO: Display page image when made
+        // Chapter 3. Page 29. First Word - Never
 
+        AddOption("Return to other pages", SecondBookChoice)
+    })
+
+    AddOption("Read second page", () => {
+        ClearOptions()
+        // TODO: Display page image when made
+        // Chapter 1. Page 6. First Word - Rather
+
+        AddOption("Return to other pages", SecondBookChoice)
+    })
+
+    AddOption("Read third page", () => {
+        ClearOptions()
+        // TODO: Display page image when made
+        // Chapter 2. Page 1. First Word - Understandably
+
+        AddOption("Return to other pages", SecondBookChoice)
+    })
     AddOption("Return to note", NoteChoice)
+
+
 }
 
 
 function BoxChoice() {
+    ClearOptions()
+
     ShowMessage("Are you ready to unlock the box?")
 
     AddOption("Return to books", FirstBookChoice)
@@ -456,33 +476,40 @@ function BoxChoice() {
 
 
 function NoteChoice() {
+    ClearOptions()
+
     // TODO: Show note in middle of screen "You must get away from this place. It is over___ "
     ShowMessage("What are the last three letters?")
     AddOption("Fill in the blanks", () => {
-        const CorrectLetters = "run"
-
-
+        ClearOptions()
         let codeInput = document.createElement('input')
         codeInput.id = "CodeInput"
         document.getElementById("FocusedObject").appendChild(codeInput)
 
-        let CodeGuessed = false
+        AddOption("Confirm", () => {
+            const CorrectLetters = "run"
 
-        while (!CodeGuessed) {
-            let inputValue = document.getElementById("CodeInput").value
-            if (inputValue == CorrectCode) {
-                CodeGuessed = true
-                break;
-            } else {
-                ShowMessage("Hmm, that doesn't make sense")
+            let CodeGuessed = false
+
+            while (!CodeGuessed) {
+                let inputValue = document.getElementById("CodeInput").value
+                if (inputValue == CorrectLetters) {
+                    CodeGuessed = true
+                    break;
+                } else {
+                    ShowMessage("Hmm, that doesn't make sense")
+                }
             }
-        }
 
-        ClearOptions()
-        AddOption("Run", () => {
-            // TODO: Confirm which room is next
-            TransitionToRoom(1)
+            ClearOptions()
+            HideMessage()
+            document.getElementById("FocusedObject").replaceChildren([])
+            AddOption("Run", () => {
+                // TODO: Confirm which room is next
+                TransitionToRoom(1)
+            })
         })
+
     })
 }
 
@@ -503,7 +530,7 @@ function StartRoom() {
             ClearOptions()
             ShowMessage("You turn around to go search through the pile of books. As you walk away from the desk you stumble over a crooked floorboard.")
 
-            AddOption("Search books", BookChoice)
+            AddOption("Search books", FirstBookChoice)
 
             AddOption("Find out what you tripped on", () => {
                 // TODO: Bonus item when inventory is added
