@@ -365,180 +365,12 @@ function ShowOptions() {
 
 
 
-function FirstBookChoice() {
-    ClearOptions()
-    ShowMessage("There are 3 books and the ground and 3 pages ripped out")
-
-    AddOption("Read first page", () => {
-        ClearOptions()
-        // TODO: Display page image when made
-        // Chapter 3. Page 29. First Word - Never
-
-        AddOption("Return to other pages", FirstBookChoice)
-    })
-
-    AddOption("Read second page", () => {
-        ClearOptions()
-        // TODO: Display page image when made
-        // Chapter 1. Page 6. First Word - Rather
-
-        AddOption("Return to other pages", FirstBookChoice)
-    })
-
-    AddOption("Read third page", () => {
-        ClearOptions()
-        // TODO: Display page image when made
-        // Chapter 2. Page 1. First Word - Understandably
-
-        AddOption("Return to other pages", FirstBookChoice)
-    })
-    AddOption("Return to locked box", BoxChoice)
-}
-
-function SecondBookChoice () {
-    ClearOptions()
-    ShowMessage("There are 3 books and the ground and 3 pages ripped out")
-
-    AddOption("Read first page", () => {
-        ClearOptions()
-        // TODO: Display page image when made
-        // Chapter 3. Page 29. First Word - Never
-
-        AddOption("Return to other pages", SecondBookChoice)
-    })
-
-    AddOption("Read second page", () => {
-        ClearOptions()
-        // TODO: Display page image when made
-        // Chapter 1. Page 6. First Word - Rather
-
-        AddOption("Return to other pages", SecondBookChoice)
-    })
-
-    AddOption("Read third page", () => {
-        ClearOptions()
-        // TODO: Display page image when made
-        // Chapter 2. Page 1. First Word - Understandably
-
-        AddOption("Return to other pages", SecondBookChoice)
-    })
-    AddOption("Return to note", NoteChoice)
-
-
-}
-
-
-function BoxChoice() {
-    ClearOptions()
-
-    ShowMessage("Are you ready to unlock the box?")
-
-    AddOption("Return to books", FirstBookChoice)
-
-    AddOption("Enter Code", () => {
-        ClearOptions()
-        HideMessage()
-        let codeInput = document.createElement('input')
-        codeInput.id = "CodeInput"
-
-        document.getElementById("FocusedObject").appendChild(codeInput)
-        
-        AddOption("Confirm", () => {
-            const CorrectCode = 6129
-            let CodeGuessed = false
-
-            while (!CodeGuessed) {
-                let inputValue = document.getElementById("CodeInput").value
-                if (inputValue == CorrectCode) {
-                    CodeGuessed = true
-                    break;
-                } else {
-                    ShowMessage("Incorrect Code")
-                }
-            }
-            document.getElementById("FocusedObject").replaceChildren([])
-
-
-            ShowMessage("The box opens with a loud creak. Inside you find an unfinished note seemingly written in a hurry")
-            ClearOptions()
-            AddOption("Read note", () => {
-                // TODO: Show note in middle of screen "You must get away from this place. It is over___ "
-                ShowMessage("The last letters appear to be smudged")
-                ClearOptions()
-
-                AddOption("Return to books", SecondBookChoice)
-            })
-
-        })
-        AddOption("Return to books", FirstBookChoice)
-    })
-}
-
-
-function NoteChoice() {
-    ClearOptions()
-
-    // TODO: Show note in middle of screen "You must get away from this place. It is over___ "
-    ShowMessage("What are the last three letters?")
-    AddOption("Fill in the blanks", () => {
-        ClearOptions()
-        let codeInput = document.createElement('input')
-        codeInput.id = "CodeInput"
-        document.getElementById("FocusedObject").appendChild(codeInput)
-
-        AddOption("Confirm", () => {
-            const CorrectLetters = "run"
-
-            let CodeGuessed = false
-
-            while (!CodeGuessed) {
-                let inputValue = document.getElementById("CodeInput").value
-                if (inputValue == CorrectLetters) {
-                    CodeGuessed = true
-                    break;
-                } else {
-                    ShowMessage("Hmm, that doesn't make sense")
-                }
-            }
-
-            ClearOptions()
-            HideMessage()
-            document.getElementById("FocusedObject").replaceChildren([])
-            AddOption("Run", () => {
-                // TODO: Confirm which room is next
-                TransitionToRoom(1)
-            })
-        })
-
-    })
-}
 
 /**
  * Main Function which is called when room page is loaded
  */
 function StartRoom() {
     
-    SetBackgroundImage("/Assets/scaryimageREMOVE--------------------------.webp")
-    SetRoomName("Study")
-
-    ShowMessage("You enter the study and find it in complete disarray. Books are strewn across the floor along with torn out pages.")
-    AddOption("Investigate Further", () => {
-        ClearOptions()
-
-        ShowMessage("The desk is in a similar state to the rest of the room, however, you find a locked box with a 4 digit combination lock on top of the desk.")
-        AddOption("Search room", () => {
-            ClearOptions()
-            ShowMessage("You turn around to go search through the pile of books. As you walk away from the desk you stumble over a crooked floorboard.")
-
-            AddOption("Search books", FirstBookChoice)
-
-            AddOption("Find out what you tripped on", () => {
-                // TODO: Bonus item when inventory is added
-            })
-        })
-
-    })
-
     
     // AddOption("Show Options", () => ShowMessage('New Option'))
     // AddOption("Hide Options", () => {
@@ -546,6 +378,8 @@ function StartRoom() {
     //     setTimeout(ShowOptions, 1000);
         
     // })
+    // AddOption("Show Object", () => ShowObject(`https://imgs.search.brave.com/Uv7PjPwToss4YP4krNPTTauC8y1Iq7BXFAWSoknkpAI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTEv/ODE0LzU2Ny9zbWFs/bC9yb2xsLW9mLXll/bGxvdy1zY290Y2gt/dGFwZS0zZC1oaWdo/LXF1YWxpdHktcGhv/dG8tcG5nLnBuZw`))
+    // AddOption("Hide Object", () => HideObject())
     // AddOption("Clear Options", () => ClearOptions("You may not make an action now"))
     // AddOption("Clear Options", () => ClearOptions())
 
@@ -557,5 +391,7 @@ function StartRoom() {
     //     })
         
     // })
+    SetBackgroundImage("/Assets/scaryimageREMOVE--------------------------.webp")
+    SetRoomName("Living Room")
 }
 
