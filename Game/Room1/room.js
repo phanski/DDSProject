@@ -364,13 +364,154 @@ function ShowOptions() {
 
 
 
+function ShowBooksOnFloor() {
 
+    ShowMessage("There are 3 books and the ground and 3 pages ripped out")
+
+    AddOption("Read first page", () => {
+        ClearOptions()
+        // TODO: Display page image when made
+        // Chapter 3. Page 29. First Word - Never
+
+        AddOption("Return to other pages", ShowBooksOnFloor)
+    })
+
+    AddOption("Read second page", () => {
+        ClearOptions()
+        // TODO: Display page image when made
+        // Chapter 1. Page 6. First Word - Rather
+
+        AddOption("Return to other pages", ShowBooksOnFloor)
+    })
+
+    AddOption("Read third page", () => {
+        ClearOptions()
+        // TODO: Display page image when made
+        // Chapter 2. Page 1. First Word - Understandably
+
+        AddOption("Return to other pages", ShowBooksOnFloor)
+    })
+}
+
+function FirstBookChoice() {
+    ClearOptions()
+
+    ShowBooksOnFloor()
+
+    AddOption("Return to locked box", BoxChoice)
+}
+
+function SecondBookChoice () {
+    ClearOptions()
+
+    ShowBooksOnFloor()
+
+    AddOption("Return to note", NoteChoice)
+}
+
+
+function BoxChoice() {
+    ShowMessage("Are you ready to unlock the box?")
+
+    AddOption("Return to books", FirstBookChoice)
+
+    AddOption("Enter Code", () => {
+        ClearOptions()
+        HideMessage()
+        let codeInput = document.createElement('input')
+        codeInput.id = "CodeInput"
+
+        document.getElementById("FocusedObject").appendChild(codeInput)
+        
+        AddOption("Confirm", () => {
+            const CorrectCode = 6129
+            let CodeGuessed = false
+
+            while (!CodeGuessed) {
+                let inputValue = document.getElementById("CodeInput").value
+                if (inputValue == CorrectCode) {
+                    CodeGuessed = true
+                    break;
+                } else {
+                    ShowMessage("Incorrect Code")
+                }
+            }
+            document.getElementById("FocusedObject").replaceChildren([])
+
+
+            ShowMessage("The box opens with a loud creak. Inside you find an unfinished note seemingly written in a hurry")
+            ClearOptions()
+            AddOption("Read note", () => {
+                // TODO: Show note in middle of screen "You must get away from this place. It is over___ "
+                ShowMessage("The last letters appear to be smudged")
+                ClearOptions()
+
+                AddOption("Return to books", SecondBookChoice)
+            })
+
+        })
+        AddOption("Return to books", FirstBookChoice)
+    })
+}
+
+
+function NoteChoice() {
+    // TODO: Show note in middle of screen "You must get away from this place. It is over___ "
+    ShowMessage("What are the last three letters?")
+    AddOption("Fill in the blanks", () => {
+        const CorrectLetters = "run"
+
+
+        let codeInput = document.createElement('input')
+        codeInput.id = "CodeInput"
+        document.getElementById("FocusedObject").appendChild(codeInput)
+
+        let CodeGuessed = false
+
+        while (!CodeGuessed) {
+            let inputValue = document.getElementById("CodeInput").value
+            if (inputValue == CorrectCode) {
+                CodeGuessed = true
+                break;
+            } else {
+                ShowMessage("Hmm, that doesn't make sense")
+            }
+        }
+
+        ClearOptions()
+        AddOption("Run", () => {
+            // TODO: Confirm which room is next
+            TransitionToRoom(1)
+        })
+    })
+}
 
 /**
  * Main Function which is called when room page is loaded
  */
 function StartRoom() {
     
+    SetBackgroundImage("/Assets/scaryimageREMOVE--------------------------.webp")
+    SetRoomName("Study")
+
+    ShowMessage("You enter the study and find it in complete disarray. Books are strewn across the floor along with torn out pages.")
+    AddOption("Investigate Further", () => {
+        ClearOptions()
+
+        ShowMessage("The desk is in a similar state to the rest of the room, however, you find a locked box with a 4 digit combination lock on top of the desk.")
+        AddOption("Search room", () => {
+            ClearOptions()
+            ShowMessage("You turn around to go search through the pile of books. As you walk away from the desk you stumble over a crooked floorboard.")
+
+            AddOption("Search books", BookChoice)
+
+            AddOption("Find out what you tripped on", () => {
+                // TODO: Bonus item when inventory is added
+            })
+        })
+
+    })
+
     
     // AddOption("Show Options", () => ShowMessage('New Option'))
     // AddOption("Hide Options", () => {
@@ -389,7 +530,5 @@ function StartRoom() {
     //     })
         
     // })
-    // SetBackgroundImage("/Assets/scaryimageREMOVE--------------------------.webp")
-    // SetRoomName("Living Room")
 }
 

@@ -2,29 +2,84 @@
 function CleanSQL(Input) {
     return Input
     
-    
 }
+
 
 window.addEventListener('load', () => {
     document.getElementById('Login').addEventListener('click', () => {
-        Login(document.getElementById("Username").value, document.getElementById("Password").value)  
+        Login(document.getElementById("Username").value, document.getElementById("Password").value).then((loginResult) => {
+            if (loginResult) {
+                document.location.pathname = "/Account/account.html"
+            } else {
+                // TODO: Better alert for failed login when the login page is created
+                alert ("Invalid Login")
+            }
+        })
     })
 })
 
+
+window.addEventListener('load', () => {
+    document.getElementById('Register').addEventListener('click', () => {
+        let Username = document.getElementById("Username").value
+        let Password = document.getElementById("Password").value
+        let ConfirmPassword = document.getElementById("ConfirmPassword").value
+
+        if (Password !== ConfirmPassword) {
+            // TODO: Better alert when register page is ready
+            alert("Password doesn't match")
+            return
+        }
+
+        Register(Username, Password).then((RegisterResult) => {
+            if (RegisterResult) {
+                // TODO: Replace to actual login page
+                document.location.pathname = "/Login/login.html"
+            } else {
+                // TODO: Better alert for failed login when the login page is created
+                alert ("Username is already taken")
+            }
+        })
+    })
+})
+
+
+/**
+ * Takes a Username and password for a new user and attempts to register their account.
+ * Only Validates to ensure Username is not duplicated and valid
+ * Validation for confirming password etc is to be done by caller
+ * @param {String} Username 
+ * @param {String} Password 
+ */
+async function Register(Username, Password) {
+    Username = CleanSQL(Username)
+    Password = CleanSQL(Password)
+
+
+    const RegisterQuery = `INSERT INTO User VALUES Username = "${Username} Password = "${Password}";`
+    executeDatabaseQuery(RegisterQuery).then((result) => {
+        return result.success
+    })
+}
+
+/**
+ * Takes a username and password and attempts to log the user in with the provided details
+ * @param {string} Username 
+ * @param {string} Password 
+ */
 async function Login(Username, Password) {
     Username = CleanSQL(Username)
     Password = CleanSQL(Password)
 
-    const LoginQuery = `SELECT Username FROM Users WHERE Username = "${Username}" AND Password = "${Password}";`
+    const LoginQuery = `SELECT Username FROM User WHERE Username = "${Username}" AND Password = "${Password}";`
     executeDatabaseQuery(LoginQuery).then((result) => {
         if (result.data.length > 0) {
+            sessionStorage.setItem('LoggedInUser', Username)
             return true
         } else {
             return false
         }
     })
-
-    
 }
 
 const DatabaseConnectionData = {
