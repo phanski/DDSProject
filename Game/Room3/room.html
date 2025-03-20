@@ -4,6 +4,12 @@
         <link rel="stylesheet" href="./room.css">
         <script src="https://kit.fontawesome.com/93f8221981.js" crossorigin="anonymous"></script>  
         <script src="./room.js"></script>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Mystery Manor: The Parlor</title>
+            <!-- Inline CSS for a luxury castle horror theme -->
+          </head>
     </head>
     <body>
         <div id="GameWindow">
@@ -22,12 +28,86 @@
                         </button>
                     </div>
                 </div>
-                <div id="FocusedObject"></div>
+                <div id="FocusedObject">
+                    <!-- Room description with a hidden hint for digit 5 -->
+                    <p>You step into a dusty, dimly lit parlor. A grand painting, an antique clock, and a mysterious control panel beckon you to uncover their secrets.</p>
+                    <section id="room-description">
+                        <p>The centerpiece is a control panel mounted on an ornate wooden cabinet. Behind its veneer lie devices and inscriptions whose meanings have been long forgotten. A faded inscription warns: "Never dare to invoke the forbidden code: BAAD."</p>
+                    </section>
+
+                    <!-- Puzzle Panel -->
+                    <section id="puzzle-panel">
+                        <h2>The Control Panel</h2>
+                        <!-- Warning message -->
+                        <div id="warningMessage">
+                        <p class="warning-text">Ancient Warning: Never enter the forbidden code <strong>BAAD</strong> – its echo brings only ruin.</p>
+                        </div>
+                        
+                        <!-- Display area with phase-specific intros and hints -->
+                        <div id="display">
+                        <!-- Phase 1 introduction: hinting at the digit 3 (thrice, like a bell) -->
+                        <p id="clueText">As the great castle bell tolls THRICE at twilight, press the correct button sequence to awaken the hidden dials.</p>
+                        <p id="puzzleFeedback"></p>
+                        </div>
+                        
+                        <!-- Phase 1: Button Sequence -->
+                        <div id="buttons">
+                        <button data-value="A">A</button>
+                        <button data-value="B">B</button>
+                        <button data-value="C">C</button>
+                        <button data-value="D">D</button>
+                        </div>
+                        
+                        <!-- Phase 2: Dial Adjustment (initially hidden) -->
+                        <div id="dial-section" style="display: none;">
+                        <!-- Phase 2 intro: hinting at the digit 1 (a solitary beacon) -->
+                        <p>In the dim light, a SOLITARY beacon shines. Adjust the dials until their positions reflect the secret of the night.</p>
+                        <div id="dials">
+                            <label for="dial1">Dial 1:</label>
+                            <input type="range" id="dial1" min="0" max="9" value="0">
+                            <label for="dial2">Dial 2:</label>
+                            <input type="range" id="dial2" min="0" max="9" value="0">
+                        </div>
+                        </div>
+                        
+                        <!-- Phase 3: Keypad Puzzle (initially hidden) -->
+                        <div id="keypad-section">
+                        <!-- Phase 3 intro: hinting at the digit 4 (four silent arches) -->
+                        <p>In the quiet gloom of this ancient manor, every detail holds a secret. Recall the tolling of the great bell at dusk, the solitary light burning in a lonely window, the four silent arches that frame the grand hall, and the subtle markings upon the venerable oak door. In their quiet harmony lies the key to unlocking the final passage. Enter the sacred numeric code.</p>
+                        <div id="keypad-display">Current Code: </div>
+                        <div id="keypad-buttons">
+                            <button data-digit="0">0</button>
+                            <button data-digit="1">1</button>
+                            <button data-digit="2">2</button>
+                            <button data-digit="3">3</button>
+                            <button data-digit="4">4</button>
+                            <button data-digit="5">5</button>
+                            <button data-digit="6">6</button>
+                            <button data-digit="7">7</button>
+                            <button data-digit="8">8</button>
+                            <button data-digit="9">9</button>
+                            <button id="keypad-clear">Clear</button>
+                        </div>
+                        </div>
+                        
+                        <!-- Submit button used across all phases -->
+                        <button id="submitPuzzle">Submit</button>
+                    </section>
+
+                </div>
                 <div id="Message">
                     <h1></h1>
                 </div>
             </div>
             <div id="UserOptions"></div>
+            
+  </header>
+
+  
+  <!-- Inline JavaScript for puzzle logic -->
+  <script>
+    
+  </script>
             <!-- Overlay code left for neat formatting -->
             <!-- <div id="Overlay">
                 <div id="OverlayMessage">
