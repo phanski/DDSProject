@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="./JP_Room.css">
+        
+
+        <script src="https://kit.fontawesome.com/93f8221981.js" crossorigin="anonymous"></script>  
+        <script src="./JP_Room.js"></script>
+    </head>
+    <body>
+        <div id="GameWindow">
+            <div id="GameView">
+                <div id="InfoBar">
+                    <div style="grid-column: 1; grid-row: 1;">
+                        Energy : <span id="PlayerEnergy">0</span>/100
+                    </div>
+                    <div style="grid-column: 2; grid-row: 1;"><h3 id="RoomName"></h3></div>
+                    <div id="Timer">
+                        <p>
+                            Time : <span id="PlayerTime">0:00</span>
+                        </p>
+                        <button id="PauseButton">
+                            <i class="fa-solid fa-pause"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="FocusedObject"></div>
+                <div id="Message">
+                    <p>In the room you see a wardroom with locked drawers,
+                        a note on top of the drawers and a door with a strange
+                        lock on it.</p>
+                </div>
+            </div>
+            <div id="UserOptions">
+
+                <button class="LowButton note" onclick="generateSolver()" id="solver note">Look at note</button>
+                <button id="showPopup">Show Popup</button>
+                    <div id="popup" style="display: none;">
+                        <h2>Popup Message</h2>
+                        <p id="popupContent"></p>
+                    <button onclick="closePopup()">Close</button>
+</div>
+
+                <button class="LowButton">Open Drawrs</button>
+                <button class="LowButton">Inspect Lock on Door</button>
+            </div>
+            <!-- Overlay code left for neat formatting -->
+            <!-- <div id="Overlay">
+                <div id="OverlayMessage">
+                    <h1>Game Paused</h1>
+                    <h2>Current Time : <span id="PauseScreenTime"></span></h2>
+                    <div style="display: flex; justify-content: space-around; max-width: 500px; width: 100%;">
+                        <button class="OverlayButton" id="ResumeButton">Resume</button>
+                        <button class="OverlayButton" id="ReturnHomeButton">Return to Home</button>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
