@@ -555,7 +555,7 @@ function NoteChoice() {
  */
 function StartRoom() {
     
-    SetBackgroundImage("/Assets/scaryimageREMOVE--------------------------.webp")
+    SetBackgroundImage("/Assets/StudyBackground.webp")
     SetRoomName("Study")
 
     ShowMessage("You enter the study and find it in complete disarray. Books are strewn across the floor along with torn out pages.")
@@ -575,24 +575,5 @@ function StartRoom() {
         })
 
     })
-
-    
-    // AddOption("Show Options", () => ShowMessage('New Option'))
-    // AddOption("Hide Options", () => {
-    //     HideOptions();
-    //     setTimeout(ShowOptions, 1000);
-        
-    // })
-    // AddOption("Clear Options", () => ClearOptions("You may not make an action now"))
-    // AddOption("Clear Options", () => ClearOptions())
-
-    // AddOption("Add Energy", () => AddEnergy(5))
-    // AddOption("Remove Energy", () => RemoveEnergy(5))
-    // AddOption("DB Test", () => {
-    //     executeDatabaseQuery("SELECT * FROM testUsers").then((result) => {
-    //         console.log(result)
-    //     })
-        
-    // })
 }
 
