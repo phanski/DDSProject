@@ -544,14 +544,7 @@ function inspectLock() {
  * Main Function which is called when room page is loaded
  */
 function StartRoom() {
-    
-    console.log("Window loaded. Initializing room...");
-    if (typeof InitRoom === 'function') {
-        InitRoom();
-        displayRoomDescription();
-    } else {
-        console.error("InitRoom function is missing.");
-    }
+
     // AddOption("Show Options", () => ShowMessage('New Option'))
     // AddOption("Hide Options", () => {
     //     HideOptions();
