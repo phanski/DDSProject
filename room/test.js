@@ -484,17 +484,7 @@ function ShowOptions() {
 
 //EDIT BELOW HERE
 // Caesar cipher encoding function
-function caesarCipher(str, shift) {
-    return str.replace(/[a-z]/gi, (char) => {
-        const offset = char === char.toUpperCase() ? 65 : 97;
-        return String.fromCharCode(((char.charCodeAt(0) - offset + shift) % 26 + 26) % 26 + offset);
-    });
-}
 
-// Set up the encoded message
-const password = "escape while you can";
-const encodedMessage = caesarCipher(password, 3); // Shift by 3
-document.getElementById("encodedMessage").textContent = encodedMessage;
 
 function checkPassword() {
     const userInput = document.getElementById("userInput").value.toLowerCase();
@@ -511,16 +501,7 @@ function goBack() {
     window.location.href = 'menu.html'; // Adjust to your menu page
 }
 
-// Generate Caesar cipher solver
-function generateSolver() {
-    const solver = document.getElementById("solver");
-    for (let i = 0; i < 26; i++) {
-        const decoded = caesarCipher(encodedMessage, 26 - i);
-        const p = document.createElement("p");
-        p.textContent = `Shift ${i}: ${decoded}`;
-        solver.appendChild(p);
-    }
-}
+
 
 // Function to display the popup with the result of another function
 function showPopup() {
