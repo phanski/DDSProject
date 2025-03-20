@@ -368,61 +368,93 @@ function ShowOptions() {
 function FirstBookChoice() {
     ClearOptions()
     ShowMessage("There are 3 books and the ground and 3 pages ripped out")
+    
+    let focusedObjectDiv = document.getElementById("FocusedObject")
+    let pageImage = document.createElement('img')
+    
+    pageImage.style = "height: 100%"
 
     AddOption("Read first page", () => {
-        ClearOptions()
-        // TODO: Display page image when made
-        // Chapter 3. Page 29. First Word - Never
+        ClearOptions()                
+        pageImage.src = "/Assets/Chapter3.png"
+        focusedObjectDiv.replaceChildren(pageImage)
 
-        AddOption("Return to other pages", FirstBookChoice)
+        AddOption("Return to other pages", () => {
+            focusedObjectDiv.replaceChildren([])
+            FirstBookChoice()
+        })
     })
 
     AddOption("Read second page", () => {
         ClearOptions()
-        // TODO: Display page image when made
-        // Chapter 1. Page 6. First Word - Rather
+        pageImage.src = "/Assets/Chapter1.png"
+        focusedObjectDiv.replaceChildren(pageImage)
 
-        AddOption("Return to other pages", FirstBookChoice)
+        AddOption("Return to other pages", () => {
+            focusedObjectDiv.replaceChildren([])
+            FirstBookChoice()
+        })
     })
 
     AddOption("Read third page", () => {
         ClearOptions()
-        // TODO: Display page image when made
-        // Chapter 2. Page 1. First Word - Understandably
+        pageImage.src = "/Assets/Chapter2.png"
+        focusedObjectDiv.replaceChildren(pageImage)
 
-        AddOption("Return to other pages", FirstBookChoice)
+        AddOption("Return to other pages", () => {
+            focusedObjectDiv.replaceChildren([])
+            FirstBookChoice()
+        })
     })
-    AddOption("Return to locked box", BoxChoice)
+    AddOption("Return to locked box", () => {
+        focusedObjectDiv.replaceChildren([])
+        BoxChoice()
+    })
 }
 
 function SecondBookChoice () {
     ClearOptions()
     ShowMessage("There are 3 books and the ground and 3 pages ripped out")
+    let focusedObjectDiv = document.getElementById("FocusedObject")
+    let pageImage = document.createElement('img')
+    pageImage.style = "height: 100%"
 
     AddOption("Read first page", () => {
-        ClearOptions()
-        // TODO: Display page image when made
-        // Chapter 3. Page 29. First Word - Never
+        ClearOptions()                
+        pageImage.src = "/Assets/Chapter3.png"
+        focusedObjectDiv.replaceChildren(pageImage)
 
-        AddOption("Return to other pages", SecondBookChoice)
+        AddOption("Return to other pages", () => {
+            focusedObjectDiv.replaceChildren([])
+            SecondBookChoice()
+        })
     })
 
     AddOption("Read second page", () => {
         ClearOptions()
-        // TODO: Display page image when made
-        // Chapter 1. Page 6. First Word - Rather
+        pageImage.src = "/Assets/Chapter1.png"
+        focusedObjectDiv.replaceChildren(pageImage)
 
-        AddOption("Return to other pages", SecondBookChoice)
+        AddOption("Return to other pages", () => {
+            focusedObjectDiv.replaceChildren([])
+            SecondBookChoice()
+        })
     })
 
     AddOption("Read third page", () => {
         ClearOptions()
-        // TODO: Display page image when made
-        // Chapter 2. Page 1. First Word - Understandably
+        pageImage.src = "/Assets/Chapter2.png"
+        focusedObjectDiv.replaceChildren(pageImage)
 
-        AddOption("Return to other pages", SecondBookChoice)
+        AddOption("Return to other pages", () => {
+            focusedObjectDiv.replaceChildren([])
+            SecondBookChoice()
+        })
     })
-    AddOption("Return to note", NoteChoice)
+    AddOption("Return to note", () => {
+        focusedObjectDiv.replaceChildren([])
+        NoteChoice()
+    })
 
 
 }
@@ -436,39 +468,43 @@ function BoxChoice() {
     AddOption("Return to books", FirstBookChoice)
 
     AddOption("Enter Code", () => {
+        const CorrectCode = "6129"
+
         ClearOptions()
         HideMessage()
+        const focusedObjectDiv = document.getElementById("FocusedObject")
+
         let codeInput = document.createElement('input')
         codeInput.id = "CodeInput"
-
-        document.getElementById("FocusedObject").appendChild(codeInput)
+        focusedObjectDiv.appendChild(codeInput)
         
+        codeInput.focus()
         AddOption("Confirm", () => {
-            const CorrectCode = 6129
-            let CodeGuessed = false
-
-            while (!CodeGuessed) {
-                let inputValue = document.getElementById("CodeInput").value
-                if (inputValue == CorrectCode) {
-                    CodeGuessed = true
-                    break;
-                } else {
-                    ShowMessage("Incorrect Code")
-                }
+            let inputValue = codeInput.value
+            if (inputValue !== CorrectCode) {
+                ShowMessage("Incorrect Code")
+                return  
             }
-            document.getElementById("FocusedObject").replaceChildren([])
-
-
             ShowMessage("The box opens with a loud creak. Inside you find an unfinished note seemingly written in a hurry")
             ClearOptions()
             AddOption("Read note", () => {
-                // TODO: Show note in middle of screen "You must get away from this place. It is over___ "
+                let noteImage = document.createElement('img')
+                noteImage.src = "/Assets/note.png"
+                noteImage.style = "height: 100%"
+                focusedObjectDiv.appendChild(noteImage)
+        
+
+                
                 ShowMessage("The last letters appear to be smudged")
                 ClearOptions()
 
-                AddOption("Return to books", SecondBookChoice)
+                AddOption("Return to books", () => {
+                    focusedObjectDiv.replaceChildren([])
+                    SecondBookChoice()
+                })
             })
-
+        
+            focusedObjectDiv.replaceChildren([])
         })
         AddOption("Return to books", FirstBookChoice)
     })
@@ -476,37 +512,38 @@ function BoxChoice() {
 
 
 function NoteChoice() {
+    const CorrectLetters = "run"
     ClearOptions()
 
-    // TODO: Show note in middle of screen "You must get away from this place. It is over___ "
     ShowMessage("What are the last three letters?")
     AddOption("Fill in the blanks", () => {
         ClearOptions()
-        let codeInput = document.createElement('input')
-        codeInput.id = "CodeInput"
-        document.getElementById("FocusedObject").appendChild(codeInput)
+        const focusedObjectDiv = document.getElementById("FocusedObject")
+        
+        let noteImage = document.createElement('img')
+        noteImage.src = "/Assets/note.png"
+        noteImage.style = "height: 100%"
+        focusedObjectDiv.appendChild(noteImage)
+        focusedObjectDiv.append(document.createElement('br'))
+
+        let WordInput = document.createElement('input')
+        WordInput.id = "WordInput"
+        focusedObjectDiv.appendChild(WordInput)
+        WordInput.focus()
 
         AddOption("Confirm", () => {
-            const CorrectLetters = "run"
-
-            let CodeGuessed = false
-
-            while (!CodeGuessed) {
-                let inputValue = document.getElementById("CodeInput").value
-                if (inputValue == CorrectLetters) {
-                    CodeGuessed = true
-                    break;
-                } else {
-                    ShowMessage("Hmm, that doesn't make sense")
-                }
+            let inputValue = WordInput.value
+            if (inputValue !== CorrectLetters) {
+                ShowMessage("Hmm, that doesn't make sense")
+                return
+                
             }
-
             ClearOptions()
             HideMessage()
-            document.getElementById("FocusedObject").replaceChildren([])
+            
             AddOption("Run", () => {
                 // TODO: Confirm which room is next
-                TransitionToRoom(1)
+                TransitionToRoom()
             })
         })
 
