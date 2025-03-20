@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="test.css">
+        <link rel="stylesheet" href="room.css">
         <script src="https://kit.fontawesome.com/93f8221981.js" crossorigin="anonymous"></script>  
-        <script src="test.js"></script>
-        <link rel="stylesheet" href="test.css">
+        <script src="room.js"></script>
+        <link rel="stylesheet" href="room.css">
     </head>
     <body>
         <div id="GameWindow">
@@ -30,29 +30,5 @@
                 <button id="inspectLock" onclick="inspectLock()">Inspect Lock</button>
             </div>
         </div>
-
-        <script src="test.js">
-            window.addEventListener('load', () => {
-                console.log("Window loaded. Initializing room...");
-                if (typeof InitRoom === 'function') {
-                    InitRoom();
-                    displayRoomDescription();
-                } else {
-                    console.error("InitRoom function is missing.");
-                }
-            });
-
-            function lookAtNote() {
-                displayRoomDescription();
-            }
-
-            function tryOpenDrawers() {
-                ShowMessage("The drawers are locked. You should look around the room more.");
-            }
-
-            function inspectLock() {
-                displayRoomDescription();
-            }
-        </script>
     </body>
 </html>

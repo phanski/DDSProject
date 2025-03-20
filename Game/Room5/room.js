@@ -524,6 +524,17 @@ function myFunction() {
 document.getElementById("showPopup").addEventListener("click", showPopup);
 
 
+function lookAtNote() {
+    displayRoomDescription();
+}
+
+function tryOpenDrawers() {
+    ShowMessage("The drawers are locked. You should look around the room more.");
+}
+
+function inspectLock() {
+    displayRoomDescription();
+}
 
 
 
@@ -534,7 +545,13 @@ document.getElementById("showPopup").addEventListener("click", showPopup);
  */
 function StartRoom() {
     
-    
+    console.log("Window loaded. Initializing room...");
+    if (typeof InitRoom === 'function') {
+        InitRoom();
+        displayRoomDescription();
+    } else {
+        console.error("InitRoom function is missing.");
+    }
     // AddOption("Show Options", () => ShowMessage('New Option'))
     // AddOption("Hide Options", () => {
     //     HideOptions();
