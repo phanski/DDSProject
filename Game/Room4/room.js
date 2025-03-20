@@ -140,7 +140,7 @@ function AddEnergy(amount) {
  * Transitions to another room safely, ensuring data is saved to transfer to new room
  * @param {integer} roomNumber 
  */
-function TransitionToRoom(roomNumber) {
+function TransitionToRoom(roomNumber) { //
     // Cleared to ensure timer doesn't tick while user is waiting for room to load
     clearInterval(TimerInterval)
 
@@ -367,25 +367,108 @@ function delay(time) {
     return new Promise(resolve => setTimeout(resolve, time));
   }
 
+// FUNCTION TO DISABLE OPTIONS
+function DisableOptions() {
+let Options = document.getElementById("UserOptions");
+for (let i = 0; i < Options.children.length; i++) {
+    Options.children[i].style.pointerEvents = "none";
+}}
 
 
+// FUNCTION TO ENABLE OPTIONS
+function EnableOptions() {
+    let Options = document.getElementById("UserOptions");
+    for (let i = 0; i < Options.children.length; i++) {
+        Options.children[i].style.pointerEvents = "auto";
+    }}
 
+function thing(messageText) {
+    DisableOptions();
+    delay(1000).then(() => {
+        ShowMessage(messageText);
+        EnableOptions();
+    });
+    
+    
+}
 
 /**
  * Main Function which is called when room page is loaded
  */
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// fix incorrect delay thing function
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function StartRoom() {
     SetRoomName("Small, Dark Room");
     ShowMessage("You enter a small, dark room. There is a table in the centre with a note on it, and a door opposite to you.");
-    
+
     AddOption("Read the note", () => {
         ShowMessage('It reads "LRRR"');
         // HideOptions();
-        delay(1000).then(() => {
-            // ShowOptions();
-            ShowMessage("You enter a small, dark room. There is a table in the centre with a note on it, and a door opposite to you.");
-        });
+        thing("You enter a small, dark room. There is a table in the centre with a note on it, and a door opposite to you.");
+        
     });
 
     AddOption("Go through the door", () => {
@@ -395,15 +478,7 @@ function StartRoom() {
         ShowMessage('You find yourself in a narrow corridor which extends to your left and right.');
         ClearOptions();
 
-        // incorrect #1
-        AddOption("Go right", () => {
-            ShowMessage('You hit a dead end. You turn back.');
-            // HideOptions();
-            delay(1000).then(() => {
-                // ShowOptions();
-                ShowMessage('Retracing your steps, you are back in the narrow corridor which still extends to your left and right.');
-            });
-        });
+        
 
         // correct #1
         AddOption("Go left", () => {
@@ -415,26 +490,23 @@ function StartRoom() {
             AddOption("Go left", () => {
                 ShowMessage('You hit a dead end. You turn back.');
                 // HideOptions();
-                delay(1000).then(() => {
-                    // ShowOptions();
-                    ShowMessage('You are back in the second narrow corridor which, surprisingly, still extends to your left and right.');
-                });
+                
+                thing('You are back in the second narrow corridor which, surprisingly, still extends to your left and right.');
             });
 
             // correct #2
             AddOption("Go right", () => {
                 SetRoomName("Corridor #3");
-                ShowMessage('You find yourself in yet another narrow corridor which extends to your left and right.');
+                ShowMessage("As you move along the corridor, you see a faint glow emanating through the next opening.");
+                ShowMessage('You find yourself in yet another narrow corridor which extends to your left and right. You pick up an energy pack.');
+                AddEnergy(5);
                 ClearOptions();
 
                 // incorrect #3
                 AddOption("Go left", () => {
                     ShowMessage('You hit a dead end. You turn back.');
                     // HideOptions();
-                    delay(1000).then(() => {
-                        // ShowOptions();
-                        ShowMessage('You retrace your steps back to the third narrow corridor, which still extends to your left and right.');
-                    });
+                    thing('You retrace your steps back to the third narrow corridor, which still extends to your left and right.');
                 });
 
                 // correct #3
@@ -447,10 +519,7 @@ function StartRoom() {
                     AddOption("Go left", () => {
                         ShowMessage('You hit a dead end. You turn back.');
                         // HideOptions();
-                        delay(1000).then(() => {
-                            // ShowOptions();
-                            ShowMessage('You retrace your steps back to the fourth narrow corridor, which still extends to your left and right.');
-                        });
+                        thing('You retrace your steps back to the fourth narrow corridor, which still extends to your left and right.');
                     });
     
                     // correct #4
@@ -458,22 +527,33 @@ function StartRoom() {
                         SetRoomName("End?");
                         ShowMessage('Congratulations! You made it to the end. You see a door in front of you.');
                         ClearOptions();
-                        AddOption("Exit room", () => alert("Room finished"));
+                        AddOption("Exit room", () => {
+                            alert("Room finished");
+                            location.reload();
+                        });
                         
                     });
                 });
             });
         });
 
+        // incorrect #1
+        AddOption("Go right", () => {
+            ShowMessage('You get caught in a trap and debris falls from the ceiling. You lose energy.');
+            RemoveEnergy(5);
+            // HideOptions();
+            thing('Retracing your steps, you are back in the narrow corridor which still extends to your left and right.');
+
+        });
+
         
 
-        // HideOptions();
-        // setTimeout(ShowOptions, 1000);
+        
     });
 
     // TODO:
-    // GetOptions
-    // RemoveOptions(); to remove the "Read the note" and "Go through the door" options
+    // <^>
+    
 
     // AddOption("Hide Options", () => {
     //     HideOptions();
@@ -491,6 +571,6 @@ function StartRoom() {
     //     })
     // })
 
-    // SetBackgroundImage("/Assets/scaryimageREMOVE--------------------------.webp")
+    
     
 }
