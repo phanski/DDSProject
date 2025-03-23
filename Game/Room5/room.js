@@ -28,17 +28,18 @@ function AddOption(optionText, action) {
     }
 }
 
-// Displays a message in the Message container
-function ShowMessage(messageText) {
-    const messageContainer = document.getElementById("Message");
-    if (messageContainer) {
-        messageContainer.style.display = "block";
-        messageContainer.querySelector("h1").textContent = messageText;
-    }
-}
+// // Displays a message in the Message container
+// function ShowMessage(messageText) {
+//     const messageContainer = document.getElementById("Message");
+//     if (messageContainer) {
+//         messageContainer.style.display = "block";
+//         messageContainer.querySelector("h1").textContent = messageText;
+//     }
+// }
 
 // Display the main room description and buttons
 function displayRoomDescription() {
+   
     console.log("displayRoomDescription called");
 
     if (typeof ShowMessage !== "function" || typeof AddOption !== "function") {
@@ -55,27 +56,168 @@ function displayRoomDescription() {
     AddOption("Inspect Lock", inspectLock);
 }
 
-// Look at the note - displays all Caesar cipher shifts in a paragraph
+
 function lookAtNote() {
     console.log("lookAtNote called");
     ClearOptions();
 
-    const optionsContainer = document.getElementById("UserOptions");
-    const noteParagraph = document.createElement("p");
+    const optionsContainer = document.getElementById("FocusedObject");
 
-    let noteContent = "";
-    for (let i = 0; i < 26; i++) {
-        // const decoded = caesarCipher(password, 26 - i);+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        const decoded = caesarCipher(decoded_password, 26 - i);
-        noteContent += `${decoded}<br>`;
+    // Create a container for the note with the scroll image as background
+    const noteContainer = document.createElement("div");
+    noteContainer.style.position = "relative";
+    noteContainer.style.width = "360px";
+    noteContainer.style.height = "360px";
+    noteContainer.style.backgroundImage = "url('/Users/jonah/Downloads/DDSProject/DDSProject/Assets/scroll_no_bg.png')";
+    noteContainer.style.backgroundSize = "cover";
+    noteContainer.style.padding = "20px";
+    noteContainer.style.color = "black";
+    noteContainer.style.fontFamily = "monospace";
+
+    // Paragraph to display the cipher
+    const noteParagraph = document.createElement("p");
+    noteParagraph.style.position = "absolute";
+    
+
+    noteParagraph.style.top = "70px";
+    noteParagraph.style.left = "120px";
+
+    noteContainer.appendChild(noteParagraph);
+    optionsContainer.appendChild(noteContainer);
+
+    let isNoteFlipped = false; // Track whether the note is flipped.
+
+    // Function to display the cipher based on note side
+    function updateCipher() {
+        let noteContent = "";
+        for (let i = 0; i < 13; i++) {
+            // Change the Caesar shift based on note side.
+            const decoded = caesarCipher(decoded_password, isNoteFlipped ? 13 + i : 13 - i);
+            noteContent += `${decoded}<br>`;
+        }
+        noteParagraph.innerHTML = noteContent;
     }
 
-    noteParagraph.innerHTML = noteContent;
-    optionsContainer.appendChild(noteParagraph);
+    // Initial display of the note.
+    ShowMessage("The note has some random letters on it and it's double-sided.");
+    updateCipher();
 
-    AddOption("Back", displayRoomDescription);
-}
+    // Button: Flip Note
+    AddOption("Flip Note", () => {
+        isNoteFlipped = !isNoteFlipped; // Toggle the note side.
+        updateCipher(); // Refresh cipher display.
+    });
 
+    // Button: Back (Clears the cipher and shows the room description)
+    AddOption("Back", () => {
+        optionsContainer.innerHTML = ""; // Clear the note content.
+        displayRoomDescription(); // Return to the room description.
+    });
+} 
+
+
+
+// function lookAtNote() {
+//     console.log("lookAtNote called");
+//     ClearOptions(); // Clears any existing options on the screen.
+
+//     const optionsContainer = document.getElementById("FocusedObject");
+//     const noteParagraph = document.createElement("p");
+//     optionsContainer.appendChild(noteParagraph);
+
+//     let isNoteFlipped = false; // Track whether the note is flipped.
+
+//     // Function to display the cipher based on note side
+//     function updateCipher() {
+//         let noteContent = "";
+//         for (let i = 0; i < 13; i++) {
+//             // Change the Caesar shift based on note side.
+//             const decoded = caesarCipher(decoded_password, isNoteFlipped ? 13 + i : 13 - i);
+//             noteContent += `${decoded}<br>`;
+//         }
+//         noteParagraph.innerHTML = noteContent;
+//     }
+
+//     // Initial display of the note.
+//     ShowMessage("The note has some random letters on it and it's double-sided.");
+//     updateCipher();
+
+//     // Button: Flip Note
+//     AddOption("Flip Note", () => {
+//         isNoteFlipped = !isNoteFlipped; // Toggle the note side.
+//         updateCipher(); // Refresh cipher display.
+//     });
+
+//     // Button: Back (Clears the cipher and shows the room description)
+//     AddOption("Back", () => {
+//         optionsContainer.innerHTML = ""; // Clear the note content.
+//         displayRoomDescription(); // Return to the room description.
+//     });
+// }
+
+
+// Look at the note - displays all Caesar cipher shifts in a paragraph
+// let isNoteFlipped = false;
+// function lookAtNote() {
+//     console.log("lookAtNote called");
+//     ClearOptions();
+
+//     const optionsContainer = document.getElementById("FocusedObject");
+//     const noteParagraph = document.createElement("p");
+//     ShowMessage("The note has some random letters on it and its double sided.");
+//     let noteContent = "";
+//     for (let i = 0; i < 13; i++) {
+//         // const decoded = caesarCipher(password, 26 - i);+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//         const decoded = caesarCipher(decoded_password, 13 - i);
+//         noteContent += `${decoded}<br>`;
+//     }
+
+//     noteParagraph.innerHTML = noteContent;
+//     optionsContainer.appendChild(noteParagraph);
+
+    
+
+//     // AddOption("Flip Note", flipedNote);
+
+//     AddOption("Flip Note", () => {
+//         isNoteFlipped = !isNoteFlipped; // Toggle note state
+//         lookAtNote(); // Refresh the note display
+//     });
+
+//     AddOption("Back", displayRoomDescription);
+
+//     if (flipedNote.clicked == true) {
+//         noteParagraph.innerHTML = "";
+
+//     }
+
+// }
+
+// function flipedNote() {
+//     console.log("flipedNote Called");
+    
+//     optionsContainer.innerHTML = "";
+//     const optionsTwoContainer = document.getElementById("FocusedObject");
+//     const noteTwoParagraph = document.createElement("p");
+//     ShowMessage("The note has some random letters on it and its double sided.");
+//     let noteTwoContent = "";
+//     const noteTwo = "pdnlap hstwp jzf nly";
+//     for (let i = 0; i < 13; i++) {
+//         // const decoded = caesarCipher(password, 26 - i);+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//         const decodeTwo = caesarCipher(noteTwo, 13 - i);
+//         noteTwoContent += `${decodeTwo}<br>`;
+//     }
+
+//     noteTwoParagraph.innerHTML = noteTwoContent;
+//     optionsTwoContainer.appendChild(noteTwoParagraph);
+
+   
+
+//     // AddOption("Back", displayRoomDescription);
+//     AddOption("Flip Note", lookAtNote)
+//     AddOption("Back", displayRoomDescription);
+
+// }
 // Try to open drawers - displays a locked message
 function tryOpenDrawers() {
     console.log("tryOpenDrawers called");
@@ -87,11 +229,23 @@ function inspectLock() {
     console.log("inspectLock called");
     ClearOptions();
 
-    // Generate a random shift between 10 and 25 (so the answer isn't at shift 0)
-    const randomShift = Math.floor(Math.random() * 16) + 10;
-    const encodedMessage = caesarCipher(password, randomShift);
+    const optionsContainer = document.getElementById("FocusedObject");
+    const lockDiv = document.createElement("div");
+    lockDiv.style.position = "relative";
+    lockDiv.style.width = "360px";
+    lockDiv.style.height = "360px";
+    lockDiv.style.backgroundImage = "url('/Users/jonah/Downloads/DDSProject/DDSProject/Assets/doorlock.webp')";
+    lockDiv.style.backgroundSize = "cover";
+    lockDiv.style.padding = "20px";
+    lockDiv.style.color = "black";
+    lockDiv.style.fontFamily = "monospace";
 
-    ShowMessage(`pdnlap hstwp jzf nly`);
+    optionsContainer.appendChild(lockDiv);
+
+  
+
+    ShowMessage("A lock with a strange note appears above the lock.");
+   
 
     const input = document.createElement("input");
     input.type = "text";
@@ -101,25 +255,27 @@ function inspectLock() {
     AddOption("Submit", () => {
         if (input.value.toLowerCase() === password) {
             ShowMessage("Correct! The lock opens.");
+            NextRoom();
         } else {
             ShowMessage("Incorrect. Try again.");
         }
     });
 
-    AddOption("Back", displayRoomDescription);
+    AddOption("Back", () => {
+        optionsContainer.innerHTML = "";
+        displayRoomDescription();
+    });
 }
 
-// Initialize the room and its functionality
-window.addEventListener('load', () => {
-    console.log("Window loaded. Initializing room...");
+function NextRoom() {
+    console.log("Next Room Called");
+    ClearOptions();
 
-    if (typeof InitRoom === 'function') {
-        InitRoom();
-        displayRoomDescription();
-    } else {
-        console.error("InitRoom function is missing.");
-    }
-});
+    AddOption("Next Room", () =>{
+        window.location.href = 'Next_Room.html'; //change this so that it takes you ton the next room change location only
+    });
+
+}
 /*
 * Boilerplate code 
 */
@@ -524,17 +680,11 @@ function myFunction() {
 document.getElementById("showPopup").addEventListener("click", showPopup);
 
 
-function lookAtNote() {
-    displayRoomDescription();
-}
+// function tryOpenDrawers() {
+//     ShowMessage("The drawers are locked. You should look around the room more.");
+// }
 
-function tryOpenDrawers() {
-    ShowMessage("The drawers are locked. You should look around the room more.");
-}
 
-function inspectLock() {
-    displayRoomDescription();
-}
 
 
 
@@ -544,6 +694,8 @@ function inspectLock() {
  * Main Function which is called when room page is loaded
  */
 function StartRoom() {
+    
+    
 
     // AddOption("Show Options", () => ShowMessage('New Option'))
     // AddOption("Hide Options", () => {
@@ -564,8 +716,12 @@ function StartRoom() {
     //     })
         
     // })
-    SetBackgroundImage("/Assets/scaryimageREMOVE--------------------------.webp")
-    SetRoomName("Living Room")
+    // AddOption("Look at note", lookAtNote)
+    // AddOption("Try to open doors", tryOpenDrawers)
+    // AddOption("Inspect Lock", inspectLock)
+    displayRoomDescription();
+    SetBackgroundImage("url('DDSProject/Assets/jonah.room.webp')")
+    SetRoomName("Corridoor")
 }
 
 

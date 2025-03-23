@@ -39,8 +39,10 @@ body {
     background-color: grey;
     margin: 0;
     padding: 0;
+    
 
 }
+
 
 #GameWindow {
     grid-row: 1;
@@ -59,6 +61,7 @@ body {
 
 
 #GameView {
+    background-image: url(../../Assets/jonah.room.webp);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 0px 0px;
@@ -91,7 +94,9 @@ body {
 
 
 #InfoBar {
-    background-color: blue;
+    /* background-color: blue; */
+    background-image: url(../../Assets/plank.jpeg);
+    color: wheat;
     margin: 0.2em;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -112,7 +117,8 @@ body {
     grid-row: 2;
     grid-column: 1;
 
-    background-color: green;
+    /* background-color: green; */
+    background-image: url(../../Assets/plank.jpeg);
     text-align: center;
     display: flex;
     flex-direction: row;
@@ -125,14 +131,17 @@ body {
 .UserOption {
     padding: 20px 80px;
     margin: 20px;
-    border: 5px solid black;
+    /* border: 5px solid black; */
+    border: 5px solid wheat ;
+    color: wheat;
     cursor: pointer;
     user-select: none;
     border-radius: 9px;
 }
 
 .UserOption:hover {
-    background-color: #00FD00;
+    background-color: wheat;
+    color: burlywood;
 }
 
 #Timer {
