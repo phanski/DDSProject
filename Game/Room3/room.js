@@ -308,18 +308,28 @@ async function executeDatabaseQuery(SQLQuery) {
     return DBPromise
 }
 
+/**
+ * Shows a message in the predefined message popup
+ * @param {string} messageText 
+ */
 function ShowMessage(messageText) {
     let message = document.getElementById("Message")
     message.style.display = "block"
     message.children[0].textContent = messageText
 }
 
+/**
+ * Hides the message popup from the user
+ */
 function HideMessage() {
     let message = document.getElementById("Message")
 
     message.style.display = "none"
 }
 
+/**
+ * Removes options bar from user to allow for more room for UI
+ */
 function HideOptions() {
     let OptionsBar = document.getElementById("UserOptions")
     OptionsBar.style.display = "none;"
@@ -331,6 +341,9 @@ function HideOptions() {
     GameView.style.gridTemplateRows = "9.6% 78.4% 12%"
 }
 
+/**
+ * Shows options bar to user
+ */
 function ShowOptions() {
     let OptionsBar = document.getElementById("UserOptions")
     OptionsBar.style.display = ""
@@ -345,196 +358,78 @@ function ShowOptions() {
 /* 
 * Boilerplate code end
 */
-// document.addEventListener("DOMContentLoaded", function() {
-//       // Elements for Phases 1 & 2
-//       const buttons = document.querySelectorAll("#buttons button");
-//       const feedback = document.getElementById("puzzleFeedback");
-//       const submitBtn = document.getElementById("submitPuzzle");
-//       const dialSection = document.getElementById("dial-section");
-//       const dial1 = document.getElementById("dial1");
-//       const dial2 = document.getElementById("dial2");
 
-//       // Elements for Phase 3 (keypad)
-//       const keypadSection = document.getElementById("keypad-section");
-//       const keypadDisplay = document.getElementById("keypad-display");
-//       const keypadButtons = document.querySelectorAll("#keypad-buttons button[data-digit]");
-//       const keypadClear = document.getElementById("keypad-clear");
-
-//       // Track puzzle phases: 1 = button sequence, 2 = dial adjustment, 3 = keypad entry
-//       let phase = 1;
-//       let sequenceInput = "";
-//       let keypadInput = "";
-//       const correctSequence = "BADC";    // Phase 1 correct sequence
-//       const forbiddenPattern = "BAAD";    // Forbidden code
-//       const correctDial1 = 3;              // Phase 2 dial values
-//       const correctDial2 = 7;
-//       const correctKeypad = "3145";        // Phase 3 correct numeric code
-
-//       // Utility: count matching characters in sequence
-//       function countSequenceMatches(input, correct) {
-//         let matches = 0;
-//         for (let i = 0; i < Math.min(input.length, correct.length); i++) {
-//           if (input[i] === correct[i]) matches++;
-//         }
-//         return matches;
-//       }
-
-//       // Utility: themed hint for button sequence (Phase 1)
-//       function getSequenceHint(input) {
-//         const matches = countSequenceMatches(input, correctSequence);
-//         if (matches === 0) return "The symbols remain a jumbled enigma.";
-//         if (matches < correctSequence.length) return `You have ${matches} symbol(s) resonating with the hidden code.`;
-//         return "";
-//       }
-
-//       // Utility: themed feedback for dial values (Phase 2)
-//       function getDialFeedback(current, correct, dialName) {
-//         const diff = Math.abs(current - correct);
-//         if (diff === 0) return `The ${dialName} aligns perfectly.`;
-//         if (diff === 1) return `The ${dialName} shimmers almost in harmony.`;
-//         if (current < correct) return `The ${dialName} seems too low, yearning to rise.`;
-//         return `The ${dialName} is set too high, lost in the void.`;
-//       }
-
-//       // Phase 1: Button clicks (active only in Phase 1)
-//       buttons.forEach(button => {
-//         button.addEventListener("click", function() {
-//           if (phase === 1) {
-//             const value = button.getAttribute("data-value");
-//             sequenceInput += value;
-//             feedback.textContent = "Current Sequence: " + sequenceInput;
-//           }
-//         });
-//       });
-
-//       // Phase 3: Keypad button clicks
-//       keypadButtons.forEach(btn => {
-//         btn.addEventListener("click", function() {
-//           if (phase === 3) {
-//             const digit = btn.getAttribute("data-digit");
-//             keypadInput += digit;
-//             keypadDisplay.textContent = "Current Code: " + keypadInput;
-//           }
-//         });
-//       });
-//       keypadClear.addEventListener("click", function() {
-//         if (phase === 3) {
-//           keypadInput = "";
-//           keypadDisplay.textContent = "Current Code: ";
-//         }
-//       });
-
-//       // Submit button (handles actions for all phases)
-//       submitBtn.addEventListener("click", function() {
-//         if (phase === 1) {
-//           // Phase 1: Process button sequence
-//           if (sequenceInput === forbiddenPattern) {
-//             feedback.textContent = "A chilling wind howls... You have invoked the forbidden sequence 'BAAD'. The manor condemns you to DEATH! Restarting...";
-//             setTimeout(() => window.location.reload(), 3000);
-//             return;
-//           }
-//           if (sequenceInput === correctSequence) {
-//             feedback.textContent = "The hidden symbols resonate... The control panel reveals the secret dials!";
-//             dialSection.style.display = "block";
-//             document.getElementById("buttons").style.display = "none";
-//             phase = 2;
-//             sequenceInput = "";
-//             // Update clue text for Phase 2 (hinting at digit 1)
-//             document.getElementById("clueText").textContent = "A SOLITARY beacon in the gloom beckons. Adjust the dials to their proper positions.";
-//           } else {
-//             const hint = getSequenceHint(sequenceInput);
-//             feedback.textContent = `The panel murmurs: "${hint}" Try again.`;
-//             sequenceInput = "";
-//           }
-//         } else if (phase === 2) {
-//           // Phase 2: Process dial values
-//           const currentDial1 = parseInt(dial1.value, 10);
-//           const currentDial2 = parseInt(dial2.value, 10);
-//           if (currentDial1 === correctDial1 && currentDial2 === correctDial2) {
-//             feedback.textContent = "The mechanisms click... A hidden compartment opens, revealing a numeric keypad!";
-//             dialSection.style.display = "none";
-//             keypadSection.style.display = "block";
-//             phase = 3;
-//             // Update clue text for Phase 3 with the cryptic passage
-//             keypadInput = "";
-//             keypadDisplay.textContent = "Current Code: ";
-//           } else {
-//             const dial1Feedback = getDialFeedback(currentDial1, correctDial1, "first dial");
-//             const dial2Feedback = getDialFeedback(currentDial2, correctDial2, "second dial");
-//             feedback.textContent = `The dials whisper: "${dial1Feedback} ${dial2Feedback}" Adjust them carefully.`;
-//           }
-//         } else if (phase === 3) {
-//           // Phase 3: Process keypad input
-//           if (keypadInput === correctKeypad) {
-//             feedback.textContent = "The final mechanism hums with ancient power. The secret door slowly opens, revealing mysteries beyond...";
-//           } else {
-//             feedback.textContent = `The keypad remains unyielding. The code "${keypadInput}" is not correct. Try again.`;
-//             keypadInput = "";
-//             keypadDisplay.textContent = "Current Code: ";
-//           }
-//         }
-//       });
-//     });
 //EDIT BELOW HERE
 
+/**
+ * Removes options bar from user and message popup slot to allow for more room for UI
+ */
+function HideOptionsAndMessage() {
+    let OptionsBar = document.getElementById("UserOptions")
+    OptionsBar.style.display = "none;"
 
+    let GameWindow = document.getElementById("GameWindow")
+    GameWindow.style.gridTemplateRows = "100%"
+
+    let GameView = document.getElementById("GameView")
+    GameView.style.gridTemplateRows = "9.6% 90.4%"
+}
 
 /**
  * Main Function which is called when room page is loaded
  */
 function StartRoom() {
+    // Elements for Phases 1 & 2
     const buttons = document.querySelectorAll("#buttons button");
     const feedback = document.getElementById("puzzleFeedback");
     const submitBtn = document.getElementById("submitPuzzle");
     const dialSection = document.getElementById("dial-section");
     const dial1 = document.getElementById("dial1");
     const dial2 = document.getElementById("dial2");
-  
-    // Track current puzzle phase: 1 = button sequence, 2 = dial adjustment
+
+    // Elements for Phase 3 (keypad)
+    const keypadSection = document.getElementById("keypad-section");
+    const keypadDisplay = document.getElementById("keypad-display");
+    const keypadButtons = document.querySelectorAll("#keypad-buttons button[data-digit]");
+    const keypadClear = document.getElementById("keypad-clear");
+
+    // Track puzzle phases: 1 = button sequence, 2 = dial adjustment, 3 = keypad entry
     let phase = 1;
     let sequenceInput = "";
-    const correctSequence = "BADC"; // Correct button pattern
-    const forbiddenPattern = "BAAD"; // Forbidden code
-    const correctDial1 = 3;
+    let keypadInput = "";
+    const correctSequence = "BADC";    // Phase 1 correct sequence
+    const forbiddenPattern = "BAAD";    // Forbidden code
+    const correctDial1 = 3;              // Phase 2 dial values
     const correctDial2 = 7;
-  
-    // Utility: count matching characters in correct positions
+    const correctKeypad = "3145";        // Phase 3 correct numeric code
+
+    // Utility: count matching characters in sequence
     function countSequenceMatches(input, correct) {
       let matches = 0;
       for (let i = 0; i < Math.min(input.length, correct.length); i++) {
-        if (input[i] === correct[i]) {
-          matches++;
-        }
+        if (input[i] === correct[i]) matches++;
       }
       return matches;
     }
-  
-    // Utility: themed hint for sequence input
+
+    // Utility: themed hint for button sequence (Phase 1)
     function getSequenceHint(input) {
       const matches = countSequenceMatches(input, correctSequence);
-      if (matches === 0) {
-        return "The symbols remain a jumbled enigma.";
-      } else if (matches < correctSequence.length) {
-        return `You have ${matches} symbol(s) resonating with the hidden code.`;
-      }
+      if (matches === 0) return "The symbols remain a jumbled enigma.";
+      if (matches < correctSequence.length) return `You have ${matches} symbol(s) resonating with the hidden code.`;
       return "";
     }
-  
-    // Utility: themed feedback for dial values
+
+    // Utility: themed feedback for dial values (Phase 2)
     function getDialFeedback(current, correct, dialName) {
       const diff = Math.abs(current - correct);
-      if (diff === 0) {
-        return `The ${dialName} aligns perfectly.`;
-      } else if (diff === 1) {
-        return `The ${dialName} shimmers almost in harmony.`;
-      } else if (current < correct) {
-        return `The ${dialName} seems too low, yearning to rise.`;
-      } else {
-        return `The ${dialName} is set too high, lost in the void.`;
-      }
+      if (diff === 0) return `The ${dialName} aligns perfectly.`;
+      if (diff === 1) return `The ${dialName} shimmers almost in harmony.`;
+      if (current < correct) return `The ${dialName} seems too low, yearning to rise.`;
+      return `The ${dialName} is set too high, lost in the void.`;
     }
-  
-    // Handle button clicks (active only in Phase 1)
+
+    // Phase 1: Button clicks (active only in Phase 1)
     buttons.forEach(button => {
       button.addEventListener("click", function() {
         if (phase === 1) {
@@ -544,40 +439,71 @@ function StartRoom() {
         }
       });
     });
-  
-    // Handle submit button click (acts for both phases)
+
+    // Phase 3: Keypad button clicks
+    keypadButtons.forEach(btn => {
+      btn.addEventListener("click", function() {
+        if (phase === 3) {
+          const digit = btn.getAttribute("data-digit");
+          keypadInput += digit;
+          keypadDisplay.textContent = "Current Code: " + keypadInput;
+        }
+      });
+    });
+    keypadClear.addEventListener("click", function() {
+      if (phase === 3) {
+        keypadInput = "";
+        keypadDisplay.textContent = "Current Code: ";
+      }
+    });
+
+    // Submit button (handles actions for all phases)
     submitBtn.addEventListener("click", function() {
       if (phase === 1) {
         // Phase 1: Process button sequence
         if (sequenceInput === forbiddenPattern) {
-          feedback.textContent = "A chilling wind howls... You have invoked the forbidden sequence 'DEATH'. The manor condemns you! Restarting...";
+          feedback.textContent = "A chilling wind howls... You have invoked the forbidden sequence 'BAAD'. The manor condemns you to DEATH! Restarting...";
           setTimeout(() => window.location.reload(), 3000);
           return;
         }
         if (sequenceInput === correctSequence) {
           feedback.textContent = "The hidden symbols resonate... The control panel reveals the secret dials!";
-          // Reveal the dials and transition to Phase 2
           dialSection.style.display = "block";
-          // Optionally hide the button panel since it's no longer needed
           document.getElementById("buttons").style.display = "none";
           phase = 2;
-          // Clear sequence input for clarity (if needed)
           sequenceInput = "";
+          // Update clue text for Phase 2 (hinting at digit 1)
+          document.getElementById("clueText").textContent = "A SOLITARY beacon in the gloom beckons. Adjust the dials to their proper positions.";
         } else {
           const hint = getSequenceHint(sequenceInput);
-          feedback.textContent = `The control panel murmurs: "${hint}" Try again.`;
-          sequenceInput = ""; // Reset sequence input for a new attempt
+          feedback.textContent = `The panel murmurs: "${hint}" Try again.`;
+          sequenceInput = "";
         }
       } else if (phase === 2) {
         // Phase 2: Process dial values
         const currentDial1 = parseInt(dial1.value, 10);
         const currentDial2 = parseInt(dial2.value, 10);
         if (currentDial1 === correctDial1 && currentDial2 === correctDial2) {
-          feedback.textContent = "The mechanisms click into place, and the secret door creaks open...";
+          feedback.textContent = "The mechanisms click... A hidden compartment opens, revealing a numeric keypad!";
+          dialSection.style.display = "none";
+          keypadSection.style.display = "block";
+          phase = 3;
+          // Update clue text for Phase 3 with the cryptic passage
+          keypadInput = "";
+          keypadDisplay.textContent = "Current Code: ";
         } else {
           const dial1Feedback = getDialFeedback(currentDial1, correctDial1, "first dial");
           const dial2Feedback = getDialFeedback(currentDial2, correctDial2, "second dial");
           feedback.textContent = `The dials whisper: "${dial1Feedback} ${dial2Feedback}" Adjust them carefully.`;
+        }
+      } else if (phase === 3) {
+        // Phase 3: Process keypad input
+        if (keypadInput === correctKeypad) {
+          feedback.textContent = "The final mechanism hums with ancient power. The secret door slowly opens, revealing mysteries beyond...";
+        } else {
+          feedback.textContent = `The keypad remains unyielding. The code "${keypadInput}" is not correct. Try again.`;
+          keypadInput = "";
+          keypadDisplay.textContent = "Current Code: ";
         }
       }
     });
@@ -601,8 +527,8 @@ function StartRoom() {
     //     })
         
     // })
-    // SetBackgroundImage("/Assets/scaryimageREMOVE--------------------------.webp")
-    HideOptions()
+    SetBackgroundImage("/Assets/scaryimageREMOVE--------------------------.webp")
+    HideOptionsAndMessage()
     SetRoomName("Parlor Room")
 }
 
