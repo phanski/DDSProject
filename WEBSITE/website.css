@@ -28,9 +28,9 @@ register page and start layout of actual game
     top: 50px;
 }
 
-/* Image styles */
+/* Image size */
 .image-column img {
-    width: 100px; 
+    width: 250px; 
     height: auto;
     margin: 20px;
 }
@@ -45,15 +45,15 @@ register page and start layout of actual game
 /* Page background an fonts and color */
 body {
     /* background-image: url("HandOnWall.jpeg"); */
-    background-image: url(Images/HandOnWall.jpeg);
-    /* background-size: 100%; */
+    /* background-image: url(Images/HandOnWall.jpeg); */
+    background-image: url(Images/wmremove-transformed.jpeg);
+
+    background-size: 100%;
     
     background-color: #cccccc;
     font-family: 'Creepster', cursive;
     text-shadow: 4px 4px 10px black;
-    color:red;
-
-    
+    color:aliceblue
 
     }
 .row {
@@ -69,7 +69,7 @@ body {
     transform: translate(-50%, -50%);
     
     
-    gap: 300px;
+    gap: 200px;
     
 }
 .button {
@@ -103,9 +103,19 @@ body {
     flex-direction: column;    /* Stack items vertically */
     align-items: center;       /* Centers items horizontally */
     justify-content: center;   /* Centers items vertically */
-    height: 55vh;
-    width: 160vh;;
+    height: 80vh;
+    width: 185vh;;
     padding: 30px;
+}
+
+.middleForm {
+    display: flex;             /* Enables Flexbox */
+    flex-direction: column;    /* Stack items vertically */
+    align-items: center;       /* Centers items horizontally */
+    justify-content: center;   /* Centers items vertically */
+    height: 50vh;
+    width: 185vh;;
+    
 }
 .Opacity {
     opacity: 90%;
@@ -161,7 +171,7 @@ input {
 form {
     width: 300px;
     padding: 20px;
-    border: 1px solid #ccc;
+    border: 3px solid black;
     border-radius: 10px;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
