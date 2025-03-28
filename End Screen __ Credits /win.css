@@ -1,2 +1,63 @@
+#text {
+    text-align: center;
+}
 
+
+.text-box {
+    display: inline-block;
+    background-color: rgba(0, 0, 0, 0.7); /* Black with 70% opacity */
+    
+    padding: 10px; /* Space inside the box */
+    border-radius: 5px; /* Optional: rounded corners */
+}
+
+.paragraph {
+    position: absolute;
+    left: 20px;
+    top: 120px; 
+}
+
+.below {
+    position: absolute;
+    left: 150px;
+    top: 300px;
+}
+
+.quintessential-regular {
+    font-family: "Quintessential", serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: large;
+  }
   
+
+body {
+    background-image: url("ENDEND\ \(1\).jpg");
+    /* background-position: center;
+    background-repeat: no-repeat;
+    height: 100%;*/
+    background-size: cover; 
+    
+    /* background-image: url("ENDEND.jpg"); */
+    /* color: #FFD3AC; */
+    color: #ffffe3;
+    
+}
+
+.right {
+    position: absolute;
+    right: 20px;
+    top: 50px;
+    font-size: 20px;
+    
+}
+
+.bottom {
+    position: absolute;
+    bottom: 55px;  /* Distance from bottom */
+    left: 50%;  
+    transform: translateX(-50%); /* Center it */
+    text-align: center;
+    width: 80%;
+    font-size: 20px;
+}

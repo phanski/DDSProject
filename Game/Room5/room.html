@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="room.css">
+        <script src="https://kit.fontawesome.com/93f8221981.js" crossorigin="anonymous"></script>  
+        <script src="room.js"></script>
+        <link rel="stylesheet" href="room.css">
+    </head>
+    <body>
+        <!-- <div class="image-container"></div> -->
+        <div id="GameWindow">
+            <div id="GameView">
+                <div id="InfoBar">
+                    <div style="grid-column: 1; grid-row: 1;">
+                        Energy : <span id="PlayerEnergy">0</span>/100
+                    </div>
+                    <div style="grid-column: 2; grid-row: 1;"><h3 id="RoomName"></h3></div>
+                    <div id="Timer">
+                        <p>Time : <span id="PlayerTime">0:00</span></p>
+                        <button id="PauseButton"><i class="fa-solid fa-pause"></i></button>
+                    </div>
+                </div>
+                <div id="FocusedObject"></div>
+                <div id="Message"><h1></h1></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div id="UserOptions">
+                <!-- <button id="lookAtNote" onclick="lookAtNote()">Look at Note</button>
+                <button id="openDrawers" onclick="tryOpenDrawers()">Try to Open Drawers</button>
+                <button id="inspectLock" onclick="inspectLock()">Inspect Lock</button> -->
+            </div>
+        </div>
+    </body>
+</html>
