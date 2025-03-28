@@ -358,7 +358,7 @@ function StartRoom() {
         })
         
     })
-    SetBackgroundImage("/Assets/scaryimageREMOVE--------------------------.webp")
+    SetBackgroundImage("/Assets/text box_pages-to-jpg-0001.jpg")
     SetRoomName("Living Room")
 
     const knockingSound = document.getElementById('knockingSound');
