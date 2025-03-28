@@ -554,27 +554,24 @@ function NoteChoice() {
  * Main Function which is called when room page is loaded
  */
 function StartRoom() {
-    AddOption("Show Options", () => ShowMessage('New Option'))
-    AddOption("Hide Options", () => {
-        HideOptions();
-        setTimeout(ShowOptions, 1000);
-        
-    })
-    // AddOption("Show Object", () => ShowObject(`https://imgs.search.brave.com/Uv7PjPwToss4YP4krNPTTauC8y1Iq7BXFAWSoknkpAI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTEv/ODE0LzU2Ny9zbWFs/bC9yb2xsLW9mLXll/bGxvdy1zY290Y2gt/dGFwZS0zZC1oaWdo/LXF1YWxpdHktcGhv/dG8tcG5nLnBuZw`))
-    // AddOption("Hide Object", () => HideObject())
-    // AddOption("Clear Options", () => ClearOptions("You may not make an action now"))
-    // AddOption("Clear Options", () => ClearOptions())
+    SetBackgroundImage("/Assets/StudyBackground.webp")
+    SetRoomName("Study")
 
-    AddOption("Add Energy", () => AddEnergy(5))
-    AddOption("Remove Energy", () => RemoveEnergy(5))
-    AddOption("DB Test", () => {
-        executeDatabaseQuery("SELECT * FROM testUsers").then((result) => {
-            console.log(result)
+    ShowMessage("You enter the study and find it in complete disarray. Books are strewn across the floor along with torn out pages.")
+    AddOption("Investigate Further", () => {
+        ClearOptions()
+
+        ShowMessage("The desk is in a similar state to the rest of the room, however, you find a locked box with a 4 digit combination lock on top of the desk.")
+        AddOption("Search room", () => {
+            ClearOptions()
+            ShowMessage("You turn around to go search through the pile of books. As you walk away from the desk you stumble over a crooked floorboard.")
+
+            AddOption("Search books", FirstBookChoice)
+
+            AddOption("Find out what you tripped on", () => {
+                // TODO: Bonus item when inventory is added
+            })
         })
-        
-
     })
-    SetBackgroundImage("/Assets/scaryimageREMOVE--------------------------.webp")
-    SetRoomName("Living Room")  
 }
 
