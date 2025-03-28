@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Save</title>
+  <script src="js/gameSave.js"></script>
+  <script>
+    // Example game state with test values.
+    // This object now includes an inventory array to match your InventoryPart table.
+    const currentGameState = {
+      saveName: "My First Save",  // SaveFile Name
+      score: 150,                 // Test score
+      slot: "A1",                 // Save slot
+      userID: 1,                  // Test user ID (must exist in the User table)
+      roomID: 3,                  // Current room ID from the Room table
+      inventory: [1, 2]           // Hard-coded inventory item IDs (should match Item table IDs)
+      // You can add additional properties later (e.g., objectives)
+    };
+
+    // This function triggers the save by calling createNewSave from gameSave.js.
+    function saveCurrentRoom() {
+      createNewSave(currentGameState);
+    }
+  </script>
+</head>
+<body>
+  <button onclick="saveCurrentRoom()">Save Game</button>
+</body>
+</html>
