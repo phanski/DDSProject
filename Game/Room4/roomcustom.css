@@ -3,7 +3,7 @@
 }
 
 body {
-    background-color: grey;
+    background-color: black;
     margin: 0;
     padding: 0;
 
@@ -40,25 +40,31 @@ body {
 #Message {
     grid-row: 3;
     width: fit-content;
-    max-width: 80%;
-    background-color: #888C;
-    margin: 10px auto;
+    max-width: 90%;
     border: black 2px solid;
-
+    background-color: #404040;
+    color: #aaaaaa;
+    
+    font-family: monospace;
+    border-radius: 10px;
     /* Room starts with no message */
-    display: none;
+    /* display: none; */ 
 }
 
 #FocusedObject {
     max-height: 80%;
+    aspect-ratio: 1/1;
     background-color: #44444499;
     margin: 2em auto;
+
+    /* Room starts with no object */
+    display: none;
 }
 
 
 
 #InfoBar {
-    background-color: blue;
+    background-color: #060606;
     margin: 0.2em;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -69,6 +75,8 @@ body {
 }
 
 #InfoBar > * {
+    font-family: monospace;
+    color: white;
     font-size: 1.5em;
     font-weight: 900;
     text-align: center;
@@ -79,7 +87,7 @@ body {
     grid-row: 2;
     grid-column: 1;
 
-    background-color: green;
+    background-color: #060606;
     text-align: center;
     display: flex;
     flex-direction: row;
@@ -92,14 +100,16 @@ body {
 .UserOption {
     padding: 20px 80px;
     margin: 20px;
-    border: 5px solid black;
-    cursor: pointer;
+    border: black 2px solid;
+    background-color: #404040;
+    color: #aaaaaa;    cursor: pointer;
     user-select: none;
     border-radius: 9px;
+    font-family: monospace;
 }
 
 .UserOption:hover {
-    background-color: #00FD00;
+    background-color: #080808;
 }
 
 #Timer {
@@ -155,6 +165,6 @@ body {
 }
 
 .OverlayButton:hover {
-    background-color: #00FD00;
+    background-color: #090909;
     cursor: pointer;
 }

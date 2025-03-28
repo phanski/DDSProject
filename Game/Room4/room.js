@@ -140,7 +140,7 @@ function AddEnergy(amount) {
  * Transitions to another room safely, ensuring data is saved to transfer to new room
  * @param {integer} roomNumber 
  */
-function TransitionToRoom(roomNumber) {
+function TransitionToRoom(roomNumber) { //
     // Cleared to ensure timer doesn't tick while user is waiting for room to load
     clearInterval(TimerInterval)
 
@@ -224,7 +224,7 @@ function StartTimer() {
         GameState.PlayerTimeSeconds += 1
         UpdateTimerDisplay()
 
-        const FiveMinutes = 5 * 60
+        const FiveMinutes = 100 * 60
 
         if (GameState.PlayerTimeSeconds > FiveMinutes) {
             FailGame(1)
@@ -362,216 +362,215 @@ function ShowOptions() {
 
 //EDIT BELOW HERE
 
+// temporary function - made this because ShowMessage("abc"); setTimeout(ShowMessage("xyz"), 1000) didnt work and was too lazy to fix it
+function delay(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+  }
+
+// FUNCTION TO DISABLE OPTIONS
+function DisableOptions() {
+let Options = document.getElementById("UserOptions");
+for (let i = 0; i < Options.children.length; i++) {
+    Options.children[i].style.pointerEvents = "none";
+}}
 
 
+// FUNCTION TO ENABLE OPTIONS
+function EnableOptions() {
+    let Options = document.getElementById("UserOptions");
+    for (let i = 0; i < Options.children.length; i++) {
+        Options.children[i].style.pointerEvents = "auto";
+    }}
 
-function FirstBookChoice() {
-    ClearOptions()
-    ShowMessage("There are 3 books and the ground and 3 pages ripped out")
+function thing(messageText) {
+    DisableOptions();
+    delay(1000).then(() => {
+        ShowMessage(messageText);
+        EnableOptions();
+    });
     
-    let focusedObjectDiv = document.getElementById("FocusedObject")
-    let pageImage = document.createElement('img')
     
-    pageImage.style = "height: 100%"
-
-    AddOption("Read first page", () => {
-        ClearOptions()                
-        pageImage.src = "/Assets/Chapter3.png"
-        focusedObjectDiv.replaceChildren(pageImage)
-
-        AddOption("Return to other pages", () => {
-            focusedObjectDiv.replaceChildren([])
-            FirstBookChoice()
-        })
-    })
-
-    AddOption("Read second page", () => {
-        ClearOptions()
-        pageImage.src = "/Assets/Chapter1.png"
-        focusedObjectDiv.replaceChildren(pageImage)
-
-        AddOption("Return to other pages", () => {
-            focusedObjectDiv.replaceChildren([])
-            FirstBookChoice()
-        })
-    })
-
-    AddOption("Read third page", () => {
-        ClearOptions()
-        pageImage.src = "/Assets/Chapter2.png"
-        focusedObjectDiv.replaceChildren(pageImage)
-
-        AddOption("Return to other pages", () => {
-            focusedObjectDiv.replaceChildren([])
-            FirstBookChoice()
-        })
-    })
-    AddOption("Return to locked box", () => {
-        focusedObjectDiv.replaceChildren([])
-        BoxChoice()
-    })
-}
-
-function SecondBookChoice () {
-    ClearOptions()
-    ShowMessage("There are 3 books and the ground and 3 pages ripped out")
-    let focusedObjectDiv = document.getElementById("FocusedObject")
-    let pageImage = document.createElement('img')
-    pageImage.style = "height: 100%"
-
-    AddOption("Read first page", () => {
-        ClearOptions()                
-        pageImage.src = "/Assets/Chapter3.png"
-        focusedObjectDiv.replaceChildren(pageImage)
-
-        AddOption("Return to other pages", () => {
-            focusedObjectDiv.replaceChildren([])
-            SecondBookChoice()
-        })
-    })
-
-    AddOption("Read second page", () => {
-        ClearOptions()
-        pageImage.src = "/Assets/Chapter1.png"
-        focusedObjectDiv.replaceChildren(pageImage)
-
-        AddOption("Return to other pages", () => {
-            focusedObjectDiv.replaceChildren([])
-            SecondBookChoice()
-        })
-    })
-
-    AddOption("Read third page", () => {
-        ClearOptions()
-        pageImage.src = "/Assets/Chapter2.png"
-        focusedObjectDiv.replaceChildren(pageImage)
-
-        AddOption("Return to other pages", () => {
-            focusedObjectDiv.replaceChildren([])
-            SecondBookChoice()
-        })
-    })
-    AddOption("Return to note", () => {
-        focusedObjectDiv.replaceChildren([])
-        NoteChoice()
-    })
-
-
-}
-
-
-function BoxChoice() {
-    ClearOptions()
-
-    ShowMessage("Are you ready to unlock the box?")
-
-    AddOption("Return to books", FirstBookChoice)
-
-    AddOption("Enter Code", () => {
-        const CorrectCode = "6129"
-
-        ClearOptions()
-        HideMessage()
-        const focusedObjectDiv = document.getElementById("FocusedObject")
-
-        let codeInput = document.createElement('input')
-        codeInput.id = "CodeInput"
-        focusedObjectDiv.appendChild(codeInput)
-        
-        codeInput.focus()
-        AddOption("Confirm", () => {
-            let inputValue = codeInput.value
-            if (inputValue !== CorrectCode) {
-                ShowMessage("Incorrect Code")
-                return  
-            }
-            ShowMessage("The box opens with a loud creak. Inside you find an unfinished note seemingly written in a hurry")
-            ClearOptions()
-            AddOption("Read note", () => {
-                let noteImage = document.createElement('img')
-                noteImage.src = "/Assets/note.png"
-                noteImage.style = "height: 100%"
-                focusedObjectDiv.appendChild(noteImage)
-        
-
-                
-                ShowMessage("The last letters appear to be smudged")
-                ClearOptions()
-
-                AddOption("Return to books", () => {
-                    focusedObjectDiv.replaceChildren([])
-                    SecondBookChoice()
-                })
-            })
-        
-            focusedObjectDiv.replaceChildren([])
-        })
-        AddOption("Return to books", FirstBookChoice)
-    })
-}
-
-
-function NoteChoice() {
-    const CorrectLetters = "run"
-    ClearOptions()
-
-    ShowMessage("What are the last three letters?")
-    AddOption("Fill in the blanks", () => {
-        ClearOptions()
-        const focusedObjectDiv = document.getElementById("FocusedObject")
-        
-        let noteImage = document.createElement('img')
-        noteImage.src = "/Assets/note.png"
-        noteImage.style = "height: 100%"
-        focusedObjectDiv.appendChild(noteImage)
-        focusedObjectDiv.append(document.createElement('br'))
-
-        let WordInput = document.createElement('input')
-        WordInput.id = "WordInput"
-        focusedObjectDiv.appendChild(WordInput)
-        WordInput.focus()
-
-        AddOption("Confirm", () => {
-            let inputValue = WordInput.value
-            if (inputValue !== CorrectLetters) {
-                ShowMessage("Hmm, that doesn't make sense")
-                return
-                
-            }
-            ClearOptions()
-            HideMessage()
-            
-            AddOption("Run", () => {
-                // TODO: Confirm which room is next
-                TransitionToRoom()
-            })
-        })
-
-    })
 }
 
 /**
  * Main Function which is called when room page is loaded
  */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// fix incorrect delay thing function
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function StartRoom() {
-    SetBackgroundImage("/Assets/StudyBackground.webp")
-    SetRoomName("Study")
+    SetRoomName("Small, Dark Room");
+    ShowMessage("You enter a small, dark room. There is a table in the centre with a note on it, and a door opposite to you.");
 
-    ShowMessage("You enter the study and find it in complete disarray. Books are strewn across the floor along with torn out pages.")
-    AddOption("Investigate Further", () => {
-        ClearOptions()
+    AddOption("Read the note", () => {
+        ShowMessage('It reads "LRRR"');
+        // HideOptions();
+        thing("You enter a small, dark room. There is a table in the centre with a note on it, and a door opposite to you.");
+        
+    });
 
-        ShowMessage("The desk is in a similar state to the rest of the room, however, you find a locked box with a 4 digit combination lock on top of the desk.")
-        AddOption("Search room", () => {
-            ClearOptions()
-            ShowMessage("You turn around to go search through the pile of books. As you walk away from the desk you stumble over a crooked floorboard.")
+    AddOption("Go through the door", () => {
+        // HideOptions();
+        // setTimeout(ShowOptions, 2000);
+        SetRoomName("Corridor #1");
+        ShowMessage('You find yourself in a narrow corridor which extends to your left and right.');
+        ClearOptions();
 
-            AddOption("Search books", FirstBookChoice)
+        
 
-            AddOption("Find out what you tripped on", () => {
-                // TODO: Bonus item when inventory is added
-            })
-        })
-    })
+        // correct #1
+        AddOption("Go left", () => {
+            SetRoomName("Corridor #2");
+            ShowMessage('You now find yourself in another narrow corridor which extends to your left and right.');
+            ClearOptions();
+
+            // incorrect #2
+            AddOption("Go left", () => {
+                ShowMessage('You hit a dead end. You turn back.');
+                // HideOptions();
+                
+                thing('You are back in the second narrow corridor which, surprisingly, still extends to your left and right.');
+            });
+
+            // correct #2
+            AddOption("Go right", () => {
+                SetRoomName("Corridor #3");
+                ShowMessage("As you move along the corridor, you see a faint glow emanating through the next opening.");
+                ShowMessage('You find yourself in yet another narrow corridor which extends to your left and right. You pick up an energy pack.');
+                AddEnergy(5);
+                ClearOptions();
+
+                // incorrect #3
+                AddOption("Go left", () => {
+                    ShowMessage('You hit a dead end. You turn back.');
+                    // HideOptions();
+                    thing('You retrace your steps back to the third narrow corridor, which still extends to your left and right.');
+                });
+
+                // correct #3
+                AddOption("Go right", () => {
+                    SetRoomName("Corridor #4");
+                    ShowMessage('You find yourself in yet another narrow corridor which extends to your left and right.');
+                    ClearOptions();
+    
+                    // incorrect #4
+                    AddOption("Go left", () => {
+                        ShowMessage('You hit a dead end. You turn back.');
+                        // HideOptions();
+                        thing('You retrace your steps back to the fourth narrow corridor, which still extends to your left and right.');
+                    });
+    
+                    // correct #4
+                    AddOption("Go right", () => {
+                        SetRoomName("End?");
+                        ShowMessage('Congratulations! You made it to the end. You see a door in front of you.');
+                        ClearOptions();
+                        AddOption("Exit room", () => {
+                            alert("Room finished");
+                            location.reload();
+                        });
+                        
+                    });
+                });
+            });
+        });
+
+        // incorrect #1
+        AddOption("Go right", () => {
+            ShowMessage('You get caught in a trap and debris falls from the ceiling. You lose energy.');
+            RemoveEnergy(5);
+            // HideOptions();
+            thing('Retracing your steps, you are back in the narrow corridor which still extends to your left and right.');
+
+        });
+
+        
+
+        
+    });
+
+    // TODO:
+    // <^>
+    
+
+    // AddOption("Hide Options", () => {
+    //     HideOptions();
+    //     setTimeout(ShowOptions, 1000);
+    // })
+
+    // // AddOption("Clear Options", () => ClearOptions("You may not make an action now"))
+    // AddOption("Clear Options", () => ClearOptions())
+
+    // AddOption("Add Energy", () => AddEnergy(5))
+    // AddOption("Remove Energy", () => RemoveEnergy(5))
+    // AddOption("DB Test", () => {
+    //     executeDatabaseQuery("SELECT * FROM testUsers").then((result) => {
+    //         console.log(result)
+    //     })
+    // })
+
+    
+    
 }
-

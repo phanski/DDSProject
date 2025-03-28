@@ -28,7 +28,7 @@ body {
 #GameView {
     background-repeat: no-repeat;
     background-size: cover;
-    background-position: 0px 0px;
+    background-position: 0px -400px;
     text-align: center;
     border-radius: 0px;
     position: relative;
@@ -39,8 +39,7 @@ body {
 
 #Message {
     grid-row: 3;
-    width: fit-content;
-    max-width: 80%;
+    width: 50%;
     background-color: #888C;
     margin: 10px auto;
     border: black 2px solid;
@@ -51,8 +50,12 @@ body {
 
 #FocusedObject {
     max-height: 80%;
+    aspect-ratio: 1/1;
     background-color: #44444499;
     margin: 2em auto;
+
+    /* Room starts with no object */
+    display: none; 
 }
 
 
@@ -157,4 +160,17 @@ body {
 .OverlayButton:hover {
     background-color: #00FD00;
     cursor: pointer;
+}
+
+/*BOILERPLATE CSS ENDS HERE*/
+
+.FocusedObject{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #44444499;
+    margin: 2em auto;
+    border-radius: 9px;
+    padding: 1em;
 }

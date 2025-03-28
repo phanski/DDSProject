@@ -365,213 +365,33 @@ function ShowOptions() {
 
 
 
-function FirstBookChoice() {
-    ClearOptions()
-    ShowMessage("There are 3 books and the ground and 3 pages ripped out")
-    
-    let focusedObjectDiv = document.getElementById("FocusedObject")
-    let pageImage = document.createElement('img')
-    
-    pageImage.style = "height: 100%"
-
-    AddOption("Read first page", () => {
-        ClearOptions()                
-        pageImage.src = "/Assets/Chapter3.png"
-        focusedObjectDiv.replaceChildren(pageImage)
-
-        AddOption("Return to other pages", () => {
-            focusedObjectDiv.replaceChildren([])
-            FirstBookChoice()
-        })
-    })
-
-    AddOption("Read second page", () => {
-        ClearOptions()
-        pageImage.src = "/Assets/Chapter1.png"
-        focusedObjectDiv.replaceChildren(pageImage)
-
-        AddOption("Return to other pages", () => {
-            focusedObjectDiv.replaceChildren([])
-            FirstBookChoice()
-        })
-    })
-
-    AddOption("Read third page", () => {
-        ClearOptions()
-        pageImage.src = "/Assets/Chapter2.png"
-        focusedObjectDiv.replaceChildren(pageImage)
-
-        AddOption("Return to other pages", () => {
-            focusedObjectDiv.replaceChildren([])
-            FirstBookChoice()
-        })
-    })
-    AddOption("Return to locked box", () => {
-        focusedObjectDiv.replaceChildren([])
-        BoxChoice()
-    })
-}
-
-function SecondBookChoice () {
-    ClearOptions()
-    ShowMessage("There are 3 books and the ground and 3 pages ripped out")
-    let focusedObjectDiv = document.getElementById("FocusedObject")
-    let pageImage = document.createElement('img')
-    pageImage.style = "height: 100%"
-
-    AddOption("Read first page", () => {
-        ClearOptions()                
-        pageImage.src = "/Assets/Chapter3.png"
-        focusedObjectDiv.replaceChildren(pageImage)
-
-        AddOption("Return to other pages", () => {
-            focusedObjectDiv.replaceChildren([])
-            SecondBookChoice()
-        })
-    })
-
-    AddOption("Read second page", () => {
-        ClearOptions()
-        pageImage.src = "/Assets/Chapter1.png"
-        focusedObjectDiv.replaceChildren(pageImage)
-
-        AddOption("Return to other pages", () => {
-            focusedObjectDiv.replaceChildren([])
-            SecondBookChoice()
-        })
-    })
-
-    AddOption("Read third page", () => {
-        ClearOptions()
-        pageImage.src = "/Assets/Chapter2.png"
-        focusedObjectDiv.replaceChildren(pageImage)
-
-        AddOption("Return to other pages", () => {
-            focusedObjectDiv.replaceChildren([])
-            SecondBookChoice()
-        })
-    })
-    AddOption("Return to note", () => {
-        focusedObjectDiv.replaceChildren([])
-        NoteChoice()
-    })
-
-
-}
-
-
-function BoxChoice() {
-    ClearOptions()
-
-    ShowMessage("Are you ready to unlock the box?")
-
-    AddOption("Return to books", FirstBookChoice)
-
-    AddOption("Enter Code", () => {
-        const CorrectCode = "6129"
-
-        ClearOptions()
-        HideMessage()
-        const focusedObjectDiv = document.getElementById("FocusedObject")
-
-        let codeInput = document.createElement('input')
-        codeInput.id = "CodeInput"
-        focusedObjectDiv.appendChild(codeInput)
-        
-        codeInput.focus()
-        AddOption("Confirm", () => {
-            let inputValue = codeInput.value
-            if (inputValue !== CorrectCode) {
-                ShowMessage("Incorrect Code")
-                return  
-            }
-            ShowMessage("The box opens with a loud creak. Inside you find an unfinished note seemingly written in a hurry")
-            ClearOptions()
-            AddOption("Read note", () => {
-                let noteImage = document.createElement('img')
-                noteImage.src = "/Assets/note.png"
-                noteImage.style = "height: 100%"
-                focusedObjectDiv.appendChild(noteImage)
-        
-
-                
-                ShowMessage("The last letters appear to be smudged")
-                ClearOptions()
-
-                AddOption("Return to books", () => {
-                    focusedObjectDiv.replaceChildren([])
-                    SecondBookChoice()
-                })
-            })
-        
-            focusedObjectDiv.replaceChildren([])
-        })
-        AddOption("Return to books", FirstBookChoice)
-    })
-}
-
-
-function NoteChoice() {
-    const CorrectLetters = "run"
-    ClearOptions()
-
-    ShowMessage("What are the last three letters?")
-    AddOption("Fill in the blanks", () => {
-        ClearOptions()
-        const focusedObjectDiv = document.getElementById("FocusedObject")
-        
-        let noteImage = document.createElement('img')
-        noteImage.src = "/Assets/note.png"
-        noteImage.style = "height: 100%"
-        focusedObjectDiv.appendChild(noteImage)
-        focusedObjectDiv.append(document.createElement('br'))
-
-        let WordInput = document.createElement('input')
-        WordInput.id = "WordInput"
-        focusedObjectDiv.appendChild(WordInput)
-        WordInput.focus()
-
-        AddOption("Confirm", () => {
-            let inputValue = WordInput.value
-            if (inputValue !== CorrectLetters) {
-                ShowMessage("Hmm, that doesn't make sense")
-                return
-                
-            }
-            ClearOptions()
-            HideMessage()
-            
-            AddOption("Run", () => {
-                // TODO: Confirm which room is next
-                TransitionToRoom()
-            })
-        })
-
-    })
-}
 
 /**
  * Main Function which is called when room page is loaded
  */
 function StartRoom() {
-    SetBackgroundImage("/Assets/StudyBackground.webp")
-    SetRoomName("Study")
+    
+    
+    // AddOption("Show Options", () => ShowMessage('New Option'))
+    // AddOption("Hide Options", () => {
+    //     HideOptions();
+    //     setTimeout(ShowOptions, 1000);
+        
+    // })
+    // AddOption("Show Object", () => ShowObject(`https://imgs.search.brave.com/Uv7PjPwToss4YP4krNPTTauC8y1Iq7BXFAWSoknkpAI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTEv/ODE0LzU2Ny9zbWFs/bC9yb2xsLW9mLXll/bGxvdy1zY290Y2gt/dGFwZS0zZC1oaWdo/LXF1YWxpdHktcGhv/dG8tcG5nLnBuZw`))
+    // AddOption("Hide Object", () => HideObject())
+    // AddOption("Clear Options", () => ClearOptions("You may not make an action now"))
+    // AddOption("Clear Options", () => ClearOptions())
 
-    ShowMessage("You enter the study and find it in complete disarray. Books are strewn across the floor along with torn out pages.")
-    AddOption("Investigate Further", () => {
-        ClearOptions()
-
-        ShowMessage("The desk is in a similar state to the rest of the room, however, you find a locked box with a 4 digit combination lock on top of the desk.")
-        AddOption("Search room", () => {
-            ClearOptions()
-            ShowMessage("You turn around to go search through the pile of books. As you walk away from the desk you stumble over a crooked floorboard.")
-
-            AddOption("Search books", FirstBookChoice)
-
-            AddOption("Find out what you tripped on", () => {
-                // TODO: Bonus item when inventory is added
-            })
-        })
-    })
+    // AddOption("Add Energy", () => AddEnergy(5))
+    // AddOption("Remove Energy", () => RemoveEnergy(5))
+    // AddOption("DB Test", () => {
+    //     executeDatabaseQuery("SELECT * FROM testUsers").then((result) => {
+    //         console.log(result)
+    //     })
+        
+    // })
+    SetBackgroundImage("/Assets/scaryimageREMOVE--------------------------.webp")
+    SetRoomName("Living Room")
 }
 

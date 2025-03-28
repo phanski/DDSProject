@@ -308,52 +308,16 @@ async function executeDatabaseQuery(SQLQuery) {
     return DBPromise
 }
 
-/**
- * Shows a message in the predefined message popup
- * @param {string} messageText 
- */
 function ShowMessage(messageText) {
     let message = document.getElementById("Message")
     message.style.display = "block"
     message.children[0].textContent = messageText
 }
 
-/**
- * Hides the message popup from the user
- */
 function HideMessage() {
     let message = document.getElementById("Message")
 
     message.style.display = "none"
-}
-
-/**
- * Removes options bar from user to allow for more room for UI
- */
-function HideOptions() {
-    let OptionsBar = document.getElementById("UserOptions")
-    OptionsBar.style.display = "none;"
-
-    let GameWindow = document.getElementById("GameWindow")
-    GameWindow.style.gridTemplateRows = "100%"
-
-    let GameView = document.getElementById("GameView")
-    GameView.style.gridTemplateRows = "9.6% 78.4% 12%"
-}
-
-
-/**
- * Shows options bar to user
- */
-function ShowOptions() {
-    let OptionsBar = document.getElementById("UserOptions")
-    OptionsBar.style.display = ""
-
-    let GameWindow = document.getElementById("GameWindow")
-    GameWindow.style.gridTemplateRows = ""
-
-    let GameView = document.getElementById("GameView")
-    GameView.style.gridTemplateRows = ""
 }
 
 /* 
@@ -362,216 +326,244 @@ function ShowOptions() {
 
 //EDIT BELOW HERE
 
+var rows=3;
+var columns=3;
+
+var currTile;
+var otherTile;
+
+var tempOrder=["1","3","2","4","5","6","7","8","9"];//["4","2","8","5","1","6","7","9","3"]; //->This will be the actual order used
+
+var correctOrder=["1","2","3","4","5","6","7","8","9"];
+
+let RoomDescription = "You are in the living room. It is a cozy room with a fireplace and a large sofa. On a table in the midle of the room, you can see a small box";
 
 
+window.onload = () => ShowMessage(RoomDescription);
 
-function FirstBookChoice() {
-    ClearOptions()
-    ShowMessage("There are 3 books and the ground and 3 pages ripped out")
-    
-    let focusedObjectDiv = document.getElementById("FocusedObject")
-    let pageImage = document.createElement('img')
-    
-    pageImage.style = "height: 100%"
-
-    AddOption("Read first page", () => {
-        ClearOptions()                
-        pageImage.src = "/Assets/Chapter3.png"
-        focusedObjectDiv.replaceChildren(pageImage)
-
-        AddOption("Return to other pages", () => {
-            focusedObjectDiv.replaceChildren([])
-            FirstBookChoice()
-        })
-    })
-
-    AddOption("Read second page", () => {
-        ClearOptions()
-        pageImage.src = "/Assets/Chapter1.png"
-        focusedObjectDiv.replaceChildren(pageImage)
-
-        AddOption("Return to other pages", () => {
-            focusedObjectDiv.replaceChildren([])
-            FirstBookChoice()
-        })
-    })
-
-    AddOption("Read third page", () => {
-        ClearOptions()
-        pageImage.src = "/Assets/Chapter2.png"
-        focusedObjectDiv.replaceChildren(pageImage)
-
-        AddOption("Return to other pages", () => {
-            focusedObjectDiv.replaceChildren([])
-            FirstBookChoice()
-        })
-    })
-    AddOption("Return to locked box", () => {
-        focusedObjectDiv.replaceChildren([])
-        BoxChoice()
-    })
+function ShowObject(url,description){
+    ClearObject();
+    HideMessage(),ShowMessage("On a closer look, you can see the box has a puzzle on it.");
+    let object=document.getElementById("FocusedObject");
+    if (object.children.length==0){
+        let child=document.createElement("img");
+        child.class="ObjectContent";
+        child.src=url;
+        child.alt=description;
+        child.style.width,child.style.height="100%";
+        child.style.cursor="pointer";
+        child.addEventListener("click",()=>{HideMessage(),showBoard();})
+        object.append(child);
+    }
+    object.style.display="block";
+}
+function HideObject(){ 
+    let object=document.getElementById("FocusedObject");
+    object.style.display="none";
 }
 
-function SecondBookChoice () {
-    ClearOptions()
-    ShowMessage("There are 3 books and the ground and 3 pages ripped out")
-    let focusedObjectDiv = document.getElementById("FocusedObject")
-    let pageImage = document.createElement('img')
-    pageImage.style = "height: 100%"
+function showBoard(){
+    ClearObject(); //Clears the object and resets the board
+    AddOption("Reset Board",resetBoard);
+    let imgOrder=tempOrder.slice();
+    let board=document.createElement("div");
 
-    AddOption("Read first page", () => {
-        ClearOptions()                
-        pageImage.src = "/Assets/Chapter3.png"
-        focusedObjectDiv.replaceChildren(pageImage)
+    board.id="Board";
+    board.style.backgroundColor="lightbrown";
+    board.style.width,board.style.height="100%";
+    board.style.border="10px solid blue";
+    board.style.display="flex";
+    board.style.flexWrap="wrap";
 
-        AddOption("Return to other pages", () => {
-            focusedObjectDiv.replaceChildren([])
-            SecondBookChoice()
-        })
-    })
+    for (let r=0; r<rows; r++) {
+        for(let c=0; c<columns; c++){
 
-    AddOption("Read second page", () => {
-        ClearOptions()
-        pageImage.src = "/Assets/Chapter1.png"
-        focusedObjectDiv.replaceChildren(pageImage)
+            //Creating the image tiles and adding them to the board
 
-        AddOption("Return to other pages", () => {
-            focusedObjectDiv.replaceChildren([])
-            SecondBookChoice()
-        })
-    })
+            let tile = document.createElement("img");
+            tile.id=r.toString() + "-" +c.toString();
+            tile.src = "../../Assets/"+imgOrder.shift() +".jpg";
 
-    AddOption("Read third page", () => {
-        ClearOptions()
-        pageImage.src = "/Assets/Chapter2.png"
-        focusedObjectDiv.replaceChildren(pageImage)
-
-        AddOption("Return to other pages", () => {
-            focusedObjectDiv.replaceChildren([])
-            SecondBookChoice()
-        })
-    })
-    AddOption("Return to note", () => {
-        focusedObjectDiv.replaceChildren([])
-        NoteChoice()
-    })
-
-
-}
-
-
-function BoxChoice() {
-    ClearOptions()
-
-    ShowMessage("Are you ready to unlock the box?")
-
-    AddOption("Return to books", FirstBookChoice)
-
-    AddOption("Enter Code", () => {
-        const CorrectCode = "6129"
-
-        ClearOptions()
-        HideMessage()
-        const focusedObjectDiv = document.getElementById("FocusedObject")
-
-        let codeInput = document.createElement('input')
-        codeInput.id = "CodeInput"
-        focusedObjectDiv.appendChild(codeInput)
-        
-        codeInput.focus()
-        AddOption("Confirm", () => {
-            let inputValue = codeInput.value
-            if (inputValue !== CorrectCode) {
-                ShowMessage("Incorrect Code")
-                return  
+            if (tile.src.includes("3.jpg")){
+                tile.style.opacity="0";
             }
-            ShowMessage("The box opens with a loud creak. Inside you find an unfinished note seemingly written in a hurry")
-            ClearOptions()
-            AddOption("Read note", () => {
-                let noteImage = document.createElement('img')
-                noteImage.src = "/Assets/note.png"
-                noteImage.style = "height: 100%"
-                focusedObjectDiv.appendChild(noteImage)
-        
 
-                
-                ShowMessage("The last letters appear to be smudged")
-                ClearOptions()
+            tile.style.width="31.33%";
+            tile.style.height="31.33%";
+            tile.style.cursor="pointer";
+            tile.style.border="1% solid brown";
 
-                AddOption("Return to books", () => {
-                    focusedObjectDiv.replaceChildren([])
-                    SecondBookChoice()
-                })
-            })
-        
-            focusedObjectDiv.replaceChildren([])
-        })
-        AddOption("Return to books", FirstBookChoice)
-    })
+            tile.setAttribute("alt",tile.id);
+
+            tile.addEventListener("dragstart",dragStart); //click an image to drag
+            tile.addEventListener("dragover",dragOver); //moving image around while clicked
+            tile.addEventListener("dragenter",dragEnter); //dragging image onto another one
+            tile.addEventListener("dragleave",dragLeave); //dragged image leaving onto another image
+            tile.addEventListener("drop",dragDrop); //drag an image over another image, drop the image
+            tile.addEventListener("dragend",dragEnd); //after drag drop, swap the two tiles
+
+            document.getElementById("FocusedObject").append(tile);
+        }
+    }
+    if (imgOrder.length==0){
+        imgOrder=tempOrder.slice();
+    }
 }
 
+function dragStart(){
+    currTile=this;
+}
 
-function NoteChoice() {
-    const CorrectLetters = "run"
-    ClearOptions()
+function dragOver(e){
+    e.preventDefault();
+}
+function dragEnter(e){
+    e.preventDefault();
+}
+function dragLeave(){
 
-    ShowMessage("What are the last three letters?")
-    AddOption("Fill in the blanks", () => {
-        ClearOptions()
-        const focusedObjectDiv = document.getElementById("FocusedObject")
+}
+function dragDrop(){
+    otherTile = this;
+}
+
+function dragEnd(){
+    if (!otherTile.src.includes("3.jpg")){ //3.jpg is the blank image that is not draggable and is used to swap with other images
+        return;
+    }
+    //Checking if the images are adjacent to each other
+
+    let currCoords = currTile.id.split("-");
+    let row=parseInt(currCoords[0]);
+    let column = parseInt(currCoords[1]);
+
+    let otherCoords = otherTile.id.split("-");
+    let otherRow = parseInt(otherCoords[0]);
+    let otherColumn = parseInt(otherCoords[1]);
+
+    let moveLeft = row === otherRow && otherColumn===column-1;
+    let moveRight = row === otherRow && otherColumn===column+1;
+
+    let moveUp = column === otherColumn && otherRow===row-1;
+    let moveDown = column === otherColumn && otherRow===row+1;
+
+    let isAdjacent = moveLeft || moveRight || moveUp ||moveDown;
+
+    if (isAdjacent){
+        //Swapping the images
+
+        let currImg = currTile.src;
+        let otherImg = otherTile.src;
+
+        currTile.src=otherImg;
+        currTile.style.opacity="0";
         
-        let noteImage = document.createElement('img')
-        noteImage.src = "/Assets/note.png"
-        noteImage.style = "height: 100%"
-        focusedObjectDiv.appendChild(noteImage)
-        focusedObjectDiv.append(document.createElement('br'))
+        otherTile.src=currImg;
+        otherTile.style.opacity="1";
+        
+        //Checking if the images are in the correct order. If they are, the player wins and are returned to the room
 
-        let WordInput = document.createElement('input')
-        WordInput.id = "WordInput"
-        focusedObjectDiv.appendChild(WordInput)
-        WordInput.focus()
+        let currParts=currTile.src.split("/");
+        let otherParts=otherTile.src.split("/");
 
-        AddOption("Confirm", () => {
-            let inputValue = WordInput.value
-            if (inputValue !== CorrectLetters) {
-                ShowMessage("Hmm, that doesn't make sense")
-                return
+        let currFile=currParts[currParts.length-1];
+        let otherFile=otherParts[otherParts.length-1];
+
+        let currNum=currFile.split(".")[0];
+        let otherNum=otherFile.split(".")[0];
+
+        currIndex=tempOrder.indexOf(currNum);
+        otherIndex=tempOrder.indexOf(otherNum);
                 
-            }
-            ClearOptions()
-            HideMessage()
+        let temp=tempOrder[otherIndex];
+
+        tempOrder[otherIndex]=tempOrder[currIndex];
+
+        tempOrder[currIndex]=temp;
+        
+        if (tempOrder.join("")==correctOrder.join("")){
+            setTimeout(()=>{showReward()},1000);//Play Audio to indicate success
             
-            AddOption("Run", () => {
-                // TODO: Confirm which room is next
-                TransitionToRoom()
-            })
-        })
+        }
+    }
+}
 
-    })
+function resetBoard(){
+    
+    tempOrder=["4","2","8","5","1","6","7","9","3"];//Resets the order of the images to the original order
+    imgOrder=tempOrder.slice();//Resets the images array to repopulate
+
+
+    //Removes all tiles from the board
+    for (let r=0; r<rows; r++) {
+        for(let c=0; c<columns; c++){
+            let tile = document.getElementById(r.toString()+"-"+c.toString());
+            tile.remove();
+        }  
+    }
+    RemoveOption("Reset Board");
+    showBoard();
+}
+
+function showReward(){
+    //Unfinished Function
+    ClearObject();
+    RemoveOption("Reset Board"),RemoveOption("Investigate the box"),RemoveOption("Set box down");
+    ShowObject(`https://imgs.search.brave.com/Uv7PjPwToss4YP4krNPTTauC8y1Iq7BXFAWSoknkpAI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTEv/ODE0LzU2Ny9zbWFs/bC9yb2xsLW9mLXll/bGxvdy1zY290Y2gt/dGFwZS0zZC1oaWdo/LXF1YWxpdHktcGhv/dG8tcG5nLnBuZw`,"Alt text");
+    
+    let object=document.getElementsByClassName("ObjectContent");
+    object.removeEventListener("click",()=>{HideMessage(),showBoard();});
+    
+    ShowMessage("You have solved the puzzle and found a key inside the box. You can now leave the room.");
+    AddOption("Close Box",()=>{HideObject(),HideMessage(),ClearOptions(),ShowMessage("There is nothing left to do here.")});
+    //AddOption("Leave Room",()=>{TransitionToRoom(3)});
+
+}
+
+function ClearObject(){
+    let object=document.getElementById("FocusedObject");
+    object.innerHTML="";
+}
+
+function RemoveOption(OptionTitle){
+    console.log(OptionTitle);
+    let Options = document.getElementById("UserOptions").children;
+    console.log(Options.length);
+    for (let i=0;i<Options.length;i++){
+        console.log(Options[i].textContent);
+        if (Options[i].textContent==OptionTitle){
+            Options[i].remove();
+        }else{
+            continue;
+        }
+    }
+
 }
 
 /**
  * Main Function which is called when room page is loaded
  */
 function StartRoom() {
-    SetBackgroundImage("/Assets/StudyBackground.webp")
-    SetRoomName("Study")
+    
+    
+    AddOption("Show Messsage", () => ShowMessage(RoomDescription))
+    AddOption("Hide Message", HideMessage)
+    AddOption("Investigate the box", () => ShowObject(`https://imgs.search.brave.com/Uv7PjPwToss4YP4krNPTTauC8y1Iq7BXFAWSoknkpAI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTEv/ODE0LzU2Ny9zbWFs/bC9yb2xsLW9mLXll/bGxvdy1zY290Y2gt/dGFwZS0zZC1oaWdo/LXF1YWxpdHktcGhv/dG8tcG5nLnBuZw`,"Alt text"))
+    AddOption("Set box down", () => HideObject())
+    // AddOption("Clear Options", () => ClearOptions("You may not make an action now"))
+    // AddOption("Clear Options", () => ClearOptions())
+    
+    //AddOption("Leave Room",)
 
-    ShowMessage("You enter the study and find it in complete disarray. Books are strewn across the floor along with torn out pages.")
-    AddOption("Investigate Further", () => {
-        ClearOptions()
-
-        ShowMessage("The desk is in a similar state to the rest of the room, however, you find a locked box with a 4 digit combination lock on top of the desk.")
-        AddOption("Search room", () => {
-            ClearOptions()
-            ShowMessage("You turn around to go search through the pile of books. As you walk away from the desk you stumble over a crooked floorboard.")
-
-            AddOption("Search books", FirstBookChoice)
-
-            AddOption("Find out what you tripped on", () => {
-                // TODO: Bonus item when inventory is added
-            })
+    //AddOption("Add Energy", () => AddEnergy(5))
+    //AddOption("Remove Energy", () => RemoveEnergy(5))
+    AddOption("DB Test", () => {
+        executeDatabaseQuery("SELECT * FROM testUsers").then((result) => {
+            console.log(result)
         })
+        
     })
+    //SetBackgroundImage("/Assets/scaryimageREMOVE--------------------------.webp")
+    SetRoomName("Living Room")
 }
 
