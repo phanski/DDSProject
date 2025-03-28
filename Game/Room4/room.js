@@ -146,7 +146,7 @@ function TransitionToRoom(roomNumber) { //
 
     SavePlayerData()
 
-    window.location.href = `/Room/Room${roomNumber}/room.html`
+    window.location.href = `/Game/Room${roomNumber}/room.html`
 }
 
 /**
