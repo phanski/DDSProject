@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game Leaderboard</title>
+<!-- CSS -->
+    <link href="website.css" rel="stylesheet" type="text/css"/>
+
+     <!-- Font -->
+        <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+   
+</head>
+<body>
+
+    <h1 class=" center">Game Leaderboard</h1>
+
+    <div class="leaderboard-container">
+        <div class="leaderboard" id="mostRuns">
+            <h2>Most Runs Completed</h2>
+            <ol id="mostRunsList"></ol>
+            <div id="personalMostRuns" class="personal-run"></div>
+        </div>
+
+        <div class="leaderboard" id="fastestRuns">
+            <h2>Fastest Runs</h2>
+            <ol id="fastestRunsList"></ol>
+            <div id="personalFastestRun" class="personal-run"></div>
+        </div>
+    </div>
+
+    <button class="button1"  onclick="goBack()">Back to Menu</button>
+
+    <script>
+        // Sample leaderboard data
+        const mostRunsData = [
+            { name: 'Player1', runs: 15 }, { name: 'Player2', runs: 12 }, { name: 'Player3', runs: 10 },
+            { name: 'Player4', runs: 9 }, { name: 'Player5', runs: 8 }, { name: 'Player6', runs: 7 },
+            { name: 'Player7', runs: 6 }, { name: 'Player8', runs: 5 }, { name: 'Player9', runs: 4 },
+            { name: 'Player10', runs: 3 }, { name: 'Player11', runs: 2 }
+        ];
+
+        const fastestRunsData = [
+            { name: 'Player1', time: '2:30' }, { name: 'Player2', time: '3:10' }, { name: 'Player3', time: '3:45' },
+            { name: 'Player4', time: '4:00' }, { name: 'Player5', time: '4:20' }, { name: 'Player6', time: '4:45' },
+            { name: 'Player7', time: '5:00' }, { name: 'Player8', time: '5:30' }, { name: 'Player9', time: '6:00' },
+            { name: 'Player10', time: '6:30' }, { name: 'Player11', time: '7:00' }
+        ];
+
+        // Simulate current player's data
+        const currentPlayer = { name: 'PlayerX', runs: 5, time: '5:15' };
+
+        function populateLeaderboard(id, data, label, personalId, personalLabel) {
+            const list = document.getElementById(id);
+            const personalRun = document.getElementById(personalId);
+
+            // Display top 10
+            data.slice(0, 10).forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `${item.name} - ${item[label]}`;
+                list.appendChild(li);
+            });
+
+            // Display personal run if not in top 10
+            const personalEntry = data.find(item => item.name === currentPlayer.name);
+            if (personalEntry && data.indexOf(personalEntry) >= 10) {
+                personalRun.textContent = `Your ${personalLabel}: ${personalEntry[label]}`;
+            }
+        }
+
+        function goBack() {
+            window.location.href = 'menu.html'; // Update with your menu page path
+        }
+
+        // Populate the leaderboards
+        populateLeaderboard('mostRunsList', mostRunsData, 'runs', 'personalMostRuns', 'Runs Completed');
+        populateLeaderboard('fastestRunsList', fastestRunsData, 'time', 'personalFastestRun', 'Fastest Time');
+    </script>
+
+</body>
+</html>

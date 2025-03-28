@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>Login Page</title>
+
+        <link href="website.css" rel="stylesheet" type="text/css"/>
+
+         <!-- Link to font -->
+        <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+        <!-- Link to font -->
+    </head>
+    <body>
+        <!--Game Name-->
+        <h1 class="center">Game Name</h1>
+
+        <!--Back Button-->
+        <div class="standard left">
+            <button id="button2">Back</button>
+        </div>
+
+        <!--Form-->
+        <div class="standard middleForm">
+            
+            <form id="loginForm">
+                <label>User Name:
+                    <input type="text" id="userName" name="user_name" required>
+                </label>
+                <label>PassWord:
+                    <input type="password" id="password" name="password" required>
+                </label>
+                <button type="submit">Start</button>
+
+            </form>
+        </div>
+        
+        
+        <script>
+            document.getElementById('button2').onclick = function(){
+                window.location.href = "menu.html";
+            }
+
+            document.getElementById('loginForm').addEventListener("submit" , function(event){
+                event.preventDefault();
+
+                let userName = document.getElementById('userName').value;
+                let password = document.getElementById('password').value;
+
+            fetch("https://your-server.com/save-data", {
+                method: "POST", 
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ userName, password }) 
+            })
+                .then(response => response.json())
+                .then(data => alert("Data saved successfully!"))
+                .catch(error => console.error("Error:", error));
+            });
+
+
+
+            
+
+        </script>
+    </body>
+</html>
