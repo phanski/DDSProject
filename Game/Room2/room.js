@@ -332,16 +332,16 @@ var columns=3;
 var currTile;
 var otherTile;
 
-var tempOrder=["1","3","2","4","5","6","7","8","9"];//["4","2","8","5","1","6","7","9","3"]; //->This will be the actual order used
+var tempOrder=["4","2","8","5","1","6","7","9","3"]; 
 
 var correctOrder=["1","2","3","4","5","6","7","8","9"];
 
 let RoomDescription = "You are in the living room. It is a cozy room with a fireplace and a large sofa. On a table in the midle of the room, you can see a small box";
 
-
 window.onload = () => ShowMessage(RoomDescription);
 
 function ShowObject(url,description){
+    AddOption("Set box down", () => HideObject()),RemoveOption("Investigate the box"),RemoveOption("Reset Board");
     ClearObject();
     HideMessage(),ShowMessage("On a closer look, you can see the box has a puzzle on it.");
     let object=document.getElementById("FocusedObject");
@@ -358,6 +358,14 @@ function ShowObject(url,description){
     object.style.display="block";
 }
 function HideObject(){ 
+    RemoveOption("Set box down");
+    try{
+        RemoveOption("Reset Board");
+    }catch{
+        console.log("");
+    }
+    HideMessage();
+    AddOption("Investigate the box", () => ShowObject(`https://imgs.search.brave.com/Uv7PjPwToss4YP4krNPTTauC8y1Iq7BXFAWSoknkpAI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTEv/ODE0LzU2Ny9zbWFs/bC9yb2xsLW9mLXll/bGxvdy1zY290Y2gt/dGFwZS0zZC1oaWdo/LXF1YWxpdHktcGhv/dG8tcG5nLnBuZw`,"Alt text"))
     let object=document.getElementById("FocusedObject");
     object.style.display="none";
 }
@@ -508,16 +516,21 @@ function resetBoard(){
 function showReward(){
     //Unfinished Function
     ClearObject();
-    RemoveOption("Reset Board"),RemoveOption("Investigate the box"),RemoveOption("Set box down");
     ShowObject(`https://imgs.search.brave.com/Uv7PjPwToss4YP4krNPTTauC8y1Iq7BXFAWSoknkpAI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTEv/ODE0LzU2Ny9zbWFs/bC9yb2xsLW9mLXll/bGxvdy1zY290Y2gt/dGFwZS0zZC1oaWdo/LXF1YWxpdHktcGhv/dG8tcG5nLnBuZw`,"Alt text");
-    
-    let object=document.getElementsByClassName("ObjectContent");
-    object.removeEventListener("click",()=>{HideMessage(),showBoard();});
+    ClearOptions();
+
+    let object=document.getElementById("FocusedObject");
+    object.style.pointerEvents="none";
     
     ShowMessage("You have solved the puzzle and found a key inside the box. You can now leave the room.");
-    AddOption("Close Box",()=>{HideObject(),HideMessage(),ClearOptions(),ShowMessage("There is nothing left to do here.")});
-    //AddOption("Leave Room",()=>{TransitionToRoom(3)});
-
+    AddOption("Close Box",()=>{
+        HideObject(),
+        HideMessage(),
+        ClearOptions(),
+        ShowMessage("There is nothing left to do here."),
+        AddOption("Inventory",console.log("Inventory")),
+        AddOption("Leave Room",TransitionToRoom(6));
+    });
 }
 
 function ClearObject(){
@@ -526,11 +539,8 @@ function ClearObject(){
 }
 
 function RemoveOption(OptionTitle){
-    console.log(OptionTitle);
     let Options = document.getElementById("UserOptions").children;
-    console.log(Options.length);
     for (let i=0;i<Options.length;i++){
-        console.log(Options[i].textContent);
         if (Options[i].textContent==OptionTitle){
             Options[i].remove();
         }else{
@@ -549,7 +559,12 @@ function StartRoom() {
     AddOption("Show Messsage", () => ShowMessage(RoomDescription))
     AddOption("Hide Message", HideMessage)
     AddOption("Investigate the box", () => ShowObject(`https://imgs.search.brave.com/Uv7PjPwToss4YP4krNPTTauC8y1Iq7BXFAWSoknkpAI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTEv/ODE0LzU2Ny9zbWFs/bC9yb2xsLW9mLXll/bGxvdy1zY290Y2gt/dGFwZS0zZC1oaWdo/LXF1YWxpdHktcGhv/dG8tcG5nLnBuZw`,"Alt text"))
-    AddOption("Set box down", () => HideObject())
+    
+//  LEFTOVER OPTIONS
+//  ||||||||||||||||
+//  vvvvvvvvvvvvvvvv
+    
+    //AddOption("Set box down", () => HideObject())
     // AddOption("Clear Options", () => ClearOptions("You may not make an action now"))
     // AddOption("Clear Options", () => ClearOptions())
     
@@ -557,13 +572,13 @@ function StartRoom() {
 
     //AddOption("Add Energy", () => AddEnergy(5))
     //AddOption("Remove Energy", () => RemoveEnergy(5))
-    AddOption("DB Test", () => {
-        executeDatabaseQuery("SELECT * FROM testUsers").then((result) => {
-            console.log(result)
-        })
-        
-    })
+    
+    
+    // AddOption("DB Test", () => {
+    //     executeDatabaseQuery("SELECT * FROM testUsers").then((result) => {
+    //         console.log(result)
+    //     })
+    // })
     //SetBackgroundImage("/Assets/scaryimageREMOVE--------------------------.webp")
     SetRoomName("Living Room")
 }
-
