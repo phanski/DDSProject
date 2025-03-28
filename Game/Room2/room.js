@@ -529,9 +529,8 @@ function showReward(){
         ClearOptions(),
         ShowMessage("There is nothing left to do here."),
         AddOption("Inventory",console.log("Inventory")),
-        AddOption("Leave Room",TransitionToRoom(4));
+        AddOption("Leave Room",TransitionToRoom(6));
     });
-
 }
 
 function ClearObject(){
