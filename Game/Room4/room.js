@@ -371,6 +371,7 @@ function Delay(time) {
   }
 
 
+
 function DisableOptions() {
 let Options = document.getElementById("UserOptions");
 for (let i = 0; i < Options.children.length; i++) {
