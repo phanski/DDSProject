@@ -392,7 +392,7 @@ function EnableOptions() {
  */
 function DisplayMessageAfterDelay (messageText) {
     DisableOptions();
-    Delay(1000).then(() => {
+    Delay(2000).then(() => {
         ShowMessage(messageText);
         EnableOptions();
     });  
