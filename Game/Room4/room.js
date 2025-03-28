@@ -9,11 +9,11 @@ let TimerInterval = undefined
 
 
 const DatabaseConnectionData = {
-    url: 'https://phanisek01.webhosting1.eeecs.qub.ac.uk/dbConnector.php',
+    url: 'https://rjyothis01.webhosting1.eeecs.qub.ac.uk/dbConnector.php',
     hostname: "localhost",
-    username: "phanisek01", // ! Enter own username
-    password: "nDKM7BtMSYYxWc9F",// ! Enter own password
-    database: "phanisek01", // ! Change to group DB when uploading
+    username: "rjyothis01", // ! Enter own username
+    password: "zhcj38KCKlYysLry",// ! Enter own password
+    database: "rjyothis01", // ! Change to group DB when uploading
 }
 
 /**
@@ -216,6 +216,8 @@ function ResumeGame() {
     
     GameWindow.removeChild(Overlay)
 }
+
+
  
 
 
@@ -240,6 +242,7 @@ function StartTimer() {
  */
 function InitRoom() {
     document.getElementById("PauseButton").addEventListener('click', PauseGame)
+    document.getElementById("InventoryButton").addEventListener('click', OpenInventory)
 
     LoadPlayerData()
     UpdateEnergyDisplay()    
@@ -363,11 +366,11 @@ function ShowOptions() {
 //EDIT BELOW HERE
 
 // temporary function - made this because ShowMessage("abc"); setTimeout(ShowMessage("xyz"), 1000) didnt work and was too lazy to fix it
-function delay(time) {
+function Delay(time) {
     return new Promise(resolve => setTimeout(resolve, time));
   }
 
-// FUNCTION TO DISABLE OPTIONS
+
 function DisableOptions() {
 let Options = document.getElementById("UserOptions");
 for (let i = 0; i < Options.children.length; i++) {
@@ -375,99 +378,115 @@ for (let i = 0; i < Options.children.length; i++) {
 }}
 
 
-// FUNCTION TO ENABLE OPTIONS
+
 function EnableOptions() {
     let Options = document.getElementById("UserOptions");
     for (let i = 0; i < Options.children.length; i++) {
         Options.children[i].style.pointerEvents = "auto";
     }}
 
-function thing(messageText) {
+/**
+ * Disables options while message is displayed - name tbd
+ * @param {string} messageText 
+ */
+function DisplayMessageAfterDelay (messageText) {
     DisableOptions();
-    delay(1000).then(() => {
+    Delay(1000).then(() => {
         ShowMessage(messageText);
         EnableOptions();
-    });
-    
+    });  
     
 }
+
+// function GetInventory() {
+//     executeDatabaseQuery("SELECT ItemID FROM InventoryPart WHERE SaveID = 1");
+    
+// }
+
+function OpenInventory() {
+    let GameWindow = document.getElementById("GameWindow")
+    
+    const playerInventory = getPlayerInventoryNames();
+
+    const InventoryPopUp = 
+    `<div id="Overlay">
+        <div id="OverlayMessage">
+            <h1>Inventory</h1>
+            <div id="InventoryGrid">
+                ${generateInventoryGrid(playerInventory)}
+            </div>
+            <div style="display: flex; justify-content: space-around; max-width: 500px; width: 100%;">
+                <button class="OverlayButton" id="ExitInventory">Resume</button>
+                <button class="OverlayButton" id="ReturnHomeButton">Return to Home</button>
+            </div>
+        </div>
+    </div>`
+    GameWindow.insertAdjacentHTML('beforeend', InventoryPopUp)
+
+    let exitInv = document.getElementById('ExitInventory')
+    exitInv.addEventListener('click', ExitInventory)
+
+
+}
+
+
+function ExitInventory() {
+    let GameWindow = document.getElementById("GameWindow")
+    let Overlay = GameWindow.lastChild
+    
+    GameWindow.removeChild(Overlay)
+}
+
+async function getPlayerInventoryNames() {
+    const query = `
+        SELECT i.Name 
+        FROM InventoryPart ip
+        JOIN Item i ON ip.ItemID = i.ItemID
+        WHERE ip.SaveID = 1
+        ORDER BY ip.ItemID
+    `;
+
+    const result = await executeDatabaseQuery(query);
+    
+    if (result.error || !result.data) {
+        console.error("Error:", result.errorReason || "Unknown error");
+        return [];
+    }
+
+    return result.data.map(item => item.Name);
+}
+
+function generateInventoryGrid(inventory) {
+    const gridSize = 16; // 4x4 grid
+    let gridHTML = `<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 400px; height: 400px; margin: 0 auto; border: 2px solid #ccc; padding: 10px;">`;
+    
+    for (let i = 0; i < gridSize; i++) {
+        const item = inventory[i] || null;
+        gridHTML += `
+            <div style="border: 1px solid #555555; display: flex; align-items: center; justify-content: center; background: #555555; min-height: 80px;">
+                ${item ? `<span style="color: #999999; text-align: center;">${item}</span>` : ''}
+            </div>
+        `;
+    }
+    
+    gridHTML += '</div>';
+    return gridHTML;
+}
+
 
 /**
  * Main Function which is called when room page is loaded
  */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// fix incorrect delay thing function
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function StartRoom() {
+    
+
     SetRoomName("Small, Dark Room");
     ShowMessage("You enter a small, dark room. There is a table in the centre with a note on it, and a door opposite to you.");
 
     AddOption("Read the note", () => {
         ShowMessage('It reads "LRRR"');
         // HideOptions();
-        thing("You enter a small, dark room. There is a table in the centre with a note on it, and a door opposite to you.");
+        DisplayMessageAfterDelay ("You enter a small, dark room. There is a table in the centre with a note on it, and a door opposite to you.");
         
     });
 
@@ -488,25 +507,34 @@ function StartRoom() {
 
             // incorrect #2
             AddOption("Go left", () => {
+                // if energy pack is not in inventory show this message
+                // ShowMessage('You hit a dead end, however you find an energy pack on the floor. You pick it up and turn back.');
+                // executeDatabaseQuery("INSERT INTO Item (Name, Description) VALUES ('Energy Pack', 'A small energy pack that can be used to restore energy.')")
+                // executeDatabaseQuery("SELECT * FROM Item WHERE Name = 'Energy Pack'").then((result) => {
+                    // console.log(result)
+                // });
+
+                // if energy pack is in inventory show this message
                 ShowMessage('You hit a dead end. You turn back.');
+                
                 // HideOptions();
                 
-                thing('You are back in the second narrow corridor which, surprisingly, still extends to your left and right.');
+                DisplayMessageAfterDelay ('You are back in the second narrow corridor which, surprisingly, still extends to your left and right.');
             });
 
             // correct #2
             AddOption("Go right", () => {
                 SetRoomName("Corridor #3");
-                ShowMessage("As you move along the corridor, you see a faint glow emanating through the next opening.");
-                ShowMessage('You find yourself in yet another narrow corridor which extends to your left and right. You pick up an energy pack.');
-                AddEnergy(5);
+                // ShowMessage("As you move along the corridor, you see a faint glow emanating through the next opening.");
+                ShowMessage('You find yourself in yet another narrow corridor which extends to your left and right.');
+                
                 ClearOptions();
 
                 // incorrect #3
                 AddOption("Go left", () => {
                     ShowMessage('You hit a dead end. You turn back.');
                     // HideOptions();
-                    thing('You retrace your steps back to the third narrow corridor, which still extends to your left and right.');
+                    DisplayMessageAfterDelay ('You retrace your steps back to the third narrow corridor, which still extends to your left and right.');
                 });
 
                 // correct #3
@@ -519,7 +547,7 @@ function StartRoom() {
                     AddOption("Go left", () => {
                         ShowMessage('You hit a dead end. You turn back.');
                         // HideOptions();
-                        thing('You retrace your steps back to the fourth narrow corridor, which still extends to your left and right.');
+                        DisplayMessageAfterDelay ('You retrace your steps back to the fourth narrow corridor, which still extends to your left and right.');
                     });
     
                     // correct #4
@@ -527,11 +555,10 @@ function StartRoom() {
                         SetRoomName("End?");
                         ShowMessage('Congratulations! You made it to the end. You see a door in front of you.');
                         ClearOptions();
-                        AddOption("Exit room", () => {
-                            alert("Room finished");
-                            location.reload();
+                        AddOption("Go through door", () => {
+                            // change to whatever room is next
+                            // TransitionToRoom(2);
                         });
-                        
                     });
                 });
             });
@@ -539,16 +566,11 @@ function StartRoom() {
 
         // incorrect #1
         AddOption("Go right", () => {
-            ShowMessage('You get caught in a trap and debris falls from the ceiling. You lose energy.');
+            ShowMessage('You get caught in a trap and debris falls from the ceiling. You lose 5 energy healing your wounds.');
             RemoveEnergy(5);
             // HideOptions();
-            thing('Retracing your steps, you are back in the narrow corridor which still extends to your left and right.');
-
+            DisplayMessageAfterDelay ('Retracing your steps, you are back in the narrow corridor which still extends to your left and right.');
         });
-
-        
-
-        
     });
 
     // TODO:

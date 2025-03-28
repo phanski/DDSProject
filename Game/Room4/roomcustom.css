@@ -44,6 +44,9 @@ body {
     border: black 2px solid;
     background-color: #404040;
     color: #aaaaaa;
+
+    margin: 10px auto;
+    padding: 0px 20px;
     
     font-family: monospace;
     border-radius: 10px;
