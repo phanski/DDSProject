@@ -373,10 +373,11 @@ function Delay(time) {
 
 
 function DisableOptions() {
-let Options = document.getElementById("UserOptions");
-for (let i = 0; i < Options.children.length; i++) {
-    Options.children[i].style.pointerEvents = "none";
-}}
+    let Options = document.getElementById("UserOptions");
+    for (let i = 0; i < Options.children.length; i++) {
+        Options.children[i].style.pointerEvents = "none";
+    }
+}
 
 
 
@@ -384,7 +385,8 @@ function EnableOptions() {
     let Options = document.getElementById("UserOptions");
     for (let i = 0; i < Options.children.length; i++) {
         Options.children[i].style.pointerEvents = "auto";
-    }}
+    }
+}
 
 /**
  * Disables options while message is displayed - name tbd
@@ -402,20 +404,17 @@ function DisplayMessageAfterDelay (messageText) {
 
 
 
-function ExitInventory() {
-    let GameWindow = document.getElementById("GameWindow")
-    let Overlay = GameWindow.lastChild
-    
-    GameWindow.removeChild(Overlay)
-}
+
 
 
 
 async function OpenInventory() {
     try {
         let GameWindow = document.getElementById("GameWindow")
-        let = inventoryParts = [];
-        let response = await fetch('https://rjyothis01.webhosting1.eeecs.qub.ac.uk/dbConnector.php', {
+        let inventoryPartNames = []; // = between let and inventoryPartNames??
+        let inventoryPartIDs = []; 
+
+        let response = await fetch(DatabaseConnectionData.url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -425,24 +424,25 @@ async function OpenInventory() {
                 username: DatabaseConnectionData.username,
                 password: DatabaseConnectionData.password,
                 database: DatabaseConnectionData.database,
-                query: `SELECT i.Name FROM InventoryPart ip JOIN Item i ON ip.ItemID = i.ItemID WHERE ip.SaveID = 1` // // change to saveid when login
+                query: `SELECT i.Name, i.ItemID FROM InventoryPart ip JOIN Item i ON ip.ItemID = i.ItemID WHERE ip.SaveID = 1` // // change to saveid when login finished
             })
         })
         const data = await response.json();
         for (let i = 0; i < data.data.length; i++) {
             
-            inventoryParts.push(data.data[i].Name);
+            inventoryPartNames.push(data.data[i].Name);
+            inventoryPartIDs.push(data.data[i].ItemID);
             
         
         }
-        console.log(inventoryParts)
+        console.log(inventoryPartIDs)
 
         const InventoryPopUp = 
     `<div id="Overlay">
         <div id="OverlayMessage">
             <h1>Inventory</h1>
             <div id="InventoryGrid">
-                ${generateInventoryGrid(inventoryParts)}
+                ${generateInventoryGrid(inventoryPartNames, inventoryPartIDs)}
             </div>
             <div style="display: flex; justify-content: space-around; max-width: 500px; width: 100%;">
                 <button class="OverlayButton" id="ExitInventory">Resume</button>
@@ -460,15 +460,33 @@ async function OpenInventory() {
     }
 }
 
-function generateInventoryGrid(inventory) {
+function ExitInventory() {
+    let GameWindow = document.getElementById("GameWindow")
+    let Overlay = GameWindow.lastChild
+    
+    GameWindow.removeChild(Overlay)
+}
+
+
+//________________________________________________________________________________________________________________________________________________________________________
+
+/**
+ * Generates the HTML for the inventory grid
+ * @param {Array} inventory - Array of item names
+ */
+function generateInventoryGrid(inventory, ids) {
     const gridSize = 16; // 4x4 grid
     let gridHTML = `<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 400px; height: 400px; margin: 0 auto; border: 2px solid #ccc; padding: 10px;">`;
     
     for (let i = 0; i < gridSize; i++) {
         const item = inventory[i] || null;
-        gridHTML += `
-            <div style="border: 1px solid #555555; display: flex; align-items: center; justify-content: center; background: #555555; min-height: 80px;">
-                ${item ? `<span style="color: #999999; text-align: center;">${item}</span>` : ''}
+        const id = ids[i] || null; // get the id of the item
+
+        //change "i" to item id 
+
+        gridHTML += ` 
+            <div id=${item} class="item" onclick="itemAction(${id})">
+                ${item ? `<span style="color: #AAAAAA; text-align: center;">${item}</span>` : ''}
             </div>
         `;
     }
@@ -477,10 +495,47 @@ function generateInventoryGrid(inventory) {
     return gridHTML;
 }
 
-function itemAction(itemName) {
+
+
+function itemAction(id) {
+    ExitInventory();
     //TO DO: query the database for the function of the item using the item name - can be a function that exists e.g. when EnergyPack is pressed, its function field has AddEnergy(5) in it, so AddEnergy(5) is called, simultaneously EnergyPack is removed from the inventory
+    if (id==1||id==2||id==3) { // id of energy pack
+        AddEnergy(5);
+        executeDatabaseQuery(`DELETE FROM InventoryPart WHERE ItemID = ${id} AND SaveID = 1`) // sql only required for consumable items - change hardcoded to saveid when login finished
+        // executeDatabaseQuery(`DELETE FROM InventoryPart WHERE ItemID = ${id} AND ${saveID} = 1`)
+        // SavePlayerData()
+        DisplayMessageAfterDelay("You have gained 5 energy from the Energy Pack!");
+        
+        
+    
+        
+    }
+
+    // to add more items, just add an else if statement with the id of the item and the function you want to call when it is clicked.
+
 }
 
+/**
+ * Checks if item is in inventory
+ * @param {integer} id - ID of the item to check
+ * @returns {boolean} present - True if item is present, false otherwise
+ */
+function checkInventory(id) {
+    executeDatabaseQuery(`SELECT * FROM InventoryPart WHERE ItemID = ${id} AND SaveID = 1`).then((result) => { // change saveid
+        if (result.data.length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    ).catch((error) => {
+        console.error('Error checking inventory:', error);
+        return false; // Error occurred, assume item is not present
+    });
+}
+//________________________________________________________________________________________________________________________________________________________________________
 
 /**
  * Main Function which is called when room page is loaded
@@ -497,6 +552,14 @@ function StartRoom() {
         DisplayMessageAfterDelay ("You enter a small, dark room. There is a table in the centre with a note on it, and a door opposite to you.");
         
     });
+
+    // AddOption("Pick up the note", () => {
+    //     ShowMessage('You pick up the note and put it in your inventory.');
+    //     executeDatabaseQuery(`INSERT INTO InventoryPart (ItemID, SaveID) VALUES (4, 1)`); // change saveid when login finished
+    //     // HideOptions();
+    //     DisplayMessageAfterDelay ("You enter a small, dark room. There is a table in the centre, and a door opposite to you.");
+
+    // })
 
     AddOption("Go through the door", () => {
         // HideOptions();
@@ -515,20 +578,19 @@ function StartRoom() {
 
             // incorrect #2
             AddOption("Go left", () => {
-                // if energy pack is not in inventory show this message
-                // ShowMessage('You hit a dead end, however you find an energy pack on the floor. You pick it up and turn back.');
-                // executeDatabaseQuery("INSERT INTO Item (Name, Description) VALUES ('Energy Pack', 'A small energy pack that can be used to restore energy.')")
-                // executeDatabaseQuery("SELECT * FROM Item WHERE Name = 'Energy Pack'").then((result) => {
-                    // console.log(result)
-                // });
-
-                // if energy pack is in inventory show this message
+                
+                
                 ShowMessage('You hit a dead end. You turn back.');
+                
+
+
+                // // if energy pack is in inventory show this message
+                // ShowMessage('You hit a dead end. You turn back.');
                 
                 // HideOptions();
                 
                 DisplayMessageAfterDelay ('You are back in the second narrow corridor which, surprisingly, still extends to your left and right.');
-            });
+        });
 
             // correct #2
             AddOption("Go right", () => {

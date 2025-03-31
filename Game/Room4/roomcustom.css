@@ -1,5 +1,7 @@
 * {
     z-index: 1;
+    font-family: monospace;
+    /* font-size: large; */
 }
 
 body {
@@ -169,5 +171,32 @@ body {
 
 .OverlayButton:hover {
     background-color: #090909;
+    cursor: pointer;
+}
+
+.item {
+    /* background-color: #44444499;
+    border: 2px solid black;
+    border-radius: 9px;
+    padding: 0.5em;
+    margin: 0.5em auto;
+    width: fit-content;
+    max-width: 90%;
+    color: #aaaaaa;
+    font-family: monospace;
+    font-size: 1.2em; */
+    color: #aaaaaa;
+    
+    border-radius: 9px;
+    border: 1px solid #555555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #555555;
+    min-height: 80px;
+}
+
+.item:hover {
+    background-color: #444444;
     cursor: pointer;
 }
