@@ -342,11 +342,19 @@ function UpdateOptionText(OptionID, NewText) {
  * Main Function which is called when room page is loaded
  */
 function StartRoom() {
+    let attempts = 0;
+    let soundPlays = 0;
+    
     document.getElementById('SubmitAnswer').addEventListener('click', function() {
         const userInput = document.getElementById('AnswerInput').value.trim().toLowerCase();
         if (userInput === 'pet') {
             document.getElementById('SuccessMessage').style.display = 'block';
+            document.getElementById('AdditionalClue').style.display = 'none';
         } else {
+            attempts++;
+            if (attempts >= 3) {
+                document.getElementById('AdditionalClue').style.display = 'block';
+            }
             alert('Try again!');
         }
     });
@@ -369,19 +377,18 @@ function StartRoom() {
 
     AddOption("Play Sound", () => {
         const knockingSound = document.getElementById('knockingSound');
-
-        if (knockingSound.paused) {
-            knockingSound.play();
-            UpdateOptionText("PlaySound", "Pause")
-        } else {
-            knockingSound.pause();
-            UpdateOptionText("PlaySound", "Play")
+        
+        // Reset the audio to the beginning and play it once
+        knockingSound.currentTime = 0;
+        knockingSound.play();
+        
+        // Increment sound plays counter and show clue after 3 plays
+        soundPlays++;
+        if (soundPlays >= 3) {
+            document.getElementById('AdditionalClue').style.display = 'block';
         }
-
     })
 
     SetBackgroundImage("/Assets/textbox_pages-to-jpg-0001.jpg")
     SetRoomName("Living Room")
-
-   
 }
