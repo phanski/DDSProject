@@ -399,36 +399,7 @@ function DisplayMessageAfterDelay (messageText) {
     
 }
 
-// function GetInventory() {
-//     executeDatabaseQuery("SELECT ItemID FROM InventoryPart WHERE SaveID = 1");
-    
-// }
 
-function OpenInventory() {
-    let GameWindow = document.getElementById("GameWindow")
-    
-    const playerInventory = getPlayerInventoryNames();
-
-    const InventoryPopUp = 
-    `<div id="Overlay">
-        <div id="OverlayMessage">
-            <h1>Inventory</h1>
-            <div id="InventoryGrid">
-                ${generateInventoryGrid(playerInventory)}
-            </div>
-            <div style="display: flex; justify-content: space-around; max-width: 500px; width: 100%;">
-                <button class="OverlayButton" id="ExitInventory">Resume</button>
-                <button class="OverlayButton" id="ReturnHomeButton">Return to Home</button>
-            </div>
-        </div>
-    </div>`
-    GameWindow.insertAdjacentHTML('beforeend', InventoryPopUp)
-
-    let exitInv = document.getElementById('ExitInventory')
-    exitInv.addEventListener('click', ExitInventory)
-
-
-}
 
 
 function ExitInventory() {
@@ -438,23 +409,55 @@ function ExitInventory() {
     GameWindow.removeChild(Overlay)
 }
 
-async function getPlayerInventoryNames() {
-    const query = `
-        SELECT i.Name 
-        FROM InventoryPart ip
-        JOIN Item i ON ip.ItemID = i.ItemID
-        WHERE ip.SaveID = 1
-        ORDER BY ip.ItemID
-    `;
 
-    const result = await executeDatabaseQuery(query);
-    
-    if (result.error || !result.data) {
-        console.error("Error:", result.errorReason || "Unknown error");
-        return [];
+
+async function OpenInventory() {
+    try {
+        let GameWindow = document.getElementById("GameWindow")
+        let = inventoryParts = [];
+        let response = await fetch('https://rjyothis01.webhosting1.eeecs.qub.ac.uk/dbConnector.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                hostname: DatabaseConnectionData.hostname,
+                username: DatabaseConnectionData.username,
+                password: DatabaseConnectionData.password,
+                database: DatabaseConnectionData.database,
+                query: `SELECT i.Name FROM InventoryPart ip JOIN Item i ON ip.ItemID = i.ItemID WHERE ip.SaveID = 1` // // change to saveid when login
+            })
+        })
+        const data = await response.json();
+        for (let i = 0; i < data.data.length; i++) {
+            
+            inventoryParts.push(data.data[i].Name);
+            
+        
+        }
+        console.log(inventoryParts)
+
+        const InventoryPopUp = 
+    `<div id="Overlay">
+        <div id="OverlayMessage">
+            <h1>Inventory</h1>
+            <div id="InventoryGrid">
+                ${generateInventoryGrid(inventoryParts)}
+            </div>
+            <div style="display: flex; justify-content: space-around; max-width: 500px; width: 100%;">
+                <button class="OverlayButton" id="ExitInventory">Resume</button>
+                <button class="OverlayButton" id="ReturnHomeButton">Return to Home</button>
+            </div>
+        </div>
+    </div>`
+        GameWindow.insertAdjacentHTML('beforeend', InventoryPopUp)
+        
+        let exitInv = document.getElementById('ExitInventory')
+        exitInv.addEventListener('click', ExitInventory)
+        // return InventoryPopUp;
+    } catch (error) {
+        console.error('Error fetching data:', error);
     }
-
-    return result.data.map(item => item.Name);
 }
 
 function generateInventoryGrid(inventory) {
@@ -472,6 +475,10 @@ function generateInventoryGrid(inventory) {
     
     gridHTML += '</div>';
     return gridHTML;
+}
+
+function itemAction(itemName) {
+    //TO DO: query the database for the function of the item using the item name - can be a function that exists e.g. when EnergyPack is pressed, its function field has AddEnergy(5) in it, so AddEnergy(5) is called, simultaneously EnergyPack is removed from the inventory
 }
 
 
@@ -558,7 +565,15 @@ function StartRoom() {
                         ClearOptions();
                         AddOption("Go through door", () => {
                             // change to whatever room is next
-                            // TransitionToRoom(2);
+                            TransitionToRoom(2);
+
+                            // // Cleared to ensure timer doesn't tick while user is waiting for room to load
+                            // clearInterval(TimerInterval)
+
+                            // SavePlayerData()
+
+                            // window.location.href = `/Game/Room${roomNumber}/room.html`
+                            // // window.location.href = `/Game/End Screen Credits/win.html`
                         });
                     });
                 });
@@ -574,25 +589,7 @@ function StartRoom() {
         });
     });
 
-    // TODO:
-    // <^>
     
-
-    // AddOption("Hide Options", () => {
-    //     HideOptions();
-    //     setTimeout(ShowOptions, 1000);
-    // })
-
-    // // AddOption("Clear Options", () => ClearOptions("You may not make an action now"))
-    // AddOption("Clear Options", () => ClearOptions())
-
-    // AddOption("Add Energy", () => AddEnergy(5))
-    // AddOption("Remove Energy", () => RemoveEnergy(5))
-    // AddOption("DB Test", () => {
-    //     executeDatabaseQuery("SELECT * FROM testUsers").then((result) => {
-    //         console.log(result)
-    //     })
-    // })
 
     
     
