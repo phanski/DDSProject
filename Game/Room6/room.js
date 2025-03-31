@@ -392,3 +392,43 @@ function StartRoom() {
     SetBackgroundImage("/Assets/textbox_pages-to-jpg-0001.jpg")
     SetRoomName("Living Room")
 }
+
+
+/**
+ * Records the user's runtime for the current room and stores it in the database
+ * @param {function} callback - Function to execute after data is stored
+ */
+function recordRoomCompletion(callback) {
+    // Get current username from session storage
+    const username = sessionStorage.getItem('username') || 'unknown_user';
+    
+    // Get the current runtime in seconds
+    const runtimeSeconds = GameState.PlayerTimeSeconds;
+    
+    // Get current room number from the URL
+    const currentUrl = window.location.pathname;
+    const roomMatch = currentUrl.match(/Room(\d+)/);
+    const roomNumber = roomMatch ? roomMatch[1] : '0';
+    
+    // Create timestamp
+    const timestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    
+    // Create SQL query to insert the data
+    const sqlQuery = `INSERT INTO room_completions (username, room_number, runtime_seconds, completion_time) 
+                     VALUES ('${username}', ${roomNumber}, ${runtimeSeconds}, '${timestamp}')`;
+    
+    // Execute the query
+    executeDatabaseQuery(sqlQuery)
+        .then(result => {
+            console.log('Room completion recorded successfully');
+            if (callback && typeof callback === 'function') {
+                callback(result);
+            }
+        })
+        .catch(error => {
+            console.error('Failed to record room completion:', error);
+            if (callback && typeof callback === 'function') {
+                callback(null, error);
+            }
+        });
+}
