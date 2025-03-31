@@ -46,7 +46,7 @@ register page and start layout of actual game
 body {
     /* background-image: url("HandOnWall.jpeg"); */
     /* background-image: url(Images/HandOnWall.jpeg); */
-    background-image: url(Images/wmremove-transformed.jpeg);
+    background-image: url(/Assets/wmremove-transformed.jpeg);
 
     background-size: 100%;
     
