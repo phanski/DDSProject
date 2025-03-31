@@ -34,12 +34,13 @@ body {
     position: relative;
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: 12% 73% 15%;
+    grid-template-rows: auto 1fr auto;
 }
 
 #Message {
     grid-row: 3;
-    width: 50%;
+    width: fit-content;
+    height:fit-content;
     background-color: #888C;
     margin: 10px auto;
     border: black 2px solid;
@@ -67,7 +68,7 @@ body {
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: auto;
     border: 2px solid black;
-
+    
     border-radius: 9px;
 }
 
@@ -90,6 +91,7 @@ body {
     justify-content: space-evenly;
     border-radius: 0px;
     border-top: 2px solid black;
+
 }
 
 .UserOption {
@@ -171,6 +173,7 @@ body {
     justify-content: center;
     background-color: #44444499;
     margin: 2em auto;
+    
     border-radius: 9px;
     padding: 1em;
 }

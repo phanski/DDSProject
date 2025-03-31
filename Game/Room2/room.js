@@ -9,11 +9,11 @@ let TimerInterval = undefined
 
 
 const DatabaseConnectionData = {
-    url: 'https://phanisek01.webhosting1.eeecs.qub.ac.uk/dbConnector.php',
+    url: 'https://jmurray65.webhosting1.eeecs.qub.ac.uk/dbConnector.php',
     hostname: "localhost",
-    username: "phanisek01", // ! Enter own username
-    password: "nDKM7BtMSYYxWc9F",// ! Enter own password
-    database: "phanisek01", // ! Change to group DB when uploading
+    username: "jmurray65", // ! Enter own username
+    password: "9BtNTkGhcczgCzJQ",// ! Enter own password
+    database: "jmurray65", // ! Change to group DB when uploading
 }
 
 /**
@@ -49,14 +49,20 @@ function SetRoomName(roomName) {
 function AddOption(OptionTitle, OptionAction) {
     let Options = document.getElementById("UserOptions")
     let NewOption = document.createElement("div")
-    NewOption.className = "UserOption"
+    NewOption.className = "UserOption";
+    NewOption.style.display="none"
 
     let NewOptionTitle = document.createElement("h1")
     NewOptionTitle.textContent = OptionTitle
     NewOption.appendChild(NewOptionTitle)
-    NewOption.addEventListener("click", OptionAction)
+    NewOption.addEventListener("click", OptionAction);
+    
+    Options.appendChild(NewOption);
+    loadSetting();
 
-    Options.appendChild(NewOption)
+    setTimeout(()=>{
+        NewOption.style.display="block";
+    },68.99)
 }
 
 /**
@@ -242,10 +248,15 @@ function InitRoom() {
     document.getElementById("PauseButton").addEventListener('click', PauseGame)
 
     LoadPlayerData()
+
+    loadSetting();
+
     UpdateEnergyDisplay()    
     StartTimer()
     
     StartRoom()
+
+
 }
 
 window.addEventListener('load', InitRoom)
@@ -325,6 +336,72 @@ function HideMessage() {
 */
 
 //EDIT BELOW HERE
+
+const currentUserID=prompt("Enter User ID: ");
+
+async function loadSetting(){
+    let volumeData=await fetchSettings(`SELECT volume FROM Users WHERE UserID= ${currentUserID} `);
+    if (volumeData){
+        setVolume(volumeData.volume);
+    }
+    let fontSize=await fetchSettings(`SELECT fontSize FROM Users WHERE UserID= ${currentUserID} `);
+    if (fontSize){
+        setFontSize(fontSize.fontSize);
+    }
+    let fontFamily=await fetchSettings(`SELECT fontFamily FROM Users WHERE UserID= ${currentUserID} `);
+    if (fontFamily){
+        setFontFamily(fontFamily.fontFamily);
+    }
+}
+
+function setVolume(value){
+    value/=100;
+    let audioElements=document.getElementsByTagName("audio");
+    if (audioElements.length!=0){
+        for (let i=0;i<audioElements.length;i++){
+            audioElements[i].volume=value;
+        }
+    }
+    else{
+        return;
+    }
+}
+
+function setFontSize(value){
+    let elements=document.querySelectorAll("*");
+    let size;
+    if (value==="Small"){
+        size=1;
+    }else if (value==="Medium"){
+        size=1.5;
+    }else if (value==="Large"){
+        size=1.75;
+    }else if (value==="Extra Large"){
+        size=2;
+    }else{
+        console.error("Error Raised when fetching data");
+        return;
+    }
+    for (let i=0;i<elements.length;i++){
+        try{
+            elements[i].style.fontSize=(size+"vw");
+            elements[i].offsetHeight;
+        }catch{
+            continue;
+        }
+    }
+}
+
+function setFontFamily(value){
+    let elements=document.querySelectorAll("*");
+    for (let i=0;i<elements.length;i++){
+        try{
+            elements[i].style.fontFamily=value;
+        }catch{
+            continue;
+        }
+    }
+}
 
 var rows=3;
 var columns=3;
@@ -501,7 +578,6 @@ function resetBoard(){
     tempOrder=["4","2","8","5","1","6","7","9","3"];//Resets the order of the images to the original order
     imgOrder=tempOrder.slice();//Resets the images array to repopulate
 
-
     //Removes all tiles from the board
     for (let r=0; r<rows; r++) {
         for(let c=0; c<columns; c++){
@@ -514,7 +590,25 @@ function resetBoard(){
 }
 
 function showReward(){
-    //Unfinished Function
+//  Unfinished Function
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+//     
     ClearObject();
     ShowObject(`https://imgs.search.brave.com/Uv7PjPwToss4YP4krNPTTauC8y1Iq7BXFAWSoknkpAI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTEv/ODE0LzU2Ny9zbWFs/bC9yb2xsLW9mLXll/bGxvdy1zY290Y2gt/dGFwZS0zZC1oaWdo/LXF1YWxpdHktcGhv/dG8tcG5nLnBuZw`,"Alt text");
     ClearOptions();
@@ -547,15 +641,38 @@ function RemoveOption(OptionTitle){
             continue;
         }
     }
+}
 
+async function fetchSettings(dbQuery){
+    try{
+        let response = await fetch("https://jmurray65.webhosting1.eeecs.qub.ac.uk/dbConnector.php", {
+            method: 'POST',
+            body: new URLSearchParams({
+                hostname: 'localhost',
+                username: 'jmurray65',
+                password: '9BtNTkGhcczgCzJQ',
+                database: 'jmurray65',
+                query: dbQuery
+            })
+        });
+        let result= await response.json();
+        if (result.error){
+            console.log(result.error.toString());
+        }else if(result.data){
+            return result.data[0];
+        }else{
+            console.log("Query Reached Else")
+        }
+    }catch(error){
+        console.error(error);
+    }
 }
 
 /**
  * Main Function which is called when room page is loaded
  */
 function StartRoom() {
-    
-    
+
     AddOption("Show Messsage", () => ShowMessage(RoomDescription))
     AddOption("Hide Message", HideMessage)
     AddOption("Investigate the box", () => ShowObject(`https://imgs.search.brave.com/Uv7PjPwToss4YP4krNPTTauC8y1Iq7BXFAWSoknkpAI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTEv/ODE0LzU2Ny9zbWFs/bC9yb2xsLW9mLXll/bGxvdy1zY290Y2gt/dGFwZS0zZC1oaWdo/LXF1YWxpdHktcGhv/dG8tcG5nLnBuZw`,"Alt text"))
