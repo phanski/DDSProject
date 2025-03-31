@@ -50,6 +50,7 @@ function AddOption(OptionTitle, OptionAction) {
     let Options = document.getElementById("UserOptions")
     let NewOption = document.createElement("div")
     NewOption.className = "UserOption"
+    NewOption.id= OptionTitle.replace(" ", "")
 
     let NewOptionTitle = document.createElement("h1")
     NewOptionTitle.textContent = OptionTitle
@@ -330,6 +331,9 @@ function HideMessage() {
 
 //EDIT BELOW HERE
 
+function UpdateOptionText(OptionID, NewText) {
+    document.getElementById(OptionID).firstChild.textContent = NewText
+}
 
 
 
@@ -347,34 +351,37 @@ function StartRoom() {
         }
     });
     
-    AddOption("Show Messsage", () => ShowMessage('New Option'))
-    AddOption("Hide Message", HideMessage)
-    // AddOption("Show Object", () => ShowObject(`https://imgs.search.brave.com/Uv7PjPwToss4YP4krNPTTauC8y1Iq7BXFAWSoknkpAI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTEv/ODE0LzU2Ny9zbWFs/bC9yb2xsLW9mLXll/bGxvdy1zY290Y2gt/dGFwZS0zZC1oaWdo/LXF1YWxpdHktcGhv/dG8tcG5nLnBuZw`))
-    // AddOption("Hide Object", () => HideObject())
-    // AddOption("Clear Options", () => ClearOptions("You may not make an action now"))
-    // AddOption("Clear Options", () => ClearOptions())
+    // AddOption("Show Messsage", () => ShowMessage('New Option'))
+    // AddOption("Hide Message", HideMessage)
+    // // AddOption("Show Object", () => ShowObject(`https://imgs.search.brave.com/Uv7PjPwToss4YP4krNPTTauC8y1Iq7BXFAWSoknkpAI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTEv/ODE0LzU2Ny9zbWFs/bC9yb2xsLW9mLXll/bGxvdy1zY290Y2gt/dGFwZS0zZC1oaWdo/LXF1YWxpdHktcGhv/dG8tcG5nLnBuZw`))
+    // // AddOption("Hide Object", () => HideObject())
+    // // AddOption("Clear Options", () => ClearOptions("You may not make an action now"))
+    // // AddOption("Clear Options", () => ClearOptions())
 
-    AddOption("Add Energy", () => AddEnergy(5))
-    AddOption("Remove Energy", () => RemoveEnergy(5))
-    AddOption("DB Test", () => {
-        executeDatabaseQuery("SELECT * FROM testUsers").then((result) => {
-            console.log(result)
-        })
+    // AddOption("Add Energy", () => AddEnergy(5))
+    // AddOption("Remove Energy", () => RemoveEnergy(5))
+    // AddOption("DB Test", () => {
+    //     executeDatabaseQuery("SELECT * FROM testUsers").then((result) => {
+    //         console.log(result)
+    //     })
         
-    })
-    SetBackgroundImage("/Assets/text box_pages-to-jpg-0001.jpg")
-    SetRoomName("Living Room")
+    // })
 
-    const knockingSound = document.getElementById('knockingSound');
-    const playPauseButton = document.getElementById('playPauseButton');
+    AddOption("Play Sound", () => {
+        const knockingSound = document.getElementById('knockingSound');
 
-    playPauseButton.addEventListener('click', function() {
         if (knockingSound.paused) {
             knockingSound.play();
-            playPauseButton.textContent = 'Pause';
+            UpdateOptionText("PlaySound", "Pause")
         } else {
             knockingSound.pause();
-            playPauseButton.textContent = 'Play';
+            UpdateOptionText("PlaySound", "Play")
         }
-    });
+
+    })
+
+    SetBackgroundImage("/Assets/textbox_pages-to-jpg-0001.jpg")
+    SetRoomName("Living Room")
+
+   
 }
