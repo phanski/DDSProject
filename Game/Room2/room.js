@@ -194,7 +194,7 @@ function FailGame(reason) {
 function PauseGame() {
     let GameWindow = document.getElementById("GameWindow")
 
-    const PauseMenuPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>Game Paused</h1><h2>Current Time : <span id="PauseScreenTime"></span></h2><div style="display: flex; justify-content: space-around; max-width: 500px; width: 100%;"><button class="OverlayButton" id="ResumeButton">Resume</button><button class="OverlayButton" id="ReturnHomeButton">Return to Home</button></div></div></div>'
+    const PauseMenuPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>Game Paused</h1><h2>Current Time : <span id="PauseScreenTime"></span></h2><div style="display: flex; justify-content: space-around; max-width: 500px; width: 100%; "><button class="OverlayButton" id="ResumeButton">Resume</button><button class="OverlayButton" id="ReturnHomeButton">Return to Home</button></div></div></div>'
     GameWindow.insertAdjacentHTML('beforeend', PauseMenuPopup)
 
     let resumeButton = document.getElementById('ResumeButton')
@@ -368,7 +368,7 @@ function setVolume(value){
 }
 
 function setFontSize(value){
-    let elements=document.querySelectorAll("*");
+    let elements=document.querySelectorAll("*:not(i)");
     let size;
     if (value==="Small"){
         size=1;
@@ -385,7 +385,6 @@ function setFontSize(value){
     for (let i=0;i<elements.length;i++){
         try{
             elements[i].style.fontSize=(size+"vw");
-            elements[i].offsetHeight;
         }catch{
             continue;
         }
@@ -393,7 +392,7 @@ function setFontSize(value){
 }
 
 function setFontFamily(value){
-    let elements=document.querySelectorAll("*");
+    let elements=document.querySelectorAll("*:not(i)");
     for (let i=0;i<elements.length;i++){
         try{
             elements[i].style.fontFamily=value;

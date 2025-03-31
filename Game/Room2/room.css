@@ -54,6 +54,7 @@ body {
     aspect-ratio: 1/1;
     background-color: #44444499;
     margin: 2em auto;
+    margin-top:1vh;
 
     /* Room starts with no object */
     display: none; 
@@ -145,18 +146,20 @@ body {
 
     border: 2px solid black;
     background-color: #999;
-    max-width: 800px;
-    max-height: 600px;
+    max-width: 40%;
+    max-height: 70%;
     width: 100%;
     height: 100%;
 }
 
 .OverlayButton {
-    padding: .5em;
-    margin: auto 1em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    margin: auto 1vw;
     border-radius: 9px;
     font-size: 1.4em;
-    width: 100%;
+    width: fit-content;
+    height:fit-content;
 }
 
 .OverlayButton:hover {
@@ -176,4 +179,13 @@ body {
     
     border-radius: 9px;
     padding: 1em;
+}
+
+#ResumeButton{
+    top:0;
+}
+
+#ReturnHomeButton{
+    margin-top: 0;
+    align-items: top;
 }
