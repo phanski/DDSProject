@@ -28,6 +28,7 @@
                     <input type="text" id="AnswerInput" placeholder="Enter the answer...">
                     <button id="SubmitAnswer">Submit</button>
                     <div id="SuccessMessage" class="success-message" style="display:none;">Correct! You've found the secret!</div>
+                    <div id="AdditionalClue" class="eerie-text" style="display:none; font-weight: bold; font-size: 2em; color: white;">. _ _ . / . / _</div>
                 </div>
                 <div id="Message">
                     <h1></h1>
@@ -35,11 +36,11 @@
             </div>
             <div id="UserOptions"></div>
             <!-- Add the audio file source for the knocking sound here -->
-            <audio id="knockingSound" loop>
-                <!-- <source src="path/to/knocking-sound.mp3" type="audio/mpeg"> -->
+            <audio id="knockingSound">
+                <source src="/Assets/knockingsound.mp3" type="audio/mpeg">
                 Your browser does not support the audio element.
             </audio>
-            <button id="playPauseButton">Play</button>
+            <!-- <button id="playPauseButton">Play</button> -->
             <!-- Overlay code left for neat formatting -->
             <!-- <div id="Overlay">
                 <div id="OverlayMessage">

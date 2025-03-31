@@ -3,9 +3,7 @@
 }
 
 body {
-    background-image: url('text box_pages-to-jpg-0001.jpg');
-    background-size: cover;
-    background-position: top;
+    background-color: grey;
     margin: 0;
     padding: 0;
 
@@ -30,7 +28,7 @@ body {
 #GameView {
     background-repeat: no-repeat;
     background-size: cover;
-    background-position: 0px -400px;
+    background-position: 0px 0px;
     text-align: center;
     border-radius: 0px;
     position: relative;
@@ -41,7 +39,8 @@ body {
 
 #Message {
     grid-row: 3;
-    width: 50%;
+    width: fit-content;
+    max-width: 80%;
     background-color: #888C;
     margin: 10px auto;
     border: black 2px solid;
@@ -51,20 +50,15 @@ body {
 }
 
 #FocusedObject {
-    max-height: 40%;
-    width: 40%; 
-    aspect-ratio: 1/1;
+    max-height: 30%;
     background-color: #44444499;
     margin: 2em auto;
-
-    /* Room starts with no object */
-    /* display: none; */
 }
 
 
 
 #InfoBar {
-    background-color: blue;
+    background-color: #5d4037; /* Changed from blue to a dark woody brown color */
     margin: 0.2em;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -85,7 +79,7 @@ body {
     grid-row: 2;
     grid-column: 1;
 
-    background-color: green;
+    background-color: #8B4513; /* Changed from green to a woody brown color (SaddleBrown) */
     text-align: center;
     display: flex;
     flex-direction: row;
@@ -105,7 +99,7 @@ body {
 }
 
 .UserOption:hover {
-    background-color: #00FD00;
+    background-color: #D2B48C; /* Changed from #00FD00 to a light tan color */
 }
 
 #Timer {

@@ -41,28 +41,128 @@
         
         
         <script>
+            /**
+             * Takes a Username and password for a new user and attempts to register their account.
+             * Only Validates to ensure Username is not duplicated and valid
+             * Validation for confirming password etc is to be done by caller
+             * @param {String} Username 
+             * @param {String} Password 
+             */
+            async function Register(Username, Password) {
+                Username = CleanSQL(Username)
+                Password = CleanSQL(Password)
+
+                const RegisterQuery = `INSERT INTO Users VALUES ("${Username}","${Password}");`
+                
+                let dbResult = await executeDatabaseQuery(RegisterQuery)
+
+                return dbResult.success
+            
+            }
+
+            // TODO: clean sql to prevent injection
+            function CleanSQL(Input) {
+                return Input
+                
+            }
+
+            const DatabaseConnectionData = {
+                url: 'https://phanisek01.webhosting1.eeecs.qub.ac.uk/dbConnector.php',
+                hostname: "localhost",
+                username: "phanisek01", // ! Enter own username
+                password: "nDKM7BtMSYYxWc9F",// ! Enter own password
+                database: "phanisek01", // ! Change to group DB when uploading
+            }
+
+            /**
+             * Sends a SQL query to the database defined at the start of the file
+             * @param {string} SQLQuery 
+             * @returns Promise. Successful if SQL query succeeds, Rejects if there is error at any part of the request
+             */
+            async function executeDatabaseQuery(SQLQuery) {
+                let params = new URLSearchParams();
+                params.append('hostname', DatabaseConnectionData.hostname);
+                params.append('username', DatabaseConnectionData.username);
+                params.append('password', DatabaseConnectionData.password);
+                params.append('database', DatabaseConnectionData.database);
+                params.append('query', SQLQuery);
+
+                const DBPromise = new Promise((resolve, reject) => {
+                    try {
+                        let fetchPromise = fetch(DatabaseConnectionData.url, {
+                            method: 'POST',
+                            body: params
+                        }); 
+                
+                        fetchPromise.then((result) => {
+                            console.log(result)
+
+
+                            result.json().then((jsonResult) => {
+                                console.log(jsonResult)
+                                if (jsonResult.error) {
+                                    console.log(jsonResult.error.toString());
+                                    // Passes result directly to not complicate handling result
+                                    reject(jsonResult)
+                                }
+                                else if (jsonResult.data) {
+                                    // Passes result directly to not complicate handling result
+                                    resolve(jsonResult)
+                                }
+                                else {
+                                    if (jsonResult.affected_rows !== undefined) {
+                                        resolve({
+                                            success: jsonResult.success,
+                                            affected_rows: jsonResult.affected_rows
+                                        })
+                                    } else {   
+                                        resolve({
+                                            success: jsonResult.success,
+                                        })
+                                    }
+                                }
+                            }) 
+                        }) 
+                    } catch (error) {
+                        console.error('Error parsing JSON:', error);
+                        reject({
+                            error: true,
+                            errorReason: error
+                        })
+                    }
+                })
+
+                return DBPromise
+            }
+
             document.getElementById('button2').onclick = function(){
                 window.location.href = "menu.html";
             }
+            
 
-            document.getElementById('loginForm').addEventListener("submit" , function(event){
+            document.getElementById('loginForm').addEventListener("submit" , async function(event){
                 event.preventDefault();
+                let Username = document.getElementById("userName").value
+                let Password = document.getElementById("password").value
+                let ConfirmPassword = document.getElementById("passwordCheck").value
 
-                let userName = document.getElementById('userName').value;
-                let password = document.getElementById('password').value;
-                let passwordCheck = document.getElementById('passwordCheck').value;
+                if (Password !== ConfirmPassword) {
+                    // TODO: Better alert when register page is ready
+                    alert("Password doesn't match")
+                    return
+                }
 
-                if (password === passwordCheck) {
-            fetch("https://your-server.com/save-data", {
-                method: "POST", 
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({ userName, password }) 
-            })
-                .then(response => response.json())
-                .then(data => alert("Data saved successfully!"))
-                .catch(error => console.error("Error:", error));
-            }});
-
+                let RegisterResult = await Register(Username, Password)
+                console.log(RegisterResult)
+                if (RegisterResult) {
+                    // TODO: Replace to actual login page
+                    document.location.pathname = "/WEBSITE/loginScreen.html"
+                } else {
+                    // TODO: Better alert for failed login when the login page is created
+                    alert ("Username is already taken")
+                }
+                })
+            
 
 
             

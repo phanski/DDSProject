@@ -50,6 +50,7 @@ function AddOption(OptionTitle, OptionAction) {
     let Options = document.getElementById("UserOptions")
     let NewOption = document.createElement("div")
     NewOption.className = "UserOption"
+    NewOption.id= OptionTitle.replace(" ", "")
 
     let NewOptionTitle = document.createElement("h1")
     NewOptionTitle.textContent = OptionTitle
@@ -172,11 +173,9 @@ function FailGame(reason) {
     let ReturnHomeButton = document.getElementById("ReturnHomeButton")
 
     ReturnHomeButton.addEventListener('click', () => {
-        // TODO: get correct home page path
+        // TODO: Ensure game state is cleared
         
-        // ! DEBUG: 
-        // window.location.href = "/home"
-        alert("No home page")
+        window.location.href = "/WEBSITE/website.html"
     })
 
     clearInterval(TimerInterval)
@@ -200,7 +199,13 @@ function PauseGame() {
 
     let TimerValue = `${timeMinutes}:${("" + timeSeconds).padStart(2, "0")}`
     
-    
+    let ReturnHomeButton = document.getElementById("ReturnHomeButton")
+    ReturnHomeButton.addEventListener('click', () => {
+        // TODO: Ensure game state is saved
+        
+        window.location.href = "/WEBSITE/website.html"
+    })
+
     pauseTimeDisplay.textContent = TimerValue
 
     clearInterval(TimerInterval)
@@ -326,6 +331,9 @@ function HideMessage() {
 
 //EDIT BELOW HERE
 
+function UpdateOptionText(OptionID, NewText) {
+    document.getElementById(OptionID).firstChild.textContent = NewText
+}
 
 
 
@@ -334,43 +342,93 @@ function HideMessage() {
  * Main Function which is called when room page is loaded
  */
 function StartRoom() {
+    let attempts = 0;
+    let soundPlays = 0;
+    
     document.getElementById('SubmitAnswer').addEventListener('click', function() {
         const userInput = document.getElementById('AnswerInput').value.trim().toLowerCase();
         if (userInput === 'pet') {
             document.getElementById('SuccessMessage').style.display = 'block';
+            document.getElementById('AdditionalClue').style.display = 'none';
         } else {
+            attempts++;
+            if (attempts >= 3) {
+                document.getElementById('AdditionalClue').style.display = 'block';
+            }
             alert('Try again!');
         }
     });
     
-    AddOption("Show Messsage", () => ShowMessage('New Option'))
-    AddOption("Hide Message", HideMessage)
-    // AddOption("Show Object", () => ShowObject(`https://imgs.search.brave.com/Uv7PjPwToss4YP4krNPTTauC8y1Iq7BXFAWSoknkpAI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTEv/ODE0LzU2Ny9zbWFs/bC9yb2xsLW9mLXll/bGxvdy1zY290Y2gt/dGFwZS0zZC1oaWdo/LXF1YWxpdHktcGhv/dG8tcG5nLnBuZw`))
-    // AddOption("Hide Object", () => HideObject())
-    // AddOption("Clear Options", () => ClearOptions("You may not make an action now"))
-    // AddOption("Clear Options", () => ClearOptions())
+    // AddOption("Show Messsage", () => ShowMessage('New Option'))
+    // AddOption("Hide Message", HideMessage)
+    // // AddOption("Show Object", () => ShowObject(`https://imgs.search.brave.com/Uv7PjPwToss4YP4krNPTTauC8y1Iq7BXFAWSoknkpAI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTEv/ODE0LzU2Ny9zbWFs/bC9yb2xsLW9mLXll/bGxvdy1zY290Y2gt/dGFwZS0zZC1oaWdo/LXF1YWxpdHktcGhv/dG8tcG5nLnBuZw`))
+    // // AddOption("Hide Object", () => HideObject())
+    // // AddOption("Clear Options", () => ClearOptions("You may not make an action now"))
+    // // AddOption("Clear Options", () => ClearOptions())
 
-    AddOption("Add Energy", () => AddEnergy(5))
-    AddOption("Remove Energy", () => RemoveEnergy(5))
-    AddOption("DB Test", () => {
-        executeDatabaseQuery("SELECT * FROM testUsers").then((result) => {
-            console.log(result)
-        })
+    // AddOption("Add Energy", () => AddEnergy(5))
+    // AddOption("Remove Energy", () => RemoveEnergy(5))
+    // AddOption("DB Test", () => {
+    //     executeDatabaseQuery("SELECT * FROM testUsers").then((result) => {
+    //         console.log(result)
+    //     })
         
-    })
-    SetBackgroundImage("/Assets/text box_pages-to-jpg-0001.jpg")
-    SetRoomName("Living Room")
+    // })
 
-    const knockingSound = document.getElementById('knockingSound');
-    const playPauseButton = document.getElementById('playPauseButton');
-
-    playPauseButton.addEventListener('click', function() {
-        if (knockingSound.paused) {
-            knockingSound.play();
-            playPauseButton.textContent = 'Pause';
-        } else {
-            knockingSound.pause();
-            playPauseButton.textContent = 'Play';
+    AddOption("Play Sound", () => {
+        const knockingSound = document.getElementById('knockingSound');
+        
+        // Reset the audio to the beginning and play it once
+        knockingSound.currentTime = 0;
+        knockingSound.play();
+        
+        // Increment sound plays counter and show clue after 3 plays
+        soundPlays++;
+        if (soundPlays >= 3) {
+            document.getElementById('AdditionalClue').style.display = 'block';
         }
-    });
+    })
+
+    SetBackgroundImage("/Assets/textbox_pages-to-jpg-0001.jpg")
+    SetRoomName("Living Room")
+}
+
+
+/**
+ * Records the user's runtime for the current room and stores it in the database
+ * @param {function} callback - Function to execute after data is stored
+ */
+function recordRoomCompletion(callback) {
+    // Get current username from session storage
+    const username = sessionStorage.getItem('username') || 'unknown_user';
+    
+    // Get the current runtime in seconds
+    const runtimeSeconds = GameState.PlayerTimeSeconds;
+    
+    // Get current room number from the URL
+    const currentUrl = window.location.pathname;
+    const roomMatch = currentUrl.match(/Room(\d+)/);
+    const roomNumber = roomMatch ? roomMatch[1] : '0';
+    
+    // Create timestamp
+    const timestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    
+    // Create SQL query to insert the data
+    const sqlQuery = `INSERT INTO room_completions (username, room_number, runtime_seconds, completion_time) 
+                     VALUES ('${username}', ${roomNumber}, ${runtimeSeconds}, '${timestamp}')`;
+    
+    // Execute the query
+    executeDatabaseQuery(sqlQuery)
+        .then(result => {
+            console.log('Room completion recorded successfully');
+            if (callback && typeof callback === 'function') {
+                callback(result);
+            }
+        })
+        .catch(error => {
+            console.error('Failed to record room completion:', error);
+            if (callback && typeof callback === 'function') {
+                callback(null, error);
+            }
+        });
 }

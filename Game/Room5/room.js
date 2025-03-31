@@ -450,11 +450,9 @@ function FailGame(reason) {
     let ReturnHomeButton = document.getElementById("ReturnHomeButton")
 
     ReturnHomeButton.addEventListener('click', () => {
-        // TODO: get correct home page path
+        // TODO: Ensure game state is cleared
         
-        // ! DEBUG: 
-        // window.location.href = "/home"
-        alert("No home page")
+        window.location.href = "/WEBSITE/website.html"
     })
 
     clearInterval(TimerInterval)
@@ -477,7 +475,12 @@ function PauseGame() {
     let timeMinutes = Math.floor(GameState.PlayerTimeSeconds / 60)
 
     let TimerValue = `${timeMinutes}:${("" + timeSeconds).padStart(2, "0")}`
-    
+    let ReturnHomeButton = document.getElementById("ReturnHomeButton")
+    ReturnHomeButton.addEventListener('click', () => {
+        // TODO: Ensure game state is saved
+        
+        window.location.href = "/WEBSITE/website.html"
+    })
     
     pauseTimeDisplay.textContent = TimerValue
 
