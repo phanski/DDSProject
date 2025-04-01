@@ -9,21 +9,21 @@
         // Using timestamp as a dynamic save name.
         const saveName = "Save_" + new Date().toISOString();
         
-        const score = window.GameState && window.GameState.score ? window.GameState.score : 0;
+        const energy = window.GameState && window.GameState.energy ? window.GameState.energy : 0;
         const roomID = window.GameState && window.GameState.roomID ? window.GameState.roomID : 1;
         
         // For the save slot, check session storage or default to "A1".
         const slot = sessionStorage.getItem('SaveSlot') || "A1";
         
-        const userID = sessionStorage.getItem('UserID') || 1;
+        const userID = sessionStorage.getItem('LoggedInUser') || 1;
         
         const inventory = window.Inventory || (window.GameState ? window.GameState.inventory : []);
         
         return {
           saveName: saveName,
-          score: score,
+          energy: energy,
           slot: slot,
-          userID: userID,
+          userName: userID,
           roomID: roomID,
           inventory: inventory
         };
