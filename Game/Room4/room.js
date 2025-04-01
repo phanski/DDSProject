@@ -9,11 +9,11 @@ let TimerInterval = undefined
 
 
 const DatabaseConnectionData = {
-    url: 'https://rjyothis01.webhosting1.eeecs.qub.ac.uk/dbConnector.php',
+    url: 'https://phanisek01.webhosting1.eeecs.qub.ac.uk/dbConnector.php',
     hostname: "localhost",
-    username: "rjyothis01", // ! Enter own username
-    password: "zhcj38KCKlYysLry",// ! Enter own password
-    database: "rjyothis01", // ! Change to group DB when uploading
+    username: "phanisek01", // ! Enter own username
+    password: "nDKM7BtMSYYxWc9F",// ! Enter own password
+    database: "CSC1034_CW_17", // ! Change to group DB when uploading
 }
 
 /**
@@ -140,7 +140,7 @@ function AddEnergy(amount) {
  * Transitions to another room safely, ensuring data is saved to transfer to new room
  * @param {integer} roomNumber 
  */
-function TransitionToRoom(roomNumber) { //
+function TransitionToRoom(roomNumber) {
     // Cleared to ensure timer doesn't tick while user is waiting for room to load
     clearInterval(TimerInterval)
 
@@ -219,8 +219,6 @@ function ResumeGame() {
     
     GameWindow.removeChild(Overlay)
 }
-
-
  
 
 
@@ -229,7 +227,7 @@ function StartTimer() {
         GameState.PlayerTimeSeconds += 1
         UpdateTimerDisplay()
 
-        const FiveMinutes = 100 * 60
+        const FiveMinutes = 5 * 60
 
         if (GameState.PlayerTimeSeconds > FiveMinutes) {
             FailGame(1)
@@ -245,7 +243,6 @@ function StartTimer() {
  */
 function InitRoom() {
     document.getElementById("PauseButton").addEventListener('click', PauseGame)
-    document.getElementById("InventoryButton").addEventListener('click', OpenInventory)
 
     LoadPlayerData()
     UpdateEnergyDisplay()    
@@ -346,7 +343,6 @@ function HideOptions() {
     let GameView = document.getElementById("GameView")
     GameView.style.gridTemplateRows = "9.6% 78.4% 12%"
 }
-
 
 /**
  * Shows options bar to user

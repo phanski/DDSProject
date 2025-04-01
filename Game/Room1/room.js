@@ -13,7 +13,7 @@ const DatabaseConnectionData = {
     hostname: "localhost",
     username: "phanisek01", // ! Enter own username
     password: "nDKM7BtMSYYxWc9F",// ! Enter own password
-    database: "phanisek01", // ! Change to group DB when uploading
+    database: "CSC1034_CW_17", // ! Change to group DB when uploading
 }
 
 /**
@@ -173,7 +173,7 @@ function FailGame(reason) {
 
     ReturnHomeButton.addEventListener('click', () => {
         // TODO: Ensure game state is cleared
- 
+        
         window.location.href = "/WEBSITE/website.html"
     })
 
@@ -343,7 +343,6 @@ function HideOptions() {
     let GameView = document.getElementById("GameView")
     GameView.style.gridTemplateRows = "9.6% 78.4% 12%"
 }
-
 
 /**
  * Shows options bar to user

@@ -280,7 +280,7 @@ function NextRoom() {
 * Boilerplate code 
 */
 let GameState = {
-    PlayerEnergy: 10,
+    PlayerEnergy: 100,
     PlayerTimeSeconds: 0
 }
 let TimerInterval = undefined
@@ -291,7 +291,7 @@ const DatabaseConnectionData = {
     hostname: "localhost",
     username: "phanisek01", // ! Enter own username
     password: "nDKM7BtMSYYxWc9F",// ! Enter own password
-    database: "phanisek01", // ! Change to group DB when uploading
+    database: "CSC1034_CW_17", // ! Change to group DB when uploading
 }
 
 /**
@@ -622,7 +622,6 @@ function HideOptions() {
     GameView.style.gridTemplateRows = "9.6% 78.4% 12%"
 }
 
-
 /**
  * Shows options bar to user
  */
@@ -640,7 +639,6 @@ function ShowOptions() {
 /* 
 * Boilerplate code end
 */
-
 //EDIT BELOW HERE
 // Caesar cipher encoding function
 

@@ -501,7 +501,7 @@ function StartRoom() {
         // Phase 3: Process keypad input
         if (keypadInput === correctKeypad) {
           feedback.textContent = "The final mechanism hums with ancient power. The secret door slowly opens, revealing mysteries beyond...";
-          AddOption("Leave Room",TransitionToRoom(2));
+          setTimeout(() => TransitionToRoom(2), 2000)
         } else {
           feedback.textContent = `The keypad remains unyielding. The code "${keypadInput}" is not correct. Try again.`;
           keypadInput = "";

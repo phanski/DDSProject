@@ -13,7 +13,7 @@ const DatabaseConnectionData = {
     hostname: "localhost",
     username: "phanisek01", // ! Enter own username
     password: "nDKM7BtMSYYxWc9F",// ! Enter own password
-    database: "phanisek01", // ! Change to group DB when uploading
+    database: "CSC1034_CW_17", // ! Change to group DB when uploading
 }
 
 /**
@@ -311,16 +311,51 @@ async function executeDatabaseQuery(SQLQuery) {
     return DBPromise
 }
 
+/**
+ * Shows a message in the predefined message popup
+ * @param {string} messageText 
+ */
 function ShowMessage(messageText) {
     let message = document.getElementById("Message")
     message.style.display = "block"
     message.children[0].textContent = messageText
 }
 
+/**
+ * Hides the message popup from the user
+ */
 function HideMessage() {
     let message = document.getElementById("Message")
 
     message.style.display = "none"
+}
+
+/**
+ * Removes options bar from user to allow for more room for UI
+ */
+function HideOptions() {
+    let OptionsBar = document.getElementById("UserOptions")
+    OptionsBar.style.display = "none;"
+
+    let GameWindow = document.getElementById("GameWindow")
+    GameWindow.style.gridTemplateRows = "100%"
+
+    let GameView = document.getElementById("GameView")
+    GameView.style.gridTemplateRows = "9.6% 78.4% 12%"
+}
+
+/**
+ * Shows options bar to user
+ */
+function ShowOptions() {
+    let OptionsBar = document.getElementById("UserOptions")
+    OptionsBar.style.display = ""
+
+    let GameWindow = document.getElementById("GameWindow")
+    GameWindow.style.gridTemplateRows = ""
+
+    let GameView = document.getElementById("GameView")
+    GameView.style.gridTemplateRows = ""
 }
 
 /* 
