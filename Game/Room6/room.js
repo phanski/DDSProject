@@ -134,7 +134,8 @@ function TransitionToRoom(roomNumber) {
     // Cleared to ensure timer doesn't tick while user is waiting for room to load
     clearInterval(TimerInterval)
 
-    sessionStorage.setItem('GameState', GameState)
+    sessionStorage.setItem('GameState', JSON.stringify(GameState))
+    saveGame(GameState)
 
     window.location.href = `/Game/Room${roomNumber}/room.html`
 }
@@ -238,10 +239,10 @@ function StartTimer() {
 function InitRoom() {
     document.getElementById("PauseButton").addEventListener('click', PauseGame)
 
-    GameState = sessionStorage.getItem('GameState')
+    GameState = JSON.parse(sessionStorage.getItem('GameState'))
 
     if (GameState == undefined || GameState.userName == undefined) {
-        window.location.pathname = "/WEBSITE/login.html"
+        window.location.pathname = "/WEBSITE/loginScreen.html"
     }
     UpdateEnergyDisplay()    
     StartTimer()
@@ -381,6 +382,7 @@ function StartRoom() {
         if (userInput === 'pet') {
             document.getElementById('SuccessMessage').style.display = 'block';
             document.getElementById('AdditionalClue').style.display = 'none';
+            setTimeout(() => TransitionToRoom(4), 2000)
         } else {
             attempts++;
             if (attempts >= 3) {

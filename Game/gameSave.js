@@ -1,8 +1,11 @@
 // creates a new save file in database using dynamic game state variables.
-async function createNewSave(gameState) {
-    const query = `INSERT INTO SaveFile (Name, Energy, Slot, UserName, RoomID, Time)
-                   VALUES ('${gameState.saveName}', ${gameState.energy}, '${gameState.slot}', '${gameState.userName}', ${gameState.roomID}, ${gameState.time})`;
-    console.log(query)
+async function saveGame(gameState) {
+    const deletequery = `DELETE FROM SaveFile WHERE Username = "${gameState.userName}";`
+    const insertquery = `INSERT INTO SaveFile (Energy, UserName, RoomID, Time)
+                   VALUES (${gameState.energy}, '${gameState.userName}', ${gameState.roomID}, ${gameState.time})`;
+    
+    const query = deletequery + insertquery
+
     const params = new URLSearchParams();
     params.append("hostname", "localhost"); 
     params.append("username", "bmooney07");   
@@ -31,42 +34,6 @@ async function createNewSave(gameState) {
       console.error("Error creating new save:", error);
     }
 }
- 
-
-// creates a new save file in database using dynamic game state variables.
-async function updateSave(gameState) {
-  const query = `UPDATE SaveFile (Energy, RoomID)
-                 VALUES (${gameState.energy}, ${gameState.roomID})`;
-
-  const params = new URLSearchParams();
-  params.append("hostname", "localhost"); 
-  params.append("username", "bmooney07");   
-  params.append("password", "rf8DJtRFn47Ywyjg");    
-  params.append("database", "bmooney07"); 
-  params.append("query", query);
-
-  try {
-    // Send a POST request to dbConnector.php.
-    const response = await fetch('https://bmooney07.webhosting1.eeecs.qub.ac.uk/dbConnector.php', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: params
-    });
-
-    const result = await response.json();
-    console.log("New Save Response:", result);
-    
-    // Include inventory data when ryan is done
-    if (gameState.inventory && gameState.inventory.length > 0) {
-      // Assume the inserted SaveFile record ID is returned as result.insert_id.
-      const saveID = result.insert_id;
-      await saveInventory(saveID, gameState.inventory);
-    }
-  } catch (error) {
-    console.error("Error creating new save:", error);
-  }
-}
-
 
 // save inventory items into the InventoryPart table.
 async function saveInventory(saveID, inventoryArray) {

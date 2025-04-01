@@ -38,9 +38,10 @@
         
         
         <script>
-
+            
             const currentUser = sessionStorage.getItem('LoggedInUser')
-            if (currentUser !== undefined) {
+            // alert(currentUser)
+            if (currentUser != null) {
                 window.location.pathname = "/Account/account.html"
             }
 

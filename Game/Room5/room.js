@@ -272,7 +272,7 @@ function NextRoom() {
     ClearOptions();
 
     AddOption("Next Room", () =>{
-        window.location.href = 'Next_Room.html'; //change this so that it takes you ton the next room change location only
+        TransitionToRoom(3) //change this so that it takes you ton the next room change location only
     });
 
 }
@@ -412,8 +412,9 @@ function TransitionToRoom(roomNumber) {
     // Cleared to ensure timer doesn't tick while user is waiting for room to load
     clearInterval(TimerInterval)
 
-    sessionStorage.setItem('GameState', GameState)
-
+    sessionStorage.setItem('GameState', JSON.stringify(GameState))
+    saveGame(GameState)
+    
     window.location.href = `/Game/Room${roomNumber}/room.html`
 }
 
@@ -516,10 +517,12 @@ function StartTimer() {
 function InitRoom() {
     document.getElementById("PauseButton").addEventListener('click', PauseGame)
 
-    GameState = sessionStorage.getItem('GameState')
+    GameState = JSON.parse(sessionStorage.getItem('GameState'))
 
     if (GameState == undefined || GameState.userName == undefined) {
-        window.location.pathname = "/WEBSITE/login.html"
+        console.log(GameState)
+        alert(GameState)    
+        window.location.pathname = "/WEBSITE/loginScreen.html"
     }
     UpdateEnergyDisplay()    
     StartTimer()
@@ -676,7 +679,7 @@ function myFunction() {
 }
 
 // Attach event listener to the button
-document.getElementById("showPopup").addEventListener("click", showPopup);
+// document.getElementById("showPopup").addEventListener("click", showPopup);
 
 
 // function tryOpenDrawers() {
