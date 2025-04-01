@@ -65,8 +65,8 @@ function ExitInventory() {
  * @param {Array} inventory - Array of item names
  */
 function generateInventoryGrid(inventory, ids) {
-    const gridSize = 16; // 4x4 grid
-    let gridHTML = `<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 400px; height: 400px; margin: 0 auto; border: 2px solid #ccc; padding: 10px;">`;
+    const gridSize = 8; // 4x4 grid
+    let gridHTML = `<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 400px; height: 200px; margin: 0 auto; border: 2px solid #ccc; padding: 10px;">`;
     
     for (let i = 0; i < gridSize; i++) {
         const item = inventory[i] || null;
