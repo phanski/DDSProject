@@ -279,10 +279,15 @@ function NextRoom() {
 /*
 * Boilerplate code 
 */
+
 let GameState = {
-    PlayerEnergy: 10,
-    PlayerTimeSeconds: 0
-}
+    energy: 100,
+    time: 0,
+    userName: sessionStorage.getItem('LoggedInUser'), 
+    roomID: 5,
+    inventory: []
+  }
+
 let TimerInterval = undefined
 
 
@@ -291,23 +296,7 @@ const DatabaseConnectionData = {
     hostname: "localhost",
     username: "phanisek01", // ! Enter own username
     password: "nDKM7BtMSYYxWc9F",// ! Enter own password
-    database: "phanisek01", // ! Change to group DB when uploading
-}
-
-/**
- * Loads player data from session storage to sync time and energy.
- * TODO: If sessions storage doesn't exist redirect to landing page. -
- * TODO: - Only allow beginning from landing page to ensure data is loaded from database before starting
- */
-function LoadPlayerData() {
-    // TODO
-}
-
-/**
- * Saves player data to session storage and asynchronously to database
- */
-function SavePlayerData() {
-    // TODO 
+    database: "CSC1034_CW_17", // ! Change to group DB when uploading
 }
 
 /**
@@ -333,6 +322,7 @@ function AddOption(OptionTitle, OptionAction) {
     NewOptionTitle.textContent = OptionTitle
     NewOption.appendChild(NewOptionTitle)
     NewOption.addEventListener("click", OptionAction)
+    
 
     Options.appendChild(NewOption)
 }
@@ -368,8 +358,8 @@ function SetBackgroundImage(ImageURL) {
  */
 function UpdateTimerDisplay() {
     let TimeDisplay = document.getElementById("PlayerTime")
-    let timeSeconds = GameState.PlayerTimeSeconds % 60
-    let timeMinutes = Math.floor(GameState.PlayerTimeSeconds / 60)
+    let timeSeconds = GameState.time % 60
+    let timeMinutes = Math.floor(GameState.time / 60)
 
     let TimerValue = `${timeMinutes}:${("" + timeSeconds).padStart(2, "0")}`
     TimeDisplay.textContent = TimerValue
@@ -380,7 +370,7 @@ function UpdateTimerDisplay() {
  */
 function UpdateEnergyDisplay() {
     let EnergyDisplay = document.getElementById("PlayerEnergy")
-    EnergyDisplay.textContent = GameState.PlayerEnergy
+    EnergyDisplay.textContent = GameState.energy
 }
 
 /**
@@ -389,11 +379,11 @@ function UpdateEnergyDisplay() {
  * @returns False if amount is greater than current player energy. True otherwise
  */
 function RemoveEnergy(amount) {
-    if (amount > GameState.PlayerEnergy) return false
+    if (amount > GameState.energy) return false
 
-    GameState.PlayerEnergy -= amount
+    GameState.energy -= amount
 
-    if (GameState.PlayerEnergy === 0) {
+    if (GameState.energy === 0) {
         FailGame(2)
     }
     UpdateEnergyDisplay()
@@ -406,9 +396,9 @@ function RemoveEnergy(amount) {
  * @returns False if amount would increase player energy above 100. True otherwise
  */
 function AddEnergy(amount) {
-    if (GameState.PlayerEnergy + amount > 100) return false
+    if (GameState.energy + amount > 100) return false
 
-    GameState.PlayerEnergy += amount
+    GameState.energy += amount
 
     UpdateEnergyDisplay()
     return true
@@ -422,7 +412,7 @@ function TransitionToRoom(roomNumber) {
     // Cleared to ensure timer doesn't tick while user is waiting for room to load
     clearInterval(TimerInterval)
 
-    SavePlayerData()
+    sessionStorage.setItem('GameState', GameState)
 
     window.location.href = `/Game/Room${roomNumber}/room.html`
 }
@@ -464,15 +454,15 @@ function FailGame(reason) {
 function PauseGame() {
     let GameWindow = document.getElementById("GameWindow")
 
-    const PauseMenuPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>Game Paused</h1><h2>Current Time : <span id="PauseScreenTime"></span></h2><div style="display: flex; justify-content: space-around; max-width: 500px; width: 100%;"><button class="OverlayButton" id="ResumeButton">Resume</button><button class="OverlayButton" id="ReturnHomeButton">Return to Home</button></div></div></div>'
+    const PauseMenuPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>Game Paused</h1><h2>Current Time : <span id="PauseScreenTime"></span></h2><div style="display: flex; justify-content: space-around; max-width: 500px; width: 100%;"><button class="OverlayButton" id="ResumeButton">Resume</button><button class="OverlayButton" id="ReturnHomeButton">Return to Home</button><button class="OverlayButton" id="SaveButton">Save</button></div></div></div>'
     GameWindow.insertAdjacentHTML('beforeend', PauseMenuPopup)
 
     let resumeButton = document.getElementById('ResumeButton')
     resumeButton.addEventListener('click', ResumeGame)
 
     let pauseTimeDisplay = document.getElementById('PauseScreenTime')
-    let timeSeconds = GameState.PlayerTimeSeconds % 60
-    let timeMinutes = Math.floor(GameState.PlayerTimeSeconds / 60)
+    let timeSeconds = GameState.time % 60
+    let timeMinutes = Math.floor(GameState.time / 60)
 
     let TimerValue = `${timeMinutes}:${("" + timeSeconds).padStart(2, "0")}`
     let ReturnHomeButton = document.getElementById("ReturnHomeButton")
@@ -482,6 +472,10 @@ function PauseGame() {
         window.location.href = "/WEBSITE/website.html"
     })
     
+    let saveButton = document.getElementById('SaveButton')
+    saveButton.addEventListener('click', () => createNewSave(GameState))
+
+
     pauseTimeDisplay.textContent = TimerValue
 
     clearInterval(TimerInterval)
@@ -502,12 +496,12 @@ function ResumeGame() {
 
 function StartTimer() {
     TimerInterval = setInterval(() => {
-        GameState.PlayerTimeSeconds += 1
+        GameState.time += 1
         UpdateTimerDisplay()
 
         const FiveMinutes = 5 * 60
 
-        if (GameState.PlayerTimeSeconds > FiveMinutes) {
+        if (GameState.time > FiveMinutes) {
             FailGame(1)
         }
     }, 1000)
@@ -522,7 +516,11 @@ function StartTimer() {
 function InitRoom() {
     document.getElementById("PauseButton").addEventListener('click', PauseGame)
 
-    LoadPlayerData()
+    GameState = sessionStorage.getItem('GameState')
+
+    if (GameState == undefined || GameState.userName == undefined) {
+        window.location.pathname = "/WEBSITE/login.html"
+    }
     UpdateEnergyDisplay()    
     StartTimer()
     
@@ -622,7 +620,6 @@ function HideOptions() {
     GameView.style.gridTemplateRows = "9.6% 78.4% 12%"
 }
 
-
 /**
  * Shows options bar to user
  */
@@ -640,7 +637,6 @@ function ShowOptions() {
 /* 
 * Boilerplate code end
 */
-
 //EDIT BELOW HERE
 // Caesar cipher encoding function
 

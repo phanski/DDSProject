@@ -39,6 +39,11 @@
         
         <script>
 
+            const currentUser = sessionStorage.getItem('LoggedInUser')
+            if (currentUser !== undefined) {
+                window.location.pathname = "/Account/account.html"
+            }
+
             // TODO: clean sql to prevent injection
             function CleanSQL(Input) {
                 return Input
@@ -55,7 +60,7 @@
                 Username = CleanSQL(Username)
                 Password = CleanSQL(Password)
 
-                const LoginQuery = `SELECT Username FROM Users WHERE Username = "${Username}" AND Password = "${Password}";`
+                const LoginQuery = `SELECT Username FROM User WHERE Username = "${Username}" AND Password = "${Password}";`
                 let dbResult = await executeDatabaseQuery(LoginQuery)
                 if (dbResult.data.length > 0) {
                     sessionStorage.setItem('LoggedInUser', Username)
@@ -70,7 +75,7 @@
                 hostname: "localhost",
                 username: "phanisek01", // ! Enter own username
                 password: "nDKM7BtMSYYxWc9F",// ! Enter own password
-                database: "phanisek01", // ! Change to group DB when uploading
+                database: "CSC1034_CW_17", // ! Change to group DB when uploading
             }
 
             /**
