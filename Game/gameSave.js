@@ -1,8 +1,8 @@
 // creates a new save file in database using dynamic game state variables.
 async function createNewSave(gameState) {
-    const query = `INSERT INTO SaveFile (Name, Energy, Slot, UserID, RoomID)
-                   VALUES ('${gameState.saveName}', ${gameState.energy}, '${gameState.slot}', ${gameState.userID}, ${gameState.roomID})`;
-  
+    const query = `INSERT INTO SaveFile (Name, Energy, Slot, UserName, RoomID, Time)
+                   VALUES ('${gameState.saveName}', ${gameState.energy}, '${gameState.slot}', '${gameState.userName}', ${gameState.roomID}, ${gameState.time})`;
+    console.log(query)
     const params = new URLSearchParams();
     params.append("hostname", "localhost"); 
     params.append("username", "bmooney07");   
