@@ -18,7 +18,7 @@ const DatabaseConnectionData = {
     hostname: "localhost",
     username: "phanisek01", // ! Enter own username
     password: "nDKM7BtMSYYxWc9F",// ! Enter own password
-    database: "phanisek01", // ! Change to group DB when uploading
+    database: "CSC1034_CW_17", // ! Change to group DB when uploading
 }
 
 /**
