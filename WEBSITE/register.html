@@ -52,7 +52,7 @@
                 Username = CleanSQL(Username)
                 Password = CleanSQL(Password)
 
-                const RegisterQuery = `INSERT INTO Users VALUES ("${Username}","${Password}");`
+                const RegisterQuery = `INSERT INTO User (Username, Password) VALUES ("${Username}","${Password}");`
                 
                 let dbResult = await executeDatabaseQuery(RegisterQuery)
 
@@ -71,7 +71,7 @@
                 hostname: "localhost",
                 username: "phanisek01", // ! Enter own username
                 password: "nDKM7BtMSYYxWc9F",// ! Enter own password
-                database: "phanisek01", // ! Change to group DB when uploading
+                database: "CSC1034_CW_17", // ! Change to group DB when uploading
             }
 
             /**
