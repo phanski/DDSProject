@@ -368,7 +368,7 @@ function ShowOptions() {
 
 //EDIT BELOW HERE
 
-// temporary function - made this because ShowMessage("abc"); setTimeout(ShowMessage("xyz"), 1000) didnt work and was too lazy to fix it
+
 function Delay(time) {
     return new Promise(resolve => setTimeout(resolve, time));
   }
@@ -403,141 +403,6 @@ function DisplayMessageAfterDelay (messageText) {
     });  
     
 }
-
-
-
-
-
-
-
-
-// async function OpenInventory() {
-//     try {
-//         let GameWindow = document.getElementById("GameWindow")
-//         let inventoryPartNames = []; // = between let and inventoryPartNames??
-//         let inventoryPartIDs = []; 
-
-//         let response = await fetch(DatabaseConnectionData.url, {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/x-www-form-urlencoded'
-//             },
-//             body: new URLSearchParams({
-//                 hostname: DatabaseConnectionData.hostname,
-//                 username: DatabaseConnectionData.username,
-//                 password: DatabaseConnectionData.password,
-//                 database: DatabaseConnectionData.database,
-//                 query: `SELECT i.Name, i.ItemID FROM InventoryPart ip JOIN Item i ON ip.ItemID = i.ItemID WHERE ip.SaveID = 1` // // change to saveid when login finished
-//             })
-//         })
-//         const data = await response.json();
-//         for (let i = 0; i < data.data.length; i++) {
-            
-//             inventoryPartNames.push(data.data[i].Name);
-//             inventoryPartIDs.push(data.data[i].ItemID);
-            
-        
-//         }
-//         console.log(inventoryPartIDs)
-
-//         const InventoryPopUp = 
-//     `<div id="Overlay">
-//         <div id="OverlayMessage">
-//             <h1>Inventory</h1>
-//             <div id="InventoryGrid">
-//                 ${generateInventoryGrid(inventoryPartNames, inventoryPartIDs)}
-//             </div>
-//             <div style="display: flex; justify-content: space-around; max-width: 500px; width: 100%;">
-//                 <button class="OverlayButton" id="ExitInventory">Resume</button>
-//             </div>
-//         </div>
-//     </div>`
-//         GameWindow.insertAdjacentHTML('beforeend', InventoryPopUp)
-        
-//         let exitInv = document.getElementById('ExitInventory')
-//         exitInv.addEventListener('click', ExitInventory)
-//         // return InventoryPopUp;
-//     } catch (error) {
-//         console.error('Error fetching data:', error);
-//     }
-// }
-
-// function ExitInventory() {
-//     let GameWindow = document.getElementById("GameWindow")
-//     let Overlay = GameWindow.lastChild
-    
-//     GameWindow.removeChild(Overlay)
-// }
-
-
-// //________________________________________________________________________________________________________________________________________________________________________
-
-// /**
-//  * Generates the HTML for the inventory grid
-//  * @param {Array} inventory - Array of item names
-//  */
-// function generateInventoryGrid(inventory, ids) {
-//     const gridSize = 16; // 4x4 grid
-//     let gridHTML = `<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 400px; height: 400px; margin: 0 auto; border: 2px solid #ccc; padding: 10px;">`;
-    
-//     for (let i = 0; i < gridSize; i++) {
-//         const item = inventory[i] || null;
-//         const id = ids[i] || null; // get the id of the item
-
-//         //change "i" to item id 
-
-//         gridHTML += ` 
-//             <div id=${item} class="item" onclick="itemAction(${id})">
-//                 ${item ? `<span style="color: #AAAAAA; text-align: center;">${item}</span>` : ''}
-//             </div>
-//         `;
-//     }
-    
-//     gridHTML += '</div>';
-//     return gridHTML;
-// }
-
-
-
-// function itemAction(id) {
-//     ExitInventory();
-//     //TO DO: query the database for the function of the item using the item name - can be a function that exists e.g. when EnergyPack is pressed, its function field has AddEnergy(5) in it, so AddEnergy(5) is called, simultaneously EnergyPack is removed from the inventory
-//     if (id==1||id==2||id==3) { // id of energy pack
-//         AddEnergy(5);
-//         executeDatabaseQuery(`DELETE FROM InventoryPart WHERE ItemID = ${id} AND SaveID = 1`) // sql only required for consumable items - change hardcoded to saveid when login finished
-//         // executeDatabaseQuery(`DELETE FROM InventoryPart WHERE ItemID = ${id} AND ${saveID} = 1`)
-//         // SavePlayerData()
-//         DisplayMessageAfterDelay("You have gained 5 energy from the Energy Pack!");
-        
-        
-    
-        
-//     }
-
-//     // to add more items, just add an else if statement with the id of the item and the function you want to call when it is clicked.
-
-// }
-
-// /**
-//  * Checks if item is in inventory
-//  * @param {integer} id - ID of the item to check
-//  * @returns {boolean} present - True if item is present, false otherwise
-//  */
-// function checkInventory(id) {
-//     executeDatabaseQuery(`SELECT * FROM InventoryPart WHERE ItemID = ${id} AND SaveID = 1`).then((result) => { // change saveid
-//         if (result.data.length > 0) {
-//             return true;
-//         } else {
-//             return false;
-//         }
-//     }
-
-//     ).catch((error) => {
-//         console.error('Error checking inventory:', error);
-//         return false; // Error occurred, assume item is not present
-//     });
-// }
-//________________________________________________________________________________________________________________________________________________________________________
 
 /**
  * Main Function which is called when room page is loaded
@@ -637,7 +502,7 @@ function StartRoom() {
                             // SavePlayerData()
 
                             // window.location.href = `/Game/Room${roomNumber}/room.html`
-                            // // window.location.href = `/Game/End Screen Credits/win.html`
+                            window.location.href = `../../End Screen Credits/win.html`
                         });
                     });
                 });
@@ -651,10 +516,158 @@ function StartRoom() {
             // HideOptions();
             DisplayMessageAfterDelay ('Retracing your steps, you are back in the narrow corridor which still extends to your left and right.');
         });
+    });   
+}
+
+function StartRoom() {
+    SetRoomName("Small, Dark Room");
+    ShowMessage("You enter a small, dark room. There is a table in the centre with a note on it, and a door opposite to you.");
+
+    AddOption("Read the note", () => {
+        ShowMessage('It reads "LRRRRRRR"');
+        DisplayMessageAfterDelay("You enter a small, dark room. There is a table in the centre with a note on it, and a door opposite to you.");
     });
 
-    
+    AddOption("Go through the door", () => {
+        SetRoomName("Corridor #1");
+        ShowMessage('You find yourself in a narrow corridor which extends to your left and right.');
+        ClearOptions();
 
+        // CORRECT PATH (Left, Right, Right, Right, ...)
+        AddOption("Go left", () => {
+            SetRoomName("Corridor #2");
+            ShowMessage('You now find yourself in another narrow corridor which extends to your left and right.');
+            ClearOptions();
+
+            // INCORRECT (Left)
+            AddOption("Go left", () => {
+                ShowMessage('You hit a dead end. You turn back.');
+                DisplayMessageAfterDelay('You are back in the second narrow corridor, which still extends to your left and right.');
+            });
+
+            // CORRECT (Right)
+            AddOption("Go right", () => {
+                SetRoomName("Corridor #3");
+                ShowMessage('You find yourself in yet another narrow corridor which extends to your left and right.');
+                ClearOptions();
+
+                // INCORRECT (Left)
+                AddOption("Go left", () => {
+                    ShowMessage('You hit a dead end. You turn back.');
+                    DisplayMessageAfterDelay('You retrace your steps back to the third corridor, which still extends left and right.');
+                });
+
+                // CORRECT (Right)
+                AddOption("Go right", () => {
+                    SetRoomName("Corridor #4");
+                    ShowMessage('The corridor continues, stretching left and right before you.');
+                    ClearOptions();
+
+                    // INCORRECT (Left)
+                    AddOption("Go left", () => {
+                        ShowMessage('Dead end. You sigh and turn around.');
+                        DisplayMessageAfterDelay('Back in corridor four, the path splits left and right.');
+                    });
+
+                    // CORRECT (Right)
+                    AddOption("Go right", () => {
+                        SetRoomName("Corridor #5");
+                        ShowMessage('The maze continues. Left or right?');
+                        ClearOptions();
+
+                        // INCORRECT (Left)
+                        AddOption("Go left", () => {
+                            ShowMessage('Another dead end. This is getting tedious.');
+                            DisplayMessageAfterDelay('Returning to corridor five, the options remain.');
+                        });
+
+                        // CORRECT (Right)
+                        AddOption("Go right", () => {
+                            SetRoomName("Corridor #6");
+                            ShowMessage('Six corridors deep. Left or right?');
+                            
+                            
+                            ClearOptions();
+                        
+
+                            // CORRECT (Right)
+                            if (checkInventory(1)) {
+                                ShowMessage('As you move along the corridor, you see an energy pack on the floor.');
+                                AddOption("Pick up energy pack", () => {
+
+                                
+                                    SetRoomName("Corridor #6");
+                                    ClearOptions();
     
+                                    ShowMessage('You pick up the pack and put it in your inventory. You continue moving along the corridor.');
+                                    executeDatabaseQuery(`INSERT INTO InventoryPart (ItemID, SaveID) VALUES (1, 1)`); // change saveid when login finished
+                                    DisplayMessageAfterDelay("Six corridors deep. Left or right?")
     
+                            })}; 
+
+                         
+
+                                
+
+
+                        
+
+                        
+                        
+
+                            // INCORRECT (Left)
+                            AddOption("Go left", () => {
+                                ShowMessage('Wall. Nothing but wall.');
+                                DisplayMessageAfterDelay('Back in the sixth corridor, the choice persists.');
+                            });
+
+                            // CORRECT (Right)
+                            AddOption("Go right", () => {
+                                SetRoomName("Corridor #7");
+                                ShowMessage('Seven corridors. Left or right?');
+                                ClearOptions();
+
+                                // INCORRECT (Left)
+                                AddOption("Go left", () => {
+                                    ShowMessage('Nope, just another dead end.');
+                                    DisplayMessageAfterDelay('Once more in corridor seven, the choice awaits.');
+                                });
+
+                                // CORRECT (Right)
+                                AddOption("Go right", () => {
+                                    SetRoomName("Corridor #8");
+                                    ShowMessage('Eighth corridor. One last choice: left or right?');
+                                    ClearOptions();
+
+                                    // INCORRECT (Left)
+                                    AddOption("Go left", () => {
+                                        ShowMessage('Dead end. Almost there...');
+                                        DisplayMessageAfterDelay('Back in corridor eight, the final choice remains.');
+                                    });
+
+                                    // CORRECT (Right) - WIN
+                                    AddOption("Go right", () => {
+                                        SetRoomName("End?");
+                                        ShowMessage('Congratulations! After eight corridors, you see a door.');
+                                        ClearOptions();
+                                        AddOption("Go through door", () => {
+                                            window.location.href = `../../End Screen Credits/win.html`;
+                                        });
+                                        
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+
+        // INCORRECT PATH (Right) - TRAP
+        AddOption("Go right", () => {
+            ShowMessage('You get caught in a trap and debris falls from the ceiling. You lose 5 energy healing your wounds.');
+            RemoveEnergy(5);
+            DisplayMessageAfterDelay('Retracing your steps, you are back in the narrow corridor which still extends to your left and right.');
+        });
+    });
 }

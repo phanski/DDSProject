@@ -95,11 +95,16 @@ function itemAction(id) {
         executeDatabaseQuery(`DELETE FROM InventoryPart WHERE ItemID = ${id} AND SaveID = 1`) // sql only required for consumable items - change hardcoded to saveid when login finished
         // executeDatabaseQuery(`DELETE FROM InventoryPart WHERE ItemID = ${id} AND ${saveID} = 1`)
         // SavePlayerData()
-        DisplayMessageAfterDelay("You have gained 5 energy from the Energy Pack!");
-        
-        
-    
-        
+
+
+
+        let message = document.getElementById("Message")
+        let oldMessage = message.children[0].textContent
+
+
+
+        ShowMessage("You have gained 5 energy from the Energy Pack!");
+        DisplayMessageAfterDelay(oldMessage);
     }
 
     // to add more items, just add an else if statement with the id of the item and the function you want to call when it is clicked.
