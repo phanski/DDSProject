@@ -196,7 +196,7 @@ function PauseGame() {
     })
     
     let saveButton = document.getElementById('SaveButton')
-    saveButton.addEventListener('click', () => createNewSave(GameState))
+    saveButton.addEventListener('click', () => saveGame(GameState))
 
 
     pauseTimeDisplay.textContent = TimerValue
@@ -239,7 +239,11 @@ function StartTimer() {
 function InitRoom() {
     document.getElementById("PauseButton").addEventListener('click', PauseGame)
 
-    GameState = JSON.parse(sessionStorage.getItem('GameState'))
+    let loadedGameState = JSON.parse(sessionStorage.getItem('GameState'))
+
+    GameState.energy = loadedGameState.energy
+    GameState.time = loadedGameState.time
+    GameState.inventory = loadedGameState.inventory
 
     if (GameState == undefined || GameState.userName == undefined) {
         window.location.pathname = "/WEBSITE/loginScreen.html"
@@ -356,6 +360,12 @@ function ShowOptions() {
     let GameView = document.getElementById("GameView")
     GameView.style.gridTemplateRows = ""
 }
+
+// Prevents reloading to regain time
+window.addEventListener('beforeunload', () => {
+    sessionStorage.setItem('GameState', JSON.stringify(GameState))
+    saveGame(GameState)
+})
 
 /* 
 * Boilerplate code end
@@ -646,7 +656,7 @@ function StartRoom() {
                                         ShowMessage('Congratulations! After eight corridors, you see a door.');
                                         ClearOptions();
                                         AddOption("Go through door", () => {
-                                            SavePlayerData()
+                                            saveGame(GameState)
                                             window.location.href = `../../End Screen Credits/win.html`;
                                         });
                                         

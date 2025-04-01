@@ -1,18 +1,29 @@
 // creates a new save file in database using dynamic game state variables.
 async function saveGame(gameState) {
-    const deletequery = `DELETE FROM SaveFile WHERE Username = "${gameState.userName}";`
-    const insertquery = `INSERT INTO SaveFile (Energy, UserName, RoomID, Time)
-                   VALUES (${gameState.energy}, '${gameState.userName}', ${gameState.roomID}, ${gameState.time})`;
+    const deletequery = `DELETE FROM SaveFile WHERE Username='${gameState.userName}';`
+    const insertquery = `INSERT INTO SaveFile (Energy, UserName, RoomID, Time) VALUES (${gameState.energy}, "${gameState.userName}", ${gameState.roomID}, ${gameState.time});`;
     
-    const query = deletequery + insertquery
 
     const params = new URLSearchParams();
     params.append("hostname", "localhost"); 
     params.append("username", "bmooney07");   
     params.append("password", "rf8DJtRFn47Ywyjg");    
-    params.append("database", "bmooney07"); 
-    params.append("query", query);
+    params.append("database", "CSC1034_CW_17"); 
+    params.append("query", deletequery);
   
+    try {
+      // Send a POST request to dbConnector.php.
+      const response = await fetch('https://bmooney07.webhosting1.eeecs.qub.ac.uk/dbConnector.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params
+      });
+      
+    } catch (error) {
+      console.error("Error creating new save:", error);
+    }
+
+    params.set("query", insertquery)
     try {
       // Send a POST request to dbConnector.php.
       const response = await fetch('https://bmooney07.webhosting1.eeecs.qub.ac.uk/dbConnector.php', {
