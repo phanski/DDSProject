@@ -1,19 +1,19 @@
 
-const currentUserID=prompt("Enter User ID: ");
+const currentUsername=prompt("Enter Username: ");
 document.addEventListener("DOMContentLoaded",()=>{
     loadSetting();
 });
 
 async function loadSetting(){
-    let volumeData=await fetchSettings(`SELECT volume FROM Users WHERE UserID= ${currentUserID} `);
+    let volumeData=await fetchSettings(`SELECT volume FROM Users WHERE Username= ${currentUsername} `);
     if (volumeData){
         setVolume(volumeData.volume);
     }
-    let fontSize=await fetchSettings(`SELECT fontSize FROM Users WHERE UserID= ${currentUserID} `);
+    let fontSize=await fetchSettings(`SELECT fontSize FROM Users WHERE Username= ${currentUsername} `);
     if (fontSize){
         setFontSize(fontSize.fontSize);
     }
-    let fontFamily=await fetchSettings(`SELECT fontFamily FROM Users WHERE UserID= ${currentUserID} `);
+    let fontFamily=await fetchSettings(`SELECT fontFamily FROM Users WHERE Username= ${currentUsername} `);
     if (fontFamily){
         setFontFamily(fontFamily.fontFamily);
     }
