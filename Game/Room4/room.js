@@ -645,6 +645,7 @@ function StartRoom() {
                                         ShowMessage('Congratulations! After eight corridors, you see a door.');
                                         ClearOptions();
                                         AddOption("Go through door", () => {
+                                            SavePlayerData()
                                             window.location.href = `../../End Screen Credits/win.html`;
                                         });
                                         
