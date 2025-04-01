@@ -42,7 +42,7 @@
             const currentUser = sessionStorage.getItem('LoggedInUser')
             // alert(currentUser)
             if (currentUser != null) {
-                window.location.pathname = "/Account/account.html"
+                window.location.href  = "../Account/account.html"
             }
 
             // TODO: clean sql to prevent injection
@@ -149,7 +149,7 @@
                 
                 Login(Username, Password).then((loginResult) => {
                     if (loginResult) {
-                        document.location.pathname = "/Account/account.html"
+                        window.location.href = "../Account/account.html"
                     } else {
                         // TODO: Better alert for failed login when the login page is created
                         alert ("Invalid Login")

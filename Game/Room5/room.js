@@ -415,7 +415,7 @@ function TransitionToRoom(roomNumber) {
     sessionStorage.setItem('GameState', JSON.stringify(GameState))
     saveGame(GameState)
 
-    window.location.href = `/Game/Room${roomNumber}/room.html`
+    window.location.href = `../Room${roomNumber}/room.html`
 }
 
 /**
@@ -435,15 +435,18 @@ function FailGame(reason) {
     let NewRunButton = document.getElementById("NewRunButton")
 
     NewRunButton.addEventListener('click', () => {
-        // TODO: Restart game from start (clear session storage)
+        window.removeEventListener('beforeunload', onPageLeave)
+        sessionStorage.removeItem('GameState')
+        window.location.href = "../Room5/room.html"
     })
 
     let ReturnHomeButton = document.getElementById("ReturnHomeButton")
 
     ReturnHomeButton.addEventListener('click', () => {
-        // TODO: Ensure game state is cleared
+        window.removeEventListener('beforeunload', onPageLeave)
+        sessionStorage.removeItem('GameState')
         
-        window.location.href = "/WEBSITE/website.html"
+        window.location.href = "../../WEBSITE/website.html"
     })
 
     clearInterval(TimerInterval)
@@ -468,9 +471,7 @@ function PauseGame() {
     let TimerValue = `${timeMinutes}:${("" + timeSeconds).padStart(2, "0")}`
     let ReturnHomeButton = document.getElementById("ReturnHomeButton")
     ReturnHomeButton.addEventListener('click', () => {
-        // TODO: Ensure game state is saved
-        
-        window.location.href = "/WEBSITE/website.html"
+        window.location.href = "../../WEBSITE/website.html"
     })
     
     let saveButton = document.getElementById('SaveButton')
@@ -517,17 +518,20 @@ function StartTimer() {
 function InitRoom() {
     document.getElementById("PauseButton").addEventListener('click', PauseGame)
 
+    if (sessionStorage.getItem('LoggedInUser') == undefined) {
+        window.location.href = "../../WEBSITE/loginScreen.html"
+    }
+
     let loadedGameState = JSON.parse(sessionStorage.getItem('GameState'))
+
+    if (sessionStorage.getItem('GameState') == undefined) {
+        window.location.href = "../../WEBSITE/loginScreen.html"
+    }
 
     GameState.energy = loadedGameState.energy
     GameState.time = loadedGameState.time
     GameState.inventory = loadedGameState.inventory
 
-    if (GameState == undefined || GameState.userName == undefined) {
-        console.log(GameState)
-        alert(GameState)    
-        window.location.pathname = "/WEBSITE/loginScreen.html"
-    }
     UpdateEnergyDisplay()    
     StartTimer()
     
@@ -642,10 +646,11 @@ function ShowOptions() {
 }
 
 // Prevents reloading to regain time
-window.addEventListener('beforeunload', () => {
+const onPageLeave = () => {
     sessionStorage.setItem('GameState', JSON.stringify(GameState))
     saveGame(GameState)
-})
+}
+window.addEventListener('beforeunload', onPageLeave)
 
 /* 
 * Boilerplate code end
