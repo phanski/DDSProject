@@ -144,7 +144,7 @@ function TransitionToRoom(roomNumber) {
     // Cleared to ensure timer doesn't tick while user is waiting for room to load
     clearInterval(TimerInterval)
 
-    SavePlayerData()
+    sessionStorage.setItem('GameState', GameState)
 
     window.location.href = `/Game/Room${roomNumber}/room.html`
 }
