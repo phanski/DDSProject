@@ -62,7 +62,7 @@ function AddOption(OptionTitle, OptionAction) {
 
     setTimeout(()=>{
         NewOption.style.display="block";
-    },68.99)
+    },68.99);
 }
 
 /**

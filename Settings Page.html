@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Settings</title>
+        <meta charset="UTF-8" viewport="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="Settings Page CSS.css">
+    </head>
+    <body>
+        <audio src="audio/videoplayback.mp3" type="audio/mpeg" loop autoplay></audio>
+        <div id="GameWindow">
+            <form>
+                <legend><button id="Back-Button" type="button" onclick="window.location.href='https://www.amazon.co.uk/ref=nav_logo';"><img src="Assets/pixel-arrow-left.png" alt="Back Button" id="Back-Image">Setting</button></legend>
+                <!--Change link location to correct location-->
+                <fieldset id="setting-set">
+
+                    <div class="setting-option" id="volume-range">
+                        <label class="label" for="volume">Volume: <span id="volume-value">50</span></label>
+                        <input type="range" id="volume-slide" name="volume" min="0" max="100" value="50">
+                    </div>
+
+                    <div class="setting-option" id="font-size">
+                        <label class="label" for="font-size">Font Size: </label>
+                        <select id="font-slide" name="font-size" onselect="changeFontSize()">
+                            <option value="1">Small</option>
+                            <option value="1.5" selected>Medium</option>
+                            <option value="1.75">Large</option>
+                            <option value="2">Extra Large</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-option" id="font-family">
+                        <label class="label" for="font-family">Font: </label>
+                        <select id="font-type" name="font-family" onselect="changeFontFamily()">
+                            <option value="Arial">Arial</option>
+                            <option value="Courier New">Courier New</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-option" id="Buffer">
+                        <!--Serves as a buffer div before the buttons-->
+                    </div>
+
+                    <div class="setting-option" id="button-container">
+                        <!--<buttton class="form-button" id="audio-test" type="button" onclick="testAudio()">Test Audio</buttton>-->
+                        <button class="form-button"  id="reset-button" type="reset" onclick="restoreDefaultSettings()">Restore Defaults</button>
+                        <button class="form-button" id="submit-button" type="button" onclick="saveSettings()">Apply</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <script src="Settings Page JS.js"></script>
+    </body>
+</html>
