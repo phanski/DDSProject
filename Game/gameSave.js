@@ -48,9 +48,9 @@ async function saveGame(gameState) {
 
 // save inventory items into the InventoryPart table.
 async function saveInventory(saveID, inventoryArray) {
-    const values = inventoryArray.map((itemID, slot) => `(${saveID}, ${itemID}, ${slot})`).join(", ");
+    const values = inventoryArray.map((itemID, slot) => `(${saveID}, ${itemID})`).join(", ");
     const deletequery = `DELETE FROM InventoryPart WHERE SaveID= ${saveID};`;
-    const insertquery = `INSERT INTO InventoryPart (SaveID, ItemID, InventorySlot) VALUES ${values}`;
+    const insertquery = `INSERT INTO InventoryPart (SaveID, ItemID) VALUES ${values}`;
     const query =   deletequery + insertquery
 
     const params = new URLSearchParams();
