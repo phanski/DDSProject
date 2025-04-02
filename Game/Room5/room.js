@@ -272,7 +272,7 @@ function NextRoom() {
     ClearOptions();
 
     AddOption("Next Room", () =>{
-        window.location.href = 'Next_Room.html'; //change this so that it takes you ton the next room change location only
+        TransitionToRoom(3) //change this so that it takes you ton the next room change location only
     });
 
 }
@@ -412,9 +412,10 @@ function TransitionToRoom(roomNumber) {
     // Cleared to ensure timer doesn't tick while user is waiting for room to load
     clearInterval(TimerInterval)
 
-    sessionStorage.setItem('GameState', GameState)
+    sessionStorage.setItem('GameState', JSON.stringify(GameState))
+    saveGame(GameState)
 
-    window.location.href = `/Game/Room${roomNumber}/room.html`
+    window.location.href = `../Room${roomNumber}/room.html`
 }
 
 /**
@@ -434,15 +435,18 @@ function FailGame(reason) {
     let NewRunButton = document.getElementById("NewRunButton")
 
     NewRunButton.addEventListener('click', () => {
-        // TODO: Restart game from start (clear session storage)
+        window.removeEventListener('beforeunload', onPageLeave)
+        sessionStorage.removeItem('GameState')
+        window.location.href = "../Room5/room.html"
     })
 
     let ReturnHomeButton = document.getElementById("ReturnHomeButton")
 
     ReturnHomeButton.addEventListener('click', () => {
-        // TODO: Ensure game state is cleared
+        window.removeEventListener('beforeunload', onPageLeave)
+        sessionStorage.removeItem('GameState')
         
-        window.location.href = "/WEBSITE/website.html"
+        window.location.href = "../../WEBSITE/website.html"
     })
 
     clearInterval(TimerInterval)
@@ -467,13 +471,11 @@ function PauseGame() {
     let TimerValue = `${timeMinutes}:${("" + timeSeconds).padStart(2, "0")}`
     let ReturnHomeButton = document.getElementById("ReturnHomeButton")
     ReturnHomeButton.addEventListener('click', () => {
-        // TODO: Ensure game state is saved
-        
-        window.location.href = "/WEBSITE/website.html"
+        window.location.href = "../../WEBSITE/website.html"
     })
     
     let saveButton = document.getElementById('SaveButton')
-    saveButton.addEventListener('click', () => createNewSave(GameState))
+    saveButton.addEventListener('click', () => saveGame(GameState))
 
 
     pauseTimeDisplay.textContent = TimerValue
@@ -516,11 +518,20 @@ function StartTimer() {
 function InitRoom() {
     document.getElementById("PauseButton").addEventListener('click', PauseGame)
 
-    GameState = sessionStorage.getItem('GameState')
-
-    if (GameState == undefined || GameState.userName == undefined) {
-        window.location.pathname = "/WEBSITE/login.html"
+    if (sessionStorage.getItem('LoggedInUser') == undefined) {
+        window.location.href = "../../WEBSITE/loginScreen.html"
     }
+
+    let loadedGameState = JSON.parse(sessionStorage.getItem('GameState'))
+
+    if (sessionStorage.getItem('GameState') == undefined) {
+        window.location.href = "../../WEBSITE/loginScreen.html"
+    }
+
+    GameState.energy = loadedGameState.energy
+    GameState.time = loadedGameState.time
+    GameState.inventory = loadedGameState.inventory
+
     UpdateEnergyDisplay()    
     StartTimer()
     
@@ -634,6 +645,13 @@ function ShowOptions() {
     GameView.style.gridTemplateRows = ""
 }
 
+// Prevents reloading to regain time
+const onPageLeave = () => {
+    sessionStorage.setItem('GameState', JSON.stringify(GameState))
+    saveGame(GameState)
+}
+window.addEventListener('beforeunload', onPageLeave)
+
 /* 
 * Boilerplate code end
 */
@@ -676,7 +694,7 @@ function myFunction() {
 }
 
 // Attach event listener to the button
-document.getElementById("showPopup").addEventListener("click", showPopup);
+// document.getElementById("showPopup").addEventListener("click", showPopup);
 
 
 // function tryOpenDrawers() {

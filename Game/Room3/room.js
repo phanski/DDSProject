@@ -134,9 +134,10 @@ function TransitionToRoom(roomNumber) {
     // Cleared to ensure timer doesn't tick while user is waiting for room to load
     clearInterval(TimerInterval)
 
-    sessionStorage.setItem('GameState', GameState)
+    sessionStorage.setItem('GameState', JSON.stringify(GameState))
+    saveGame(GameState)
 
-    window.location.href = `/Game/Room${roomNumber}/room.html`
+    window.location.href = `../Room${roomNumber}/room.html`
 }
 
 /**
@@ -144,30 +145,33 @@ function TransitionToRoom(roomNumber) {
  * @param {integer} reason 1 - Ran out of time | 2 - Ran out of energy
  */
 function FailGame(reason) {
-    let GameWindow = document.getElementById("GameWindow")
-    if (reason === 1) {
-        const TimeFailPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>You\'ve ran out of time</h1><div style="display: flex; justify-content: space-around; max-width: 500px; width: 100%;"><button class="OverlayButton" id="NewRunButton">New Run</button><button class="OverlayButton" id="ReturnHomeButton">Return to Home</button></div></div></div>'
-        GameWindow.insertAdjacentHTML('beforeend', TimeFailPopup)
-        
-    } else {
-        const EnergyFailPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>You\'ve ran out of energy</h1><div style="display: flex; justify-content: space-around; max-width: 500px; width: 100%;"><button class="OverlayButton" id="NewRunButton">New Run</button><button class="OverlayButton" id="ReturnHomeButton">Return to Home</button></div></div></div>'
-        GameWindow.insertAdjacentHTML('beforeend', EnergyFailPopup)
-    }
-    let NewRunButton = document.getElementById("NewRunButton")
+  let GameWindow = document.getElementById("GameWindow")
+  if (reason === 1) {
+      const TimeFailPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>You\'ve ran out of time</h1><div style="display: flex; justify-content: space-around; max-width: 500px; width: 100%;"><button class="OverlayButton" id="NewRunButton">New Run</button><button class="OverlayButton" id="ReturnHomeButton">Return to Home</button></div></div></div>'
+      GameWindow.insertAdjacentHTML('beforeend', TimeFailPopup)
+      
+  } else {
+      const EnergyFailPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>You\'ve ran out of energy</h1><div style="display: flex; justify-content: space-around; max-width: 500px; width: 100%;"><button class="OverlayButton" id="NewRunButton">New Run</button><button class="OverlayButton" id="ReturnHomeButton">Return to Home</button></div></div></div>'
+      GameWindow.insertAdjacentHTML('beforeend', EnergyFailPopup)
+  }
+  let NewRunButton = document.getElementById("NewRunButton")
 
-    NewRunButton.addEventListener('click', () => {
-        // TODO: Restart game from start (clear session storage)
-    })
+  NewRunButton.addEventListener('click', () => {
+      window.removeEventListener('beforeunload', onPageLeave)
+      sessionStorage.removeItem('GameState')
+      window.location.href = "../Room5/room.html"
+  })
 
-    let ReturnHomeButton = document.getElementById("ReturnHomeButton")
+  let ReturnHomeButton = document.getElementById("ReturnHomeButton")
 
-    ReturnHomeButton.addEventListener('click', () => {
-        // TODO: Ensure game state is cleared
-        
-        window.location.href = "/WEBSITE/website.html"
-    })
+  ReturnHomeButton.addEventListener('click', () => {
+      window.removeEventListener('beforeunload', onPageLeave)
+      sessionStorage.removeItem('GameState')
+      
+      window.location.href = "../../WEBSITE/website.html"
+  })
 
-    clearInterval(TimerInterval)
+  clearInterval(TimerInterval)
 }
 
 /**
@@ -189,13 +193,11 @@ function PauseGame() {
     let TimerValue = `${timeMinutes}:${("" + timeSeconds).padStart(2, "0")}`
     let ReturnHomeButton = document.getElementById("ReturnHomeButton")
     ReturnHomeButton.addEventListener('click', () => {
-        // TODO: Ensure game state is saved
-        
-        window.location.href = "/WEBSITE/website.html"
+        window.location.href = "../../WEBSITE/website.html"
     })
     
     let saveButton = document.getElementById('SaveButton')
-    saveButton.addEventListener('click', () => createNewSave(GameState))
+    saveButton.addEventListener('click', () => saveGame(GameState))
 
 
     pauseTimeDisplay.textContent = TimerValue
@@ -236,17 +238,21 @@ function StartTimer() {
  * Separated to ensure boilerplate code remains unedited
  */
 function InitRoom() {
-    document.getElementById("PauseButton").addEventListener('click', PauseGame)
+  document.getElementById("PauseButton").addEventListener('click', PauseGame)
 
-    GameState = sessionStorage.getItem('GameState')
+  let loadedGameState = JSON.parse(sessionStorage.getItem('GameState'))
+  if (loadedGameState == undefined || loadedGameState.userName == undefined) {
+      window.location.href = "../../WEBSITE/loginScreen.html"
+  }
 
-    if (GameState == undefined || GameState.userName == undefined) {
-        window.location.pathname = "/WEBSITE/login.html"
-    }
-    UpdateEnergyDisplay()    
-    StartTimer()
-    
-    StartRoom()
+  GameState.energy = loadedGameState.energy
+  GameState.time = loadedGameState.time
+  GameState.inventory = loadedGameState.inventory
+
+  UpdateEnergyDisplay()    
+  StartTimer()
+
+  StartRoom()
 }
 
 window.addEventListener('load', InitRoom)
@@ -355,6 +361,13 @@ function ShowOptions() {
     let GameView = document.getElementById("GameView")
     GameView.style.gridTemplateRows = ""
 }
+
+// Prevents reloading to regain time
+const onPageLeave = () => {
+  sessionStorage.setItem('GameState', JSON.stringify(GameState))
+  saveGame(GameState)
+}
+window.addEventListener('beforeunload', onPageLeave)
 
 /* 
 * Boilerplate code end
@@ -511,7 +524,7 @@ function StartRoom() {
     });
     
 
-    SetBackgroundImage("/Assets/scaryimageREMOVE--------------------------.webp")
+    SetBackgroundImage("../../Assets/scaryimageREMOVE--------------------------.webp")
     HideOptionsAndMessage()
     SetRoomName("Parlor Room")
 }
