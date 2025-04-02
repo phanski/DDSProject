@@ -414,111 +414,111 @@ function DisplayMessageAfterDelay (messageText) {
 /**
  * Main Function which is called when room page is loaded
  */
-function StartRoom() {
+// function StartRoom() {
     
 
-    SetRoomName("Small, Dark Room");
-    ShowMessage("You enter a small, dark room. There is a table in the centre with a note on it, and a door opposite to you.");
+//     SetRoomName("Small, Dark Room");
+//     ShowMessage("You enter a small, dark room. There is a table in the centre with a note on it, and a door opposite to you.");
 
-    AddOption("Read the note", () => {
-        ShowMessage('It reads "LRRR"');
-        // HideOptions();
-        DisplayMessageAfterDelay ("You enter a small, dark room. There is a table in the centre with a note on it, and a door opposite to you.");
+//     AddOption("Read the note", () => {
+//         ShowMessage('It reads "LRRR"');
+//         // HideOptions();
+//         DisplayMessageAfterDelay ("You enter a small, dark room. There is a table in the centre with a note on it, and a door opposite to you.");
         
-    });
+//     });
 
-    // AddOption("Pick up the note", () => {
-    //     ShowMessage('You pick up the note and put it in your inventory.');
-    //     executeDatabaseQuery(`INSERT INTO InventoryPart (ItemID, SaveID) VALUES (4, 1)`); // change saveid when login finished
-    //     // HideOptions();
-    //     DisplayMessageAfterDelay ("You enter a small, dark room. There is a table in the centre, and a door opposite to you.");
+//     // AddOption("Pick up the note", () => {
+//     //     ShowMessage('You pick up the note and put it in your inventory.');
+//     //     executeDatabaseQuery(`INSERT INTO InventoryPart (ItemID, SaveID) VALUES (4, 1)`); // change saveid when login finished
+//     //     // HideOptions();
+//     //     DisplayMessageAfterDelay ("You enter a small, dark room. There is a table in the centre, and a door opposite to you.");
 
-    // })
+//     // })
 
-    AddOption("Go through the door", () => {
-        // HideOptions();
-        // setTimeout(ShowOptions, 2000);
-        SetRoomName("Corridor #1");
-        ShowMessage('You find yourself in a narrow corridor which extends to your left and right.');
-        ClearOptions();
+//     AddOption("Go through the door", () => {
+//         // HideOptions();
+//         // setTimeout(ShowOptions, 2000);
+//         SetRoomName("Corridor #1");
+//         ShowMessage('You find yourself in a narrow corridor which extends to your left and right.');
+//         ClearOptions();
 
         
 
-        // correct #1
-        AddOption("Go left", () => {
-            SetRoomName("Corridor #2");
-            ShowMessage('You now find yourself in another narrow corridor which extends to your left and right.');
-            ClearOptions();
+//         // correct #1
+//         AddOption("Go left", () => {
+//             SetRoomName("Corridor #2");
+//             ShowMessage('You now find yourself in another narrow corridor which extends to your left and right.');
+//             ClearOptions();
 
-            // incorrect #2
-            AddOption("Go left", () => {
+//             // incorrect #2
+//             AddOption("Go left", () => {
                 
                 
-                ShowMessage('You hit a dead end. You turn back.');
+//                 ShowMessage('You hit a dead end. You turn back.');
                 
 
 
-                // // if energy pack is in inventory show this message
-                // ShowMessage('You hit a dead end. You turn back.');
+//                 // // if energy pack is in inventory show this message
+//                 // ShowMessage('You hit a dead end. You turn back.');
                 
-                // HideOptions();
+//                 // HideOptions();
                 
-                DisplayMessageAfterDelay ('You are back in the second narrow corridor which, surprisingly, still extends to your left and right.');
-        });
+//                 DisplayMessageAfterDelay ('You are back in the second narrow corridor which, surprisingly, still extends to your left and right.');
+//         });
 
-            // correct #2
-            AddOption("Go right", () => {
-                SetRoomName("Corridor #3");
-                // ShowMessage("As you move along the corridor, you see a faint glow emanating through the next opening.");
-                ShowMessage('You find yourself in yet another narrow corridor which extends to your left and right.');
+//             // correct #2
+//             AddOption("Go right", () => {
+//                 SetRoomName("Corridor #3");
+//                 // ShowMessage("As you move along the corridor, you see a faint glow emanating through the next opening.");
+//                 ShowMessage('You find yourself in yet another narrow corridor which extends to your left and right.');
                 
-                ClearOptions();
+//                 ClearOptions();
 
-                // incorrect #3
-                AddOption("Go left", () => {
-                    ShowMessage('You hit a dead end. You turn back.');
-                    // HideOptions();
-                    DisplayMessageAfterDelay ('You retrace your steps back to the third narrow corridor, which still extends to your left and right.');
-                });
+//                 // incorrect #3
+//                 AddOption("Go left", () => {
+//                     ShowMessage('You hit a dead end. You turn back.');
+//                     // HideOptions();
+//                     DisplayMessageAfterDelay ('You retrace your steps back to the third narrow corridor, which still extends to your left and right.');
+//                 });
 
-                // correct #3
-                AddOption("Go right", () => {
-                    SetRoomName("Corridor #4");
-                    ShowMessage('You find yourself in yet another narrow corridor which extends to your left and right.');
-                    ClearOptions();
+//                 // correct #3
+//                 AddOption("Go right", () => {
+//                     SetRoomName("Corridor #4");
+//                     ShowMessage('You find yourself in yet another narrow corridor which extends to your left and right.');
+//                     ClearOptions();
     
-                    // incorrect #4
-                    AddOption("Go left", () => {
-                        ShowMessage('You hit a dead end. You turn back.');
-                        // HideOptions();
-                        DisplayMessageAfterDelay ('You retrace your steps back to the fourth narrow corridor, which still extends to your left and right.');
-                    });
+//                     // incorrect #4
+//                     AddOption("Go left", () => {
+//                         ShowMessage('You hit a dead end. You turn back.');
+//                         // HideOptions();
+//                         DisplayMessageAfterDelay ('You retrace your steps back to the fourth narrow corridor, which still extends to your left and right.');
+//                     });
     
-                    // correct #4
-                    AddOption("Go right", () => {
-                        SetRoomName("End?");
-                        ShowMessage('Congratulations! You made it to the end. You see a door in front of you.');
-                        ClearOptions();
-                        AddOption("Go through door", () => {
-                            // change to whatever room is next
-                            saveGame(GameState)
-                            sessionStorage.setItem('GameState', null)
-                            window.location.href = `../../End Screen Credits/win.html`;
-                        });
-                    });
-                });
-            });
-        });
+//                     // correct #4
+//                     AddOption("Go right", () => {
+//                         SetRoomName("End?");
+//                         ShowMessage('Congratulations! You made it to the end. You see a door in front of you.');
+//                         ClearOptions();
+//                         AddOption("Go through door", () => {
+//                             // change to whatever room is next
+//                             saveGame(GameState)
+//                             sessionStorage.setItem('GameState', null)
+//                             window.location.href = `../../End Screen Credits/win.html`;
+//                         });
+//                     });
+//                 });
+//             });
+//         });
 
-        // incorrect #1
-        AddOption("Go right", () => {
-            ShowMessage('You get caught in a trap and debris falls from the ceiling. You lose 5 energy healing your wounds.');
-            RemoveEnergy(5);
-            // HideOptions();
-            DisplayMessageAfterDelay ('Retracing your steps, you are back in the narrow corridor which still extends to your left and right.');
-        });
-    });   
-}
+//         // incorrect #1
+//         AddOption("Go right", () => {
+//             ShowMessage('You get caught in a trap and debris falls from the ceiling. You lose 5 energy healing your wounds.');
+//             RemoveEnergy(5);
+//             // HideOptions();
+//             DisplayMessageAfterDelay ('Retracing your steps, you are back in the narrow corridor which still extends to your left and right.');
+//         });
+//     });   
+// }
 
 function StartRoom() {
     SetRoomName("Small, Dark Room");
@@ -586,8 +586,6 @@ function StartRoom() {
                         AddOption("Go right", () => {
                             SetRoomName("Corridor #6");
                             ShowMessage('Six corridors deep. Left or right?');
-                            
-                            
                             ClearOptions();
                         
 
@@ -605,17 +603,7 @@ function StartRoom() {
                                     DisplayMessageAfterDelay("Six corridors deep. Left or right?")
     
                             })}; 
-
-                         
-
-                                
-
-
-                        
-
-                        
-                        
-
+                            
                             // INCORRECT (Left)
                             AddOption("Go left", () => {
                                 ShowMessage('Wall. Nothing but wall.');

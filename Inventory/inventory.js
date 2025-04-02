@@ -2,7 +2,7 @@
 async function OpenInventory() {
     try {
         let GameWindow = document.getElementById("GameWindow")
-        let inventoryPartNames = []; // = between let and inventoryPartNames??
+        let inventoryPartNames = []; 
         let inventoryPartIDs = []; 
 
         let response = await fetch(DatabaseConnectionData.url, {

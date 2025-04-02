@@ -738,7 +738,7 @@ function StartRoom() {
     // AddOption("Inspect Lock", inspectLock)
     displayRoomDescription();
     SetBackgroundImage("url('DDSProject/Assets/jonah.room.webp')")
-    SetRoomName("Corridoor")
+    SetRoomName("Corridor")
 }
 
 
