@@ -51,9 +51,15 @@
             async function Register(Username, Password) {
                 Username = CleanSQL(Username)
                 Password = CleanSQL(Password)
+                
+                const AccountExistsQuery = `SELECT * FROM User WHERE Username="${Username}";`
+                let result = await executeDatabaseQuery(AccountExistsQuery)
+                if (result.data.length > 0) {
+                    return false
+                }
+
 
                 const RegisterQuery = `INSERT INTO User (Username, Password, volume, fontSize, fontFamily) VALUES ("${Username}","${Password}",50, "medium", "Arial");`
-                console.log(RegisterQuery)
                 let dbResult = await executeDatabaseQuery(RegisterQuery)
 
                 return dbResult.success
@@ -153,10 +159,9 @@
                 }
 
                 let RegisterResult = await Register(Username, Password)
-                console.log(RegisterResult)
                 if (RegisterResult) {
-                    // TODO: Replace to actual login page
-                    document.location.pathname = "/WEBSITE/loginScreen.html"
+                    
+                    window.location.href = "./loginScreen.html"
                 } else {
                     // TODO: Better alert for failed login when the login page is created
                     alert ("Username is already taken")
