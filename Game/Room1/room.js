@@ -389,7 +389,7 @@ function FirstBookChoice() {
 
     AddOption("Read first page", () => {
         ClearOptions()                
-        pageImage.src = "/Assets/Chapter3.png"
+        pageImage.src = "../../Assets/Chapter3.png"
         focusedObjectDiv.replaceChildren(pageImage)
 
         AddOption("Return to other pages", () => {
@@ -400,7 +400,7 @@ function FirstBookChoice() {
 
     AddOption("Read second page", () => {
         ClearOptions()
-        pageImage.src = "/Assets/Chapter1.png"
+        pageImage.src = "../../Assets/Chapter1.png"
         focusedObjectDiv.replaceChildren(pageImage)
 
         AddOption("Return to other pages", () => {
@@ -411,7 +411,7 @@ function FirstBookChoice() {
 
     AddOption("Read third page", () => {
         ClearOptions()
-        pageImage.src = "/Assets/Chapter2.png"
+        pageImage.src = "../../Assets/Chapter2.png"
         focusedObjectDiv.replaceChildren(pageImage)
 
         AddOption("Return to other pages", () => {
@@ -434,7 +434,7 @@ function SecondBookChoice () {
 
     AddOption("Read first page", () => {
         ClearOptions()                
-        pageImage.src = "/Assets/Chapter3.png"
+        pageImage.src = "../../Assets/Chapter3.png"
         focusedObjectDiv.replaceChildren(pageImage)
 
         AddOption("Return to other pages", () => {
@@ -445,7 +445,7 @@ function SecondBookChoice () {
 
     AddOption("Read second page", () => {
         ClearOptions()
-        pageImage.src = "/Assets/Chapter1.png"
+        pageImage.src = "../../Assets/Chapter1.png"
         focusedObjectDiv.replaceChildren(pageImage)
 
         AddOption("Return to other pages", () => {
@@ -456,7 +456,7 @@ function SecondBookChoice () {
 
     AddOption("Read third page", () => {
         ClearOptions()
-        pageImage.src = "/Assets/Chapter2.png"
+        pageImage.src = "../../Assets/Chapter2.png"
         focusedObjectDiv.replaceChildren(pageImage)
 
         AddOption("Return to other pages", () => {
@@ -502,7 +502,7 @@ function BoxChoice() {
             ClearOptions()
             AddOption("Read note", () => {
                 let noteImage = document.createElement('img')
-                noteImage.src = "/Assets/note.png"
+                noteImage.src = "../../Assets/note.png"
                 noteImage.style = "height: 100%"
                 focusedObjectDiv.appendChild(noteImage)
         
@@ -534,7 +534,7 @@ function NoteChoice() {
         const focusedObjectDiv = document.getElementById("FocusedObject")
         
         let noteImage = document.createElement('img')
-        noteImage.src = "/Assets/note.png"
+        noteImage.src = "../../Assets/note.png"
         noteImage.style = "height: 100%"
         focusedObjectDiv.appendChild(noteImage)
         focusedObjectDiv.append(document.createElement('br'))
@@ -566,7 +566,7 @@ function NoteChoice() {
  * Main Function which is called when room page is loaded
  */
 function StartRoom() {
-    SetBackgroundImage("/Assets/StudyBackground.webp")
+    SetBackgroundImage("../../Assets/StudyBackground.webp")
     SetRoomName("Study")
 
     ShowMessage("You enter the study and find it in complete disarray. Books are strewn across the floor along with torn out pages.")

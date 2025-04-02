@@ -58,7 +58,7 @@ body {
 
 
 #InfoBar {
-    background-color: blue;
+    background-color: rgb(235, 126, 63);
     margin: 0.2em;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -79,7 +79,7 @@ body {
     grid-row: 2;
     grid-column: 1;
 
-    background-color: green;
+    background-color: rgb(128, 68, 0);
     text-align: center;
     display: flex;
     flex-direction: row;
@@ -99,7 +99,7 @@ body {
 }
 
 .UserOption:hover {
-    background-color: #00FD00;
+    background-color: #dd9000;
 }
 
 #Timer {
