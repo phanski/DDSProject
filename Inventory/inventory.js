@@ -105,7 +105,10 @@ function itemAction(id) {
 
         ShowMessage("You have gained 5 energy from the Energy Pack!");
         DisplayMessageAfterDelay(oldMessage);
-    }
+    } 
+    // else if (id==8) {
+        // note with answers
+    // }
 
     // to add more items, just add an else if statement with the id of the item and the function you want to call when it is clicked.
 
