@@ -137,7 +137,7 @@ function TransitionToRoom(roomNumber) {
     sessionStorage.setItem('GameState', JSON.stringify(GameState))
     saveGame(GameState)
 
-    window.location.href = `../Room${roomNumber}/room.html`
+    window.location.href = `/Game/Room${roomNumber}/room.html`
 }
 
 /**
@@ -514,7 +514,7 @@ function StartRoom() {
         // Phase 3: Process keypad input
         if (keypadInput === correctKeypad) {
           feedback.textContent = "The final mechanism hums with ancient power. The secret door slowly opens, revealing mysteries beyond...";
-          setTimeout(() => TransitionToRoom(2), 2000)
+          AddOption("Leave Room",TransitionToRoom(2));
         } else {
           feedback.textContent = `The keypad remains unyielding. The code "${keypadInput}" is not correct. Try again.`;
           keypadInput = "";
