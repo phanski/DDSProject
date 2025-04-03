@@ -663,7 +663,9 @@ function StartRoom() {
             AddOption("Search books", FirstBookChoice)
 
             AddOption("Find out what you tripped on", () => {
-                // TODO: Bonus item when inventory is added
+                executeDatabaseQuery(`INSERT INTO InventoryPart (ItemID, SaveID) VALUES (2, (SELECT SaveID FROM SaveFile WHERE UserName = "${sessionStorage.getItem('LoggedInUser')}"))`).then((result) => {console.log(`Result: ${result}`)}); // change saveid when login finished
+                ShowMessage("You find a lost energy pack in a hole in the floor")
+                AddOption("Search books", FirstBookChoice)
             })
         })
     })
