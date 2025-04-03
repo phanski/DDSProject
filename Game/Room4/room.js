@@ -738,8 +738,9 @@ function StartRoom() {
                                             SetRoomName("End?");
                                             ShowMessage('Congratulations! After eight corridors, you see a door.');
                                             ClearOptions();
-                                            AddOption("Go through door", () => {
-                                                saveGame(GameState)
+                                            AddOption("Go through door", async () => {
+                                                await executeDatabaseQuery(`DELETE FROM InventoryPart WHERE SaveID = (SELECT SaveID FROM SaveFile WHERE Username = "${sessionStorage.getItem('LoggedInUser')}")`)
+                                                await executeDatabaseQuery(`DELETE FROM SaveFile WHERE Username = "${sessionStorage.getItem('LoggedInUser')}"`)
                                                 window.removeEventListener('beforeunload', onPageLeave)
                                                 recordRoomCompletion()
     

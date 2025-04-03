@@ -5,6 +5,8 @@
  * @returns Promise. Successful if SQL query succeeds, Rejects if there is error at any part of the request
  */
 async function executeDatabaseQuery(SQLQuery) {
+    console.log(SQLQuery)
+
     let params = new URLSearchParams();
     params.append('hostname', DatabaseConnectionData.hostname);
     params.append('username', DatabaseConnectionData.username);
@@ -78,10 +80,9 @@ document.getElementById("Settings").addEventListener("click", ()=>{
 })
 
 document.getElementById("StartRun").addEventListener("click", async () => {
-    const deleteSaveQuery = `DELETE FROM SaveFile WHERE Username = "${sessionStorage.getItem('LoggedInUser')}"`
-
-    await executeDatabaseQuery(deleteSaveQuery)
-
+    await executeDatabaseQuery(`DELETE FROM InventoryPart WHERE SaveID = (SELECT SaveID FROM SaveFile WHERE Username = "${sessionStorage.getItem('LoggedInUser')}")`)
+    await executeDatabaseQuery(`DELETE FROM SaveFile WHERE Username = "${sessionStorage.getItem('LoggedInUser')}"`)
+    
     sessionStorage.setItem("GameState", JSON.stringify({
         energy: 100,
         time: 0,
