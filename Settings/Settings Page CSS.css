@@ -1,0 +1,108 @@
+
+body{
+    height:90vh;
+    width:90vw;
+    background-color:grey;
+    font-size:1.5vw;
+}
+
+#GameWindow{
+    height:100%;
+    width: 100%;
+    font-family: inherit;
+}
+
+form{
+    height:100%;
+    width:100%;
+    font-size:inherit;
+    font-family: inherit;
+
+}
+.form-button{
+    font-size:inherit;
+    font-family: inherit;
+
+}
+
+#setting-set{
+    width:99%;
+    height:99%;
+    border: 2px solid white;
+    border-radius:10px;
+    background-color:transparent;
+    font-size:inherit;
+    font-family: inherit;
+
+}
+
+.setting-option{
+    display: flex;
+    flex-direction: row;
+    justify-content:center;
+    align-items:center;
+    height: 20%;
+    width: 100%;
+    font-size:inherit;
+    font-family: inherit;
+
+}
+
+.label{
+    font-size:20px;
+    margin-right: 20%;
+    font-size:inherit;
+    font-family: inherit;
+
+}
+
+#volume-slide{
+    width:45vw;
+    height:20vh;
+    cursor:pointer;
+
+}
+
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+#font-slide{
+    width: 25%;
+    height:40%;
+    font-size:inherit;
+}
+
+#font-type{
+    width: 25%;
+    height:40%;
+    font-size:inherit;
+}
+
+#Back-Image{
+    height:1em;
+    width:25%;
+}
+
+#Back-Button{
+    display:flex;
+    flex-direction: row;
+    font-size:inherit;
+    font-family:inherit;
+    background-color: transparent;
+    border: none;
+}
+#Back-Button:hover{
+    text-decoration:underline;
+}
+#Back-Button:active{
+    transform: translateY(2px);
+}

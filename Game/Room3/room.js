@@ -20,6 +20,34 @@ const DatabaseConnectionData = {
     password: "nDKM7BtMSYYxWc9F",// ! Enter own password
     database: "CSC1034_CW_17", // ! Change to group DB when uploading
 }
+/**
+ * Records the user's runtime for the current room and stores it in the database
+ * @param {function} callback - Function to execute after data is stored
+ */
+async function recordRoomCompletion(callback) {
+  // Get current username from session storage
+  const username = sessionStorage.getItem('LoggedInUser') || 'unknown_user';
+  
+  // Get the current runtime in seconds
+  const runtimeSeconds = GameState.time;
+  
+  // Get current room number from the URL
+  const currentUrl = window.location.href;
+  const roomMatch = currentUrl.match(/Room(\d+)/);
+  const roomNumber = roomMatch ? roomMatch[1] : '0';
+  
+  // Create timestamp
+  const timestamp = new Date().getTime()
+  
+  // Create SQL query to insert the data
+  const insertEntryQuery = `INSERT INTO room_completions (saveID, username, room_number, runtime_seconds, completion_time) 
+                   VALUES ((SELECT SaveID FROM SaveFile WHERE Username = '${username}') ,'${username}', ${roomNumber}, ${runtimeSeconds}, '${timestamp}')`;
+  
+  // Execute the query
+  await executeDatabaseQuery(insertEntryQuery)
+  
+  console.log('Room completion recorded successfully');
+}
 
 /**
  * Updates room name in info bar
@@ -130,12 +158,13 @@ function AddEnergy(amount) {
  * Transitions to another room safely, ensuring data is saved to transfer to new room
  * @param {integer} roomNumber 
  */
-function TransitionToRoom(roomNumber) {
+async function TransitionToRoom(roomNumber) {
     // Cleared to ensure timer doesn't tick while user is waiting for room to load
     clearInterval(TimerInterval)
 
     sessionStorage.setItem('GameState', JSON.stringify(GameState))
     saveGame(GameState)
+    await recordRoomCompletion()
 
     window.location.href = `../Room${roomNumber}/room.html`
 }
@@ -180,7 +209,7 @@ function FailGame(reason) {
 function PauseGame() {
     let GameWindow = document.getElementById("GameWindow")
 
-    const PauseMenuPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>Game Paused</h1><h2>Current Time : <span id="PauseScreenTime"></span></h2><div style="display: flex; justify-content: space-around; max-width: 500px; width: 100%;"><button class="OverlayButton" id="ResumeButton">Resume</button><button class="OverlayButton" id="ReturnHomeButton">Return to Home</button><button class="OverlayButton" id="SaveButton">Save</button></div></div></div>'
+    const PauseMenuPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>Game Paused</h1><h2>Current Time : <span id="PauseScreenTime"></span></h2><div style="display: flex; justify-content: space-around; width: 100%;"><button class="OverlayButton" id="ResumeButton">Resume</button><button class="OverlayButton" id="ReturnHomeButton">Return to Home</button><button class="OverlayButton" id="SaveButton">Save</button></div></div></div>'
     GameWindow.insertAdjacentHTML('beforeend', PauseMenuPopup)
 
     let resumeButton = document.getElementById('ResumeButton')
@@ -240,15 +269,16 @@ function StartTimer() {
 function InitRoom() {
   document.getElementById("PauseButton").addEventListener('click', PauseGame)
   document.getElementById("InventoryButton").addEventListener('click', OpenInventory)
-
   let loadedGameState = JSON.parse(sessionStorage.getItem('GameState'))
   if (loadedGameState == undefined || loadedGameState.userName == undefined) {
-      window.location.href = "../../WEBSITE/loginScreen.html"
+    window.location.href = "../../WEBSITE/loginScreen.html"
   }
-
+  
   GameState.energy = loadedGameState.energy
   GameState.time = loadedGameState.time
   GameState.inventory = loadedGameState.inventory
+  sessionStorage.setItem('GameState', JSON.stringify(GameState))
+  saveGame(GameState)
 
   UpdateEnergyDisplay()    
   StartTimer()
@@ -346,7 +376,7 @@ function HideOptions() {
     GameWindow.style.gridTemplateRows = "100%"
 
     let GameView = document.getElementById("GameView")
-    GameView.style.gridTemplateRows = "9.6% 78.4% 12%"
+    GameView.style.gridTemplateRows = "auto 1fr"
 }
 
 /**
@@ -415,13 +445,13 @@ function EnableOptions() {
  */
 function HideOptionsAndMessage() {
     let OptionsBar = document.getElementById("UserOptions")
-    OptionsBar.style.display = "none;"
+    OptionsBar.parentElement.removeChild(OptionsBar)
 
     let GameWindow = document.getElementById("GameWindow")
     GameWindow.style.gridTemplateRows = "100%"
 
     let GameView = document.getElementById("GameView")
-    GameView.style.gridTemplateRows = "9.6% 90.4%"
+    GameView.style.gridTemplateRows = "auto 1fr auto"
 }
 
 /**
@@ -503,7 +533,7 @@ function StartRoom() {
       if (phase === 3) {
         keypadInput = "";
         keypadDisplay.textContent = "Current Code: ";
-      }
+      }''
     });
 
     // Submit button (handles actions for all phases)
@@ -511,8 +541,8 @@ function StartRoom() {
       if (phase === 1) {
         // Phase 1: Process button sequence
         if (sequenceInput === forbiddenPattern) {
-          feedback.textContent = "A chilling wind howls... You have invoked the forbidden sequence 'BAAD'. The manor condemns you to DEATH! Restarting...";
-          setTimeout(() => window.location.reload(), 3000);
+          feedback.textContent = "A chilling wind howls... You have invoked the forbidden sequence 'BAAD'. The manor condemns you. You wake up concussed with 50 energy removed.";
+          RemoveEnergy(50);
           return;
         }
         if (sequenceInput === correctSequence) {

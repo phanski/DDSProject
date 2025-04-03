@@ -25,7 +25,7 @@ register page and start layout of actual game
     gap: 10px; /* Spacing between images */
     position: absolute;
     left: 20px; /* Adjust left positioning */
-    top: 50px;
+    top: 250px;
 }
 
 /* Image size */

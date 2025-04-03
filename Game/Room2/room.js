@@ -22,6 +22,36 @@ const DatabaseConnectionData = {
 }
 
 /**
+ * Records the user's runtime for the current room and stores it in the database
+ * @param {function} callback - Function to execute after data is stored
+ */
+async function recordRoomCompletion(callback) {
+    // Get current username from session storage
+    const username = sessionStorage.getItem('LoggedInUser') || 'unknown_user';
+    
+    // Get the current runtime in seconds
+    const runtimeSeconds = GameState.time;
+    
+    // Get current room number from the URL
+    const currentUrl = window.location.href;
+    const roomMatch = currentUrl.match(/Room(\d+)/);
+    const roomNumber = roomMatch ? roomMatch[1] : '0';
+    
+    // Create timestamp
+    const timestamp = new Date().getTime()
+    
+    // Create SQL query to insert the data
+    const insertEntryQuery = `INSERT INTO room_completions (saveID, username, room_number, runtime_seconds, completion_time) 
+                     VALUES ((SELECT SaveID FROM SaveFile WHERE Username = '${username}') ,'${username}', ${roomNumber}, ${runtimeSeconds}, '${timestamp}')`;
+    
+    // Execute the query
+    await executeDatabaseQuery(insertEntryQuery)
+    
+    console.log('Room completion recorded successfully');
+}
+
+
+/**
  * Updates room name in info bar
  * @param {string} roomName 
  */
@@ -43,10 +73,15 @@ function AddOption(OptionTitle, OptionAction) {
     let NewOptionTitle = document.createElement("h1")
     NewOptionTitle.textContent = OptionTitle
     NewOption.appendChild(NewOptionTitle)
-    NewOption.addEventListener("click", OptionAction)
-    
+    NewOption.style.display="none";
+    NewOption.addEventListener("click", OptionAction);
 
-    Options.appendChild(NewOption)
+    Options.appendChild(NewOption);
+    loadSetting();
+
+    setTimeout(()=>{
+        NewOption.style.display="block";
+    },68.99);
 }
 
 /**
@@ -130,16 +165,16 @@ function AddEnergy(amount) {
  * Transitions to another room safely, ensuring data is saved to transfer to new room
  * @param {integer} roomNumber 
  */
-function TransitionToRoom(roomNumber) {
+async function TransitionToRoom(roomNumber) {
     // Cleared to ensure timer doesn't tick while user is waiting for room to load
     clearInterval(TimerInterval)
 
     sessionStorage.setItem('GameState', JSON.stringify(GameState))
     saveGame(GameState)
+    await recordRoomCompletion()
 
     window.location.href = `../Room${roomNumber}/room.html`
 }
-
 /**
  * Fails the player for their current run
  * @param {integer} reason 1 - Ran out of time | 2 - Ran out of energy
@@ -180,7 +215,7 @@ function FailGame(reason) {
 function PauseGame() {
     let GameWindow = document.getElementById("GameWindow")
 
-    const PauseMenuPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>Game Paused</h1><h2>Current Time : <span id="PauseScreenTime"></span></h2><div style="display: flex; justify-content: space-around; max-width: 500px; width: 100%;"><button class="OverlayButton" id="ResumeButton">Resume</button><button class="OverlayButton" id="ReturnHomeButton">Return to Home</button><button class="OverlayButton" id="SaveButton">Save</button></div></div></div>'
+    const PauseMenuPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>Game Paused</h1><h2>Current Time : <span id="PauseScreenTime"></span></h2><div style="display: flex; justify-content: space-around; width: 100%;"><button class="OverlayButton" id="ResumeButton">Resume</button><button class="OverlayButton" id="ReturnHomeButton">Return to Home</button><button class="OverlayButton" id="SaveButton">Save</button></div></div></div>'
     GameWindow.insertAdjacentHTML('beforeend', PauseMenuPopup)
 
     let resumeButton = document.getElementById('ResumeButton')
@@ -240,15 +275,16 @@ function StartTimer() {
 function InitRoom() {
     document.getElementById("PauseButton").addEventListener('click', PauseGame)
     document.getElementById("InventoryButton").addEventListener('click', OpenInventory)
-
     let loadedGameState = JSON.parse(sessionStorage.getItem('GameState'))
     if (loadedGameState == undefined || loadedGameState.userName == undefined) {
         window.location.href = "../../WEBSITE/loginScreen.html"
     }
-
+    
     GameState.energy = loadedGameState.energy
     GameState.time = loadedGameState.time
     GameState.inventory = loadedGameState.inventory
+    sessionStorage.setItem('GameState', JSON.stringify(GameState))
+    saveGame(GameState)
 
     UpdateEnergyDisplay()    
     StartTimer()
@@ -429,11 +465,13 @@ function ShowObject(url,description){
     ClearObject();
     HideMessage(),ShowMessage("On a closer look, you can see the box has a puzzle on it.");
     let object=document.getElementById("FocusedObject");
+    object.style.height="60%";
     if (object.children.length==0){
         let child=document.createElement("img");
         child.class="ObjectContent";
         child.src=url;
         child.alt=description;
+        child.style.maxHeight,child.style.maxWidth="100%";
         child.style.width,child.style.height="100%";
         child.style.cursor="pointer";
         child.addEventListener("click",()=>{HideMessage(),showBoard();})
@@ -449,7 +487,7 @@ function HideObject(){
         console.log("");
     }
     HideMessage();
-    AddOption("Investigate the box", () => ShowObject(`https://imgs.search.brave.com/Uv7PjPwToss4YP4krNPTTauC8y1Iq7BXFAWSoknkpAI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTEv/ODE0LzU2Ny9zbWFs/bC9yb2xsLW9mLXll/bGxvdy1zY290Y2gt/dGFwZS0zZC1oaWdo/LXF1YWxpdHktcGhv/dG8tcG5nLnBuZw`,"Alt text"))
+    AddOption("Investigate the box", () => ShowObject(`../../Assets/lockbox.png`,"Alt text"))
     let object=document.getElementById("FocusedObject");
     object.style.display="none";
 }
@@ -574,7 +612,7 @@ function dragEnd(){
         tempOrder[currIndex]=temp;
         
         if (tempOrder.join("")==correctOrder.join("")){
-            setTimeout(()=>{showReward()},1000);//Play Audio to indicate success
+            setTimeout(()=>{showReward()},1000);
             
         }
     }
@@ -598,21 +636,19 @@ function resetBoard(){
 }
 
 function showReward(){
-    //Unfinished Function
     ClearObject();
-    ShowObject(`https://imgs.search.brave.com/Uv7PjPwToss4YP4krNPTTauC8y1Iq7BXFAWSoknkpAI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTEv/ODE0LzU2Ny9zbWFs/bC9yb2xsLW9mLXll/bGxvdy1zY290Y2gt/dGFwZS0zZC1oaWdo/LXF1YWxpdHktcGhv/dG8tcG5nLnBuZw`,"Alt text");
+    ShowObject(`../../Assets/key-reward.png`,"Key");
     ClearOptions();
 
     let object=document.getElementById("FocusedObject");
     object.style.pointerEvents="none";
     
-    ShowMessage("You have solved the puzzle and found a key inside the box. You can now leave the room.");
+    ShowMessage("You have solved the puzzle and found a key inside the box. It unlocks the exit.");
     AddOption("Close Box",()=>{
         HideObject(),
         HideMessage(),
         ClearOptions(),
         ShowMessage("There is nothing left to do here."),
-        AddOption("Inventory",console.log("Inventory")),
         AddOption("Leave Room",TransitionToRoom(6));
     });
 }
@@ -640,9 +676,9 @@ function RemoveOption(OptionTitle){
 function StartRoom() {
     
     
-    AddOption("Show Messsage", () => ShowMessage(RoomDescription))
-    AddOption("Hide Message", HideMessage)
-    AddOption("Investigate the box", () => ShowObject(`https://imgs.search.brave.com/Uv7PjPwToss4YP4krNPTTauC8y1Iq7BXFAWSoknkpAI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTEv/ODE0LzU2Ny9zbWFs/bC9yb2xsLW9mLXll/bGxvdy1zY290Y2gt/dGFwZS0zZC1oaWdo/LXF1YWxpdHktcGhv/dG8tcG5nLnBuZw`,"Alt text"))
+    // AddOption("Show Messsage", () => ShowMessage(RoomDescription))
+    // AddOption("Hide Message", HideMessage)
+    AddOption("Investigate the box", () => ShowObject(`../../Assets/lockbox.png`,"Lockbox"))
     
 //  LEFTOVER OPTIONS
 //  ||||||||||||||||

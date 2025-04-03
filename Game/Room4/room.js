@@ -43,11 +43,18 @@ function AddOption(OptionTitle, OptionAction) {
     let NewOptionTitle = document.createElement("h1")
     NewOptionTitle.textContent = OptionTitle
     NewOption.appendChild(NewOptionTitle)
+    NewOption.style.display="none";
     NewOption.addEventListener("click", OptionAction)
     
 
-    Options.appendChild(NewOption)
+    Options.appendChild(NewOption);
+    loadSetting();
+
+    setTimeout(()=>{
+        NewOption.style.display="block";
+    },68.99);
 }
+
 
 /**
  * Removes all options from user
@@ -136,6 +143,7 @@ function TransitionToRoom(roomNumber) {
 
     sessionStorage.setItem('GameState', JSON.stringify(GameState))
     saveGame(GameState)
+    recordRoomCompletion()
 
     window.location.href = `../Room${roomNumber}/room.html`
 }
@@ -180,7 +188,7 @@ function FailGame(reason) {
 function PauseGame() {
     let GameWindow = document.getElementById("GameWindow")
 
-    const PauseMenuPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>Game Paused</h1><h2>Current Time : <span id="PauseScreenTime"></span></h2><div style="display: flex; justify-content: space-around; max-width: 500px; width: 100%;"><button class="OverlayButton" id="ResumeButton">Resume</button><button class="OverlayButton" id="ReturnHomeButton">Return to Home</button><button class="OverlayButton" id="SaveButton">Save</button></div></div></div>'
+    const PauseMenuPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>Game Paused</h1><h2>Current Time : <span id="PauseScreenTime"></span></h2><div style="display: flex; justify-content: space-around; width: 100%;"><button class="OverlayButton" id="ResumeButton">Resume</button><button class="OverlayButton" id="ReturnHomeButton">Return to Home</button><button class="OverlayButton" id="SaveButton">Save</button></div></div></div>'
     GameWindow.insertAdjacentHTML('beforeend', PauseMenuPopup)
 
     let resumeButton = document.getElementById('ResumeButton')
@@ -238,6 +246,7 @@ function StartTimer() {
  * Separated to ensure boilerplate code remains unedited
  */
 function InitRoom() {
+    
     document.getElementById("PauseButton").addEventListener('click', PauseGame)
     document.getElementById("InventoryButton").addEventListener('click', OpenInventory)
 
@@ -250,6 +259,9 @@ function InitRoom() {
     GameState.time = loadedGameState.time
     GameState.inventory = loadedGameState.inventory
 
+    sessionStorage.setItem('GameState', JSON.stringify(GameState))
+    saveGame(GameState)
+    
     UpdateEnergyDisplay()    
     StartTimer()
     
@@ -369,6 +381,35 @@ const onPageLeave = () => {
     saveGame(GameState)
 }
 window.addEventListener('beforeunload', onPageLeave)
+
+/**
+ * Records the user's runtime for the current room and stores it in the database
+ * @param {function} callback - Function to execute after data is stored
+ */
+async function recordRoomCompletion(callback) {
+    // Get current username from session storage
+    const username = sessionStorage.getItem('LoggedInUser') || 'unknown_user';
+    
+    // Get the current runtime in seconds
+    const runtimeSeconds = GameState.time;
+    
+    // Get current room number from the URL
+    const currentUrl = window.location.href;
+    const roomMatch = currentUrl.match(/Room(\d+)/);
+    const roomNumber = roomMatch ? roomMatch[1] : '0';
+    
+    // Create timestamp
+    const timestamp = new Date().getTime()
+    
+    // Create SQL query to insert the data
+    const insertEntryQuery = `INSERT INTO room_completions (saveID, username, room_number, runtime_seconds, completion_time) 
+                     VALUES ((SELECT SaveID FROM SaveFile WHERE Username = '${username}') ,'${username}', ${roomNumber}, ${runtimeSeconds}, '${timestamp}')`;
+    
+    // Execute the query
+    await executeDatabaseQuery(insertEntryQuery)
+    
+    console.log('Room completion recorded successfully');
+}
 
 /* 
 * Boilerplate code end
@@ -685,6 +726,14 @@ function StartRoom() {
                                         SetRoomName("Corridor #8");
                                         ShowMessage('Eighth corridor. One last choice: left or right?');
                                         ClearOptions();
+                                        AddOption("Go through door", () => {
+                                            saveGame(GameState)
+                                            window.removeEventListener('beforeunload', onPageLeave)
+                                            recordRoomCompletion()
+
+                                            sessionStorage.removeItem('GameState')
+                                            sessionStorage.setItem('Completiontime', GameState.time)
+                                            window.location.href = `../../End Screen Credits/win.html`;
     
                                         // INCORRECT (Left)
                                         AddOption("Go left", () => {

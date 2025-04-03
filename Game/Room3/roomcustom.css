@@ -192,4 +192,7 @@ input[type="range"]::-moz-range-thumb {
     padding: 1em;
     overflow: scroll;
     margin: 0;
+
+    overflow-x: hidden;
+    
 }

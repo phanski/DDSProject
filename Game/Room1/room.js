@@ -21,6 +21,46 @@ const DatabaseConnectionData = {
     database: "CSC1034_CW_17", // ! Change to group DB when uploading
 }
 
+
+/**
+ * Records the user's runtime for the current room and stores it in the database
+ * @param {function} callback - Function to execute after data is stored
+ */
+function recordRoomCompletion(callback) {
+    // Get current username from session storage
+    const username = sessionStorage.getItem('LoggedInUser') || 'unknown_user';
+    
+    // Get the current runtime in seconds
+    const runtimeSeconds = GameState.PlayerTimeSeconds;
+    
+    // Get current room number from the URL
+    const currentUrl = window.location.href;
+    const roomMatch = currentUrl.match(/Room(\d+)/);
+    const roomNumber = roomMatch ? roomMatch[1] : '0';
+    
+    // Create timestamp
+    const timestamp = new Date().getTime()
+    
+    // Create SQL query to insert the data
+    const sqlQuery = `INSERT INTO room_completions (username, room_number, runtime_seconds, completion_time) 
+                     VALUES ('${username}', ${roomNumber}, ${runtimeSeconds}, '${timestamp}')`;
+    
+    // Execute the query
+    executeDatabaseQuery(sqlQuery)
+        .then(result => {
+            console.log('Room completion recorded successfully');
+            if (callback && typeof callback === 'function') {
+                callback(result);
+            }
+        })
+        .catch(error => {
+            console.error('Failed to record room completion:', error);
+            if (callback && typeof callback === 'function') {
+                callback(null, error);
+            }
+        });
+}
+
 /**
  * Updates room name in info bar
  * @param {string} roomName 
@@ -45,8 +85,14 @@ function AddOption(OptionTitle, OptionAction) {
     NewOption.appendChild(NewOptionTitle)
     NewOption.addEventListener("click", OptionAction)
     
+    NewOption.style.display="none";
 
     Options.appendChild(NewOption)
+    setTimeout(()=>{
+        loadSetting();
+        NewOption.style.display="block";
+    },68.5)
+
 }
 
 /**
@@ -130,16 +176,16 @@ function AddEnergy(amount) {
  * Transitions to another room safely, ensuring data is saved to transfer to new room
  * @param {integer} roomNumber 
  */
-function TransitionToRoom(roomNumber) {
+async function TransitionToRoom(roomNumber) {
     // Cleared to ensure timer doesn't tick while user is waiting for room to load
     clearInterval(TimerInterval)
 
     sessionStorage.setItem('GameState', JSON.stringify(GameState))
     saveGame(GameState)
+    await recordRoomCompletion()
 
     window.location.href = `../Room${roomNumber}/room.html`
 }
-
 /**
  * Fails the player for their current run
  * @param {integer} reason 1 - Ran out of time | 2 - Ran out of energy
@@ -180,7 +226,7 @@ function FailGame(reason) {
 function PauseGame() {
     let GameWindow = document.getElementById("GameWindow")
 
-    const PauseMenuPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>Game Paused</h1><h2>Current Time : <span id="PauseScreenTime"></span></h2><div style="display: flex; justify-content: space-around; max-width: 500px; width: 100%;"><button class="OverlayButton" id="ResumeButton">Resume</button><button class="OverlayButton" id="ReturnHomeButton">Return to Home</button><button class="OverlayButton" id="SaveButton">Save</button></div></div></div>'
+    const PauseMenuPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>Game Paused</h1><h2>Current Time : <span id="PauseScreenTime"></span></h2><di style="display: flex; justify-content: space-around; width: 100%;"><button class="OverlayButton" id="ResumeButton">Resume</button><button class="OverlayButton" id="ReturnHomeButton">Return to Home</button><button class="OverlayButton" id="SaveButton">Save</button></div></div></div>'
     GameWindow.insertAdjacentHTML('beforeend', PauseMenuPopup)
 
     let resumeButton = document.getElementById('ResumeButton')
@@ -240,15 +286,16 @@ function StartTimer() {
 function InitRoom() {
     document.getElementById("PauseButton").addEventListener('click', PauseGame)
     document.getElementById("InventoryButton").addEventListener('click', OpenInventory)
-
     let loadedGameState = JSON.parse(sessionStorage.getItem('GameState'))
     if (loadedGameState == undefined || loadedGameState.userName == undefined) {
         window.location.href = "../../WEBSITE/loginScreen.html"
     }
-
+    
     GameState.energy = loadedGameState.energy
     GameState.time = loadedGameState.time
     GameState.inventory = loadedGameState.inventory
+    sessionStorage.setItem('GameState', JSON.stringify(GameState))
+    saveGame(GameState)
 
     UpdateEnergyDisplay()    
     StartTimer()
@@ -588,7 +635,7 @@ function NoteChoice() {
             HideMessage()
             
             AddOption("Run", () => {
-                TransitionToRoom(3)
+                TransitionToRoom(4)
             })
         })
 
