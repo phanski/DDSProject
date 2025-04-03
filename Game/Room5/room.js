@@ -517,6 +517,7 @@ function StartTimer() {
  */
 function InitRoom() {
     document.getElementById("PauseButton").addEventListener('click', PauseGame)
+    document.getElementById("InventoryButton").addEventListener('click', OpenInventory)
 
     if (sessionStorage.getItem('LoggedInUser') == undefined) {
         window.location.href = "../../WEBSITE/loginScreen.html"
@@ -711,6 +712,7 @@ function myFunction() {
  * Main Function which is called when room page is loaded
  */
 function StartRoom() {
+    console.log(`${sessionStorage.getItem('LoggedInUser')} has entered the room`)
     
     
 

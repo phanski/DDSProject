@@ -137,7 +137,7 @@ function TransitionToRoom(roomNumber) {
     sessionStorage.setItem('GameState', JSON.stringify(GameState))
     saveGame(GameState)
 
-    window.location.href = `/Game/Room${roomNumber}/room.html`
+    window.location.href = `../Room${roomNumber}/room.html`
 }
 
 /**
@@ -239,6 +239,7 @@ function StartTimer() {
  */
 function InitRoom() {
   document.getElementById("PauseButton").addEventListener('click', PauseGame)
+  document.getElementById("InventoryButton").addEventListener('click', OpenInventory)
 
   let loadedGameState = JSON.parse(sessionStorage.getItem('GameState'))
   if (loadedGameState == undefined || loadedGameState.userName == undefined) {

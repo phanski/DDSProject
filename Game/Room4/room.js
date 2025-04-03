@@ -239,6 +239,7 @@ function StartTimer() {
  */
 function InitRoom() {
     document.getElementById("PauseButton").addEventListener('click', PauseGame)
+    document.getElementById("InventoryButton").addEventListener('click', OpenInventory)
 
     let loadedGameState = JSON.parse(sessionStorage.getItem('GameState'))
     if (sessionStorage.getItem('GameState') == undefined || loadedGameState.userName == undefined) {
@@ -590,7 +591,8 @@ function StartRoom() {
                         
 
                             // CORRECT (Right)
-                            if (checkInventory(1)) {
+                            // if (checkInventory(1)) {
+                            if (true) { 
                                 ShowMessage('As you move along the corridor, you see an energy pack on the floor.');
                                 AddOption("Pick up energy pack", () => {
 
@@ -599,7 +601,11 @@ function StartRoom() {
                                     ClearOptions();
     
                                     ShowMessage('You pick up the pack and put it in your inventory. You continue moving along the corridor.');
-                                    executeDatabaseQuery(`INSERT INTO InventoryPart (ItemID, SaveID) VALUES (1, 1)`); // change saveid when login finished
+
+                                    //
+                                    executeDatabaseQuery(`INSERT INTO InventoryPart (ItemID, SaveID) VALUES (1, (SELECT SaveID FROM SaveFile WHERE UserName = ${sessionStorage.getItem('LoggedInUser')}))`); // change saveid when login finished
+                                    //
+                                    
                                     DisplayMessageAfterDelay("Six corridors deep. Left or right?")
     
                             })}; 

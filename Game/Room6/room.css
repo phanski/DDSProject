@@ -196,3 +196,20 @@ body {
     background-color: green;
     color: black;
 }
+
+.item {
+    color: #aaaaaa;
+    
+    border-radius: 9px;
+    border: 1px solid #555555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #555555;
+    min-height: 80px;
+}
+
+.item:hover {
+    background-color: #444444;
+    cursor: pointer;
+}

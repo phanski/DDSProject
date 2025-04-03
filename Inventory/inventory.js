@@ -15,8 +15,17 @@ async function OpenInventory() {
                 username: DatabaseConnectionData.username,
                 password: DatabaseConnectionData.password,
                 database: DatabaseConnectionData.database,
-                query: `SELECT i.Name, i.ItemID FROM InventoryPart ip JOIN Item i ON ip.ItemID = i.ItemID WHERE ip.SaveID = 1` // // change to saveid when login finished
+
+                //
+
+                
+                // query: `SELECT i.Name, i.ItemID FROM InventoryPart ip JOIN Item i ON ip.ItemID = i.ItemID WHERE ip.SaveID = 1` // // change to saveid when login finished
+
+                query: `SELECT i.Name, i.ItemID FROM SaveFile sf JOIN InventoryPart ip ON sf.SaveID = ip.SaveID JOIN Item i ON ip.ItemID = i.ItemID WHERE sf.UserName = ${sessionStorage.getItem('LoggedInUser')}`
+                //
+            
             })
+
         })
         const data = await response.json();
         for (let i = 0; i < data.data.length; i++) {
@@ -120,7 +129,7 @@ function itemAction(id) {
  * @returns {boolean} present - True if item is present, false otherwise
  */
 function checkInventory(id) {
-    executeDatabaseQuery(`SELECT * FROM InventoryPart WHERE ItemID = ${id} AND SaveID = 1`).then((result) => { // change saveid
+    executeDatabaseQuery(`SELECT * FROM InventoryPart WHERE ItemID = ${id} AND SaveID = (SELECT SaveID FROM SaveFile WHERE UserName = ${sessionStorage.getItem('LoggedInUser')})`).then((result) => { // change saveid
         if (result.data.length > 0) {
             return true;
         } else {
