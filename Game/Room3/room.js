@@ -173,7 +173,13 @@ async function TransitionToRoom(roomNumber) {
  * Fails the player for their current run
  * @param {integer} reason 1 - Ran out of time | 2 - Ran out of energy
  */
-function FailGame(reason) {
+async function FailGame(reason) {
+  await executeDatabaseQuery(`DELETE FROM InventoryPart WHERE SaveID = (SELECT SaveID FROM SaveFile WHERE Username = "${sessionStorage.getItem('LoggedInUser')}")`)
+  await executeDatabaseQuery(`DELETE FROM SaveFile WHERE Username = "${sessionStorage.getItem('LoggedInUser')}"`)
+  window.removeEventListener('beforeunload', onPageLeave)
+
+  sessionStorage.removeItem('GameState')
+
   let GameWindow = document.getElementById("GameWindow")
   if (reason === 1) {
       const TimeFailPopup = '<div id="Overlay"><div id="OverlayMessage"><h1>You\'ve ran out of time</h1><div style="display: flex; justify-content: space-around; max-width: 500px; width: 100%;"><button class="OverlayButton" id="NewRunButton">New Run</button><button class="OverlayButton" id="ReturnHomeButton">Return to Home</button></div></div></div>'
@@ -187,22 +193,28 @@ function FailGame(reason) {
 
   NewRunButton.addEventListener('click', () => {
       window.removeEventListener('beforeunload', onPageLeave)
-      sessionStorage.removeItem('GameState')
+      sessionStorage.setItem("GameState", JSON.stringify({
+          energy: 100,
+          time: 0,
+          userName: sessionStorage.getItem('LoggedInUser'), 
+          roomID: 5,
+          inventory: []
+      }))
       window.location.href = "../Room5/room.html"
   })
 
   let ReturnHomeButton = document.getElementById("ReturnHomeButton")
+  ReturnHomeButton.addEventListener('click', async () => {
+    window.removeEventListener('beforeunload', onPageLeave)
+    await saveGame(GameState)
+    sessionStorage.removeItem('GameState')
+    
+    window.location.href = "../../WEBSITE/website.html"
+})
 
-  ReturnHomeButton.addEventListener('click', () => {
-      window.removeEventListener('beforeunload', onPageLeave)
-      sessionStorage.removeItem('GameState')
-      
-      window.location.href = "../../WEBSITE/website.html"
-  })
 
   clearInterval(TimerInterval)
 }
-
 /**
  * Pauses the timer and displays a pause menu
  */

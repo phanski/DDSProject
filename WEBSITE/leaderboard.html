@@ -163,10 +163,11 @@
          */
         async function getTotalCompletions() {
             const FinalRoom = 4
-            const GetCompletionsQuery = `SELECT DISTINCT username, COUNT(username) FROM room_completions WHERE room_number = ${FinalRoom}`
+            const GetCompletionsQuery = `SELECT username, COUNT(username) FROM room_completions WHERE room_number = ${FinalRoom} GROUP BY username`
 
             try {
                 let result = await executeDatabaseQuery(GetCompletionsQuery)
+                console.log(result.data)
                 return result.data
                 
             } catch (error) {
