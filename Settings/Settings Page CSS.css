@@ -4,6 +4,9 @@ body{
     width:90vw;
     background-color:grey;
     font-size:1.5vw;
+    background-image: url("../Assets/wmremove-transformed.jpeg");
+    background-size:100%;
+    color:white;
 }
 
 #GameWindow{
@@ -33,7 +36,6 @@ form{
     background-color:transparent;
     font-size:inherit;
     font-family: inherit;
-
 }
 
 .setting-option{
@@ -99,6 +101,7 @@ input[type=number] {
     font-family:inherit;
     background-color: transparent;
     border: none;
+    color:white;
 }
 #Back-Button:hover{
     text-decoration:underline;

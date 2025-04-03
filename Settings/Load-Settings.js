@@ -37,13 +37,13 @@ function setVolume(value){
 function setFontSize(value){
     let elements=document.querySelectorAll("*:not(i)");
     let size;
-    if (value==="Small"){
+    if (value.toLowerCase()==="Small"){
         size=1;
-    }else if (value==="Medium"){
+    }else if (value.toLowerCase()==="medium"){
         size=1.5;
-    }else if (value==="Large"){
+    }else if (value.toLowerCase()==="Large"){
         size=1.75;
-    }else if (value==="Extra Large"){
+    }else if (value.toLowerCase()==="Extra Large"){
         size=2;
     }else{
         console.error("Error Raised when fetching data");
