@@ -476,8 +476,8 @@ function StartRoom() {
       if (phase === 1) {
         // Phase 1: Process button sequence
         if (sequenceInput === forbiddenPattern) {
-          feedback.textContent = "A chilling wind howls... You have invoked the forbidden sequence 'BAAD'. The manor condemns you to DEATH! Restarting...";
-          setTimeout(() => window.location.reload(), 3000);
+          feedback.textContent = "A chilling wind howls... You have invoked the forbidden sequence 'BAAD'. The manor condemns you. You wake up concussed with 50 energy removed.";
+          RemoveEnergy(50);
           return;
         }
         if (sequenceInput === correctSequence) {
