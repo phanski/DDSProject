@@ -650,6 +650,7 @@ function StartRoom() {
                                             saveGame(GameState)
                                             window.removeEventListener('beforeunload', onPageLeave)
                                             sessionStorage.removeItem('GameState')
+                                            sessionStorage.setItem('Completiontime', GameState.time)
                                             window.location.href = `../../End Screen Credits/win.html`;
                                         });
                                         
