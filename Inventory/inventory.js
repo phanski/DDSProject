@@ -20,13 +20,14 @@ async function OpenInventory() {
 
                 
                 // query: `SELECT i.Name, i.ItemID FROM InventoryPart ip JOIN Item i ON ip.ItemID = i.ItemID WHERE ip.SaveID = 1` // // change to saveid when login finished
-
-                query: `SELECT i.Name, i.ItemID FROM SaveFile sf JOIN InventoryPart ip ON sf.SaveID = ip.SaveID JOIN Item i ON ip.ItemID = i.ItemID WHERE sf.UserName = ${sessionStorage.getItem('LoggedInUser')}`
+                
+                query: `SELECT i.Name, i.ItemID FROM SaveFile sf JOIN InventoryPart ip ON sf.SaveID = ip.SaveID JOIN Item i ON ip.ItemID = i.ItemID WHERE sf.UserName = "${sessionStorage.getItem('LoggedInUser')}"`
                 //
             
             })
 
         })
+
         const data = await response.json();
         for (let i = 0; i < data.data.length; i++) {
             
@@ -35,7 +36,7 @@ async function OpenInventory() {
             
         
         }
-        console.log(inventoryPartIDs)
+        
 
         const InventoryPopUp = 
     `<div id="Overlay">
@@ -101,7 +102,8 @@ function itemAction(id) {
     //TO DO: query the database for the function of the item using the item name - can be a function that exists e.g. when EnergyPack is pressed, its function field has AddEnergy(5) in it, so AddEnergy(5) is called, simultaneously EnergyPack is removed from the inventory
     if (id==1||id==2||id==3) { // id of energy pack
         AddEnergy(5);
-        executeDatabaseQuery(`DELETE FROM InventoryPart WHERE ItemID = ${id} AND SaveID = 1`) // sql only required for consumable items - change hardcoded to saveid when login finished
+        executeDatabaseQuery(`DELETE FROM InventoryPart WHERE ItemID = ${id} AND SaveID = (SELECT SaveID FROM SaveFile WHERE UserName = "${sessionStorage.getItem('LoggedInUser')}")`) // sql only required for consumable items - change hardcoded to saveid when login finished
+        console.log("here")
         // executeDatabaseQuery(`DELETE FROM InventoryPart WHERE ItemID = ${id} AND ${saveID} = 1`)
         // SavePlayerData()
 
@@ -129,16 +131,23 @@ function itemAction(id) {
  * @returns {boolean} present - True if item is present, false otherwise
  */
 function checkInventory(id) {
-    executeDatabaseQuery(`SELECT * FROM InventoryPart WHERE ItemID = ${id} AND SaveID = (SELECT SaveID FROM SaveFile WHERE UserName = ${sessionStorage.getItem('LoggedInUser')})`).then((result) => { // change saveid
-        if (result.data.length > 0) {
-            return true;
-        } else {
-            return false;
-        }
+    // console.log(GameState.inventory)
+    // executeDatabaseQuery(`SELECT * FROM InventoryPart WHERE ItemID = ${id} AND SaveID = (SELECT SaveID FROM SaveFile WHERE UserName = "${sessionStorage.getItem('LoggedInUser')}")`).then((result) => { // change saveid
+    //     console.log(result.data)
+    console.log(id.toString())
+    console.log(`Index of id in inventory: ${GameState.inventory.indexOf(id.toString())}`)
+    console.log(`Inventory (checkInventory): ${GameState.inventory}`)
+    if (GameState.inventory.indexOf(id.toString()) != -1) { // check if the item id is in the inventory array
+        console.log("Item is in inventory")
+        return true;
+    } else {
+        console.log("Item is not in inventory")
+        return false;
     }
+    // }
 
-    ).catch((error) => {
-        console.error('Error checking inventory:', error);
-        return false; // Error occurred, assume item is not present
-    });
+    // ).catch((error) => {
+    //     console.error('Error checking inventory:', error);
+    //     return false; // Error occurred, assume item is not present
+    // });
 }

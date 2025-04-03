@@ -376,6 +376,40 @@ window.addEventListener('beforeunload', onPageLeave)
 
 //EDIT BELOW HERE
 
+
+function Delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
+/**
+* Disables options while message is displayed - name tbd
+* @param {string} messageText 
+*/
+function DisplayMessageAfterDelay (messageText) {
+  DisableOptions();
+  Delay(2000).then(() => {
+      ShowMessage(messageText);
+      EnableOptions();
+  });  
+  
+}
+
+function DisableOptions() {
+  let Options = document.getElementById("UserOptions");
+  for (let i = 0; i < Options.children.length; i++) {
+      Options.children[i].style.pointerEvents = "none";
+  }
+}
+
+
+
+function EnableOptions() {
+  let Options = document.getElementById("UserOptions");
+  for (let i = 0; i < Options.children.length; i++) {
+      Options.children[i].style.pointerEvents = "auto";
+  }
+}
+
 /**
  * Removes options bar from user and message popup slot to allow for more room for UI
  */
