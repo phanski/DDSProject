@@ -345,7 +345,7 @@ function HideOptions() {
     GameWindow.style.gridTemplateRows = "100%"
 
     let GameView = document.getElementById("GameView")
-    GameView.style.gridTemplateRows = "9.6% 78.4% 12%"
+    GameView.style.gridTemplateRows = "auto 1fr"
 }
 
 /**
@@ -380,13 +380,13 @@ window.addEventListener('beforeunload', onPageLeave)
  */
 function HideOptionsAndMessage() {
     let OptionsBar = document.getElementById("UserOptions")
-    OptionsBar.style.display = "none;"
+    OptionsBar.parentElement.removeChild(OptionsBar)
 
     let GameWindow = document.getElementById("GameWindow")
     GameWindow.style.gridTemplateRows = "100%"
 
     let GameView = document.getElementById("GameView")
-    GameView.style.gridTemplateRows = "9.6% 90.4%"
+    GameView.style.gridTemplateRows = "auto 1fr auto"
 }
 
 /**
