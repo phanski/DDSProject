@@ -574,6 +574,7 @@ function DisplayMessageAfterDelay (messageText) {
 // }
 
 function StartRoom() {
+    SetBackgroundImage("../../Assets/corridor.jpg")
     SetRoomName("Small, Dark Room");
     ShowMessage("You enter a small, dark room. There is a table in the centre with a note on it, and a door opposite to you.");
 
