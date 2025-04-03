@@ -675,30 +675,7 @@ function RemoveOption(OptionTitle){
  */
 function StartRoom() {
     
-    
-    // AddOption("Show Messsage", () => ShowMessage(RoomDescription))
-    // AddOption("Hide Message", HideMessage)
+    SetBackgroundImage("../../Assets/livingroom.png");
     AddOption("Investigate the box", () => ShowObject(`../../Assets/lockbox.png`,"Lockbox"))
-    
-//  LEFTOVER OPTIONS
-//  ||||||||||||||||
-//  vvvvvvvvvvvvvvvv
-    
-    //AddOption("Set box down", () => HideObject())
-    // AddOption("Clear Options", () => ClearOptions("You may not make an action now"))
-    // AddOption("Clear Options", () => ClearOptions())
-    
-    //AddOption("Leave Room",)
-
-    //AddOption("Add Energy", () => AddEnergy(5))
-    //AddOption("Remove Energy", () => RemoveEnergy(5))
-    
-    
-    // AddOption("DB Test", () => {
-    //     executeDatabaseQuery("SELECT * FROM testUsers").then((result) => {
-    //         console.log(result)
-    //     })
-    // })
-    //SetBackgroundImage("/Assets/scaryimageREMOVE--------------------------.webp")
     SetRoomName("Living Room")
 }
