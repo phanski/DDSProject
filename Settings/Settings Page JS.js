@@ -116,16 +116,16 @@ function changeFontSize(){
 
 function dbFontSize(dbValue){
     let select=document.getElementById("font-slide");
-    if (dbValue==="Small"){
+    if (dbValue.toLowerCase()==="Small"){
         select.selectedIndex=0;
         changeFontSize();
-    }else if( dbValue==="Medium"){
+    }else if( dbValue.toLowerCase()==="Medium"){
         select.selectedIndex=1;
         changeFontSize();
-    }else if(dbValue==="Large"){
+    }else if(dbValue.toLowerCase()==="Large"){
         select.selectedIndex=2;
         changeFontSize();
-    }else if(dbValue==="Extra Large"){
+    }else if(dbValue.toLowerCase()==="Extra Large"){
         select.selectedIndex=3;
         changeFontSize();
     }else{
@@ -187,7 +187,7 @@ async function saveData(values){
         });
         let result= await response.json();
         if (result.success){
-            console.log("Update successful");
+            window.location.href="../Account/account.html";
         }else{
             console.error("Error raised from update", result);
         }
