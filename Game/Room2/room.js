@@ -274,7 +274,7 @@ function StartTimer() {
  */
 function InitRoom() {
     document.getElementById("PauseButton").addEventListener('click', PauseGame)
-    
+    document.getElementById("InventoryButton").addEventListener('click', OpenInventory)
     let loadedGameState = JSON.parse(sessionStorage.getItem('GameState'))
     if (loadedGameState == undefined || loadedGameState.userName == undefined) {
         window.location.href = "../../WEBSITE/loginScreen.html"
@@ -411,6 +411,40 @@ window.addEventListener('beforeunload', onPageLeave)
 */
 
 //EDIT BELOW HERE
+
+
+function Delay(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+  }
+  
+/**
+ * Disables options while message is displayed - name tbd
+ * @param {string} messageText 
+ */
+function DisplayMessageAfterDelay (messageText) {
+    DisableOptions();
+    Delay(2000).then(() => {
+        ShowMessage(messageText);
+        EnableOptions();
+    });  
+    
+}
+
+function DisableOptions() {
+    let Options = document.getElementById("UserOptions");
+    for (let i = 0; i < Options.children.length; i++) {
+        Options.children[i].style.pointerEvents = "none";
+    }
+}
+
+
+
+function EnableOptions() {
+    let Options = document.getElementById("UserOptions");
+    for (let i = 0; i < Options.children.length; i++) {
+        Options.children[i].style.pointerEvents = "auto";
+    }
+}
 
 var rows=3;
 var columns=3;

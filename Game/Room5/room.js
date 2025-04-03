@@ -422,7 +422,7 @@ function StartTimer() {
  */
 function InitRoom() {
     document.getElementById("PauseButton").addEventListener('click', PauseGame)
-    
+    document.getElementById("InventoryButton").addEventListener('click', OpenInventory)
     if (sessionStorage.getItem('LoggedInUser') == undefined) {
         window.location.href = "../../WEBSITE/loginScreen.html"
     }
@@ -595,6 +595,40 @@ async function recordRoomCompletion(callback) {
 //EDIT BELOW HERE
 // Caesar cipher encoding function
 
+function Delay(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+  }
+  
+/**
+ * Disables options while message is displayed - name tbd
+ * @param {string} messageText 
+ */
+function DisplayMessageAfterDelay (messageText) {
+    DisableOptions();
+    Delay(2000).then(() => {
+        ShowMessage(messageText);
+        EnableOptions();
+    });  
+    
+
+    
+}
+
+function DisableOptions() {
+    let Options = document.getElementById("UserOptions");
+    for (let i = 0; i < Options.children.length; i++) {
+        Options.children[i].style.pointerEvents = "none";
+    }
+}
+
+
+
+function EnableOptions() {
+    let Options = document.getElementById("UserOptions");
+    for (let i = 0; i < Options.children.length; i++) {
+        Options.children[i].style.pointerEvents = "auto";
+    }
+}
 
 function checkPassword() {
     const userInput = document.getElementById("userInput").value.toLowerCase();
@@ -648,6 +682,7 @@ function myFunction() {
  * Main Function which is called when room page is loaded
  */
 function StartRoom() {
+    console.log(`${sessionStorage.getItem('LoggedInUser')} has entered the room`)
     
     
 

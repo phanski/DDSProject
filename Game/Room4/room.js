@@ -248,6 +248,7 @@ function StartTimer() {
 function InitRoom() {
     
     document.getElementById("PauseButton").addEventListener('click', PauseGame)
+    document.getElementById("InventoryButton").addEventListener('click', OpenInventory)
 
     let loadedGameState = JSON.parse(sessionStorage.getItem('GameState'))
     if (sessionStorage.getItem('GameState') == undefined || loadedGameState.userName == undefined) {
@@ -631,7 +632,9 @@ function StartRoom() {
                         
 
                             // CORRECT (Right)
-                            if (checkInventory(1)) {
+                            // if (checkInventory(1)) {
+                            if (!(checkInventory(1))) {
+                                console.log(`Inventory: ${GameState.inventory}`)
                                 ShowMessage('As you move along the corridor, you see an energy pack on the floor.');
                                 AddOption("Pick up energy pack", () => {
 
@@ -640,59 +643,116 @@ function StartRoom() {
                                     ClearOptions();
     
                                     ShowMessage('You pick up the pack and put it in your inventory. You continue moving along the corridor.');
-                                    executeDatabaseQuery(`INSERT INTO InventoryPart (ItemID, SaveID) VALUES (1, 1)`); // change saveid when login finished
+
+                                    //
+                                    //
+                                    executeDatabaseQuery(`INSERT INTO InventoryPart (ItemID, SaveID) VALUES (1, (SELECT SaveID FROM SaveFile WHERE UserName = "${sessionStorage.getItem('LoggedInUser')}"))`).then((result) => {console.log(`Result: ${result}`)}); // change saveid when login finished
+                                    
+                                    // GameState.inventory.push(1);
+                                    
+                                    
+                                    //
+                                    
                                     DisplayMessageAfterDelay("Six corridors deep. Left or right?")
-    
-                            })}; 
-                            
-                            // INCORRECT (Left)
-                            AddOption("Go left", () => {
-                                ShowMessage('Wall. Nothing but wall.');
-                                DisplayMessageAfterDelay('Back in the sixth corridor, the choice persists.');
-                            });
-
-                            // CORRECT (Right)
-                            AddOption("Go right", () => {
-                                SetRoomName("Corridor #7");
-                                ShowMessage('Seven corridors. Left or right?');
-                                ClearOptions();
-
-                                // INCORRECT (Left)
-                                AddOption("Go left", () => {
-                                    ShowMessage('Nope, just another dead end.');
-                                    DisplayMessageAfterDelay('Once more in corridor seven, the choice awaits.');
-                                });
-
-                                // CORRECT (Right)
-                                AddOption("Go right", () => {
-                                    SetRoomName("Corridor #8");
-                                    ShowMessage('Eighth corridor. One last choice: left or right?');
-                                    ClearOptions();
 
                                     // INCORRECT (Left)
                                     AddOption("Go left", () => {
-                                        ShowMessage('Dead end. Almost there...');
-                                        DisplayMessageAfterDelay('Back in corridor eight, the final choice remains.');
+                                        ShowMessage('Wall. Nothing but wall.');
+                                        DisplayMessageAfterDelay('Back in the sixth corridor, the choice persists.');
                                     });
 
-                                    // CORRECT (Right) - WIN
+                                    // CORRECT (Right)
                                     AddOption("Go right", () => {
-                                        SetRoomName("End?");
-                                        ShowMessage('Congratulations! After eight corridors, you see a door.');
+                                        SetRoomName("Corridor #7");
+                                        ShowMessage('Seven corridors. Left or right?');
                                         ClearOptions();
-                                        AddOption("Go through door", () => {
-                                            saveGame(GameState)
-                                            window.removeEventListener('beforeunload', onPageLeave)
-                                            recordRoomCompletion()
 
-                                            sessionStorage.removeItem('GameState')
-                                            sessionStorage.setItem('Completiontime', GameState.time)
-                                            window.location.href = `../../End Screen Credits/win.html`;
+                                        // INCORRECT (Left)
+                                        AddOption("Go left", () => {
+                                            ShowMessage('Nope, just another dead end.');
+                                            DisplayMessageAfterDelay('Once more in corridor seven, the choice awaits.');
                                         });
-                                        
+
+                                        // CORRECT (Right)
+                                        AddOption("Go right", () => {
+                                            SetRoomName("Corridor #8");
+                                            ShowMessage('Eighth corridor. One last choice: left or right?');
+                                            ClearOptions();
+
+                                            // INCORRECT (Left)
+                                            AddOption("Go left", () => {
+                                                ShowMessage('Dead end. Almost there...');
+                                                DisplayMessageAfterDelay('Back in corridor eight, the final choice remains.');
+                                            });
+
+                                            // CORRECT (Right) - WIN
+                                            AddOption("Go right", () => {
+                                                SetRoomName("End?");
+                                                ShowMessage('Congratulations! After eight corridors, you see a door.');
+                                                ClearOptions();
+                                                AddOption("Go through door", () => {
+                                                    saveGame(GameState)
+                                                    window.removeEventListener('beforeunload', onPageLeave)
+                                                    sessionStorage.removeItem('GameState')
+                                                    window.location.href = `../../End Screen Credits/win.html`;
+                                                });
+                                                
+                                            });
+                                        });
                                     });
+                                    
+    
+                            })} else {
+                                // INCORRECT (Left)
+                                AddOption("Go left", () => {
+                                    ShowMessage('Wall. Nothing but wall.');
+                                    DisplayMessageAfterDelay('Back in the sixth corridor, the choice persists.');
                                 });
-                            });
+    
+                                // CORRECT (Right)
+                                AddOption("Go right", () => {
+                                    SetRoomName("Corridor #7");
+                                    ShowMessage('Seven corridors. Left or right?');
+                                    ClearOptions();
+    
+                                    // INCORRECT (Left)
+                                    AddOption("Go left", () => {
+                                        ShowMessage('Nope, just another dead end.');
+                                        DisplayMessageAfterDelay('Once more in corridor seven, the choice awaits.');
+                                    });
+    
+                                    // CORRECT (Right)
+                                    AddOption("Go right", () => {
+                                        SetRoomName("Corridor #8");
+                                        ShowMessage('Eighth corridor. One last choice: left or right?');
+                                        ClearOptions();
+               
+                                        // INCORRECT (Left)
+                                        AddOption("Go left", () => {
+                                            ShowMessage('Dead end. Almost there...');
+                                            DisplayMessageAfterDelay('Back in corridor eight, the final choice remains.');
+                                        });
+    
+                                        // CORRECT (Right) - WIN
+                                        AddOption("Go right", () => {
+                                            SetRoomName("End?");
+                                            ShowMessage('Congratulations! After eight corridors, you see a door.');
+                                            ClearOptions();
+                                            AddOption("Go through door", () => {
+                                                saveGame(GameState)
+                                                window.removeEventListener('beforeunload', onPageLeave)
+                                                recordRoomCompletion()
+    
+                                                sessionStorage.removeItem('GameState')
+                                                sessionStorage.setItem('Completiontime', GameState.time)
+                                                window.location.href = `../../End Screen Credits/win.html`;
+                                            });
+                                            
+                                        });
+                                    });
+                                });} 
+                            
+                            
                         });
                     });
                 });
@@ -701,9 +761,10 @@ function StartRoom() {
 
         // INCORRECT PATH (Right) - TRAP
         AddOption("Go right", () => {
-            ShowMessage('You get caught in a trap and debris falls from the ceiling. You lose 5 energy healing your wounds.');
-            RemoveEnergy(5);
-            DisplayMessageAfterDelay('Retracing your steps, you are back in the narrow corridor which still extends to your left and right.');
+            ShowMessage('You get caught in a trap and debris falls from the ceiling...');
+            
+            RemoveEnergy(GameState.energy);
+            // DisplayMessageAfterDelay('Retracing your steps, you are back in the narrow corridor which still extends to your left and right.');
         });
     });
 }
