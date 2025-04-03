@@ -41,6 +41,11 @@
         
         
         <script>
+
+            const currentUser = sessionStorage.getItem('LoggedInUser')
+            if (currentUser != undefined) {
+                window.location.href  = "../Account/account.html"
+            }
             /**
              * Takes a Username and password for a new user and attempts to register their account.
              * Only Validates to ensure Username is not duplicated and valid

@@ -96,11 +96,7 @@ document.getElementById("StartRun").addEventListener("click", async () => {
 // Checks if a saved game exists for the current user.
 async function checkForSave() {
     const userID = sessionStorage.getItem('LoggedInUser');
-    if (!userID) {
-        console.error("User ID not found in sessionStorage.");
-        return;
-    }
-    
+
     // Query for the most recent save for this user.
     const query = `SELECT * FROM SaveFile WHERE UserName = '${userID}' ORDER BY SaveID DESC LIMIT 1`;
     try {
@@ -122,6 +118,8 @@ async function checkForSave() {
 
         } else {
             console.log("No saved game found for this user.");
+            let stats = document.getElementById('CurrentStats')
+            stats.parentElement.removeChild(stats)
         }
     } catch (error) {
         console.error("Error checking for save:", error);

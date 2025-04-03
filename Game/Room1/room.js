@@ -671,7 +671,7 @@ function StartRoom() {
         AddOption("Search room", () => {
             ClearOptions()
             ShowMessage("You turn around to go search through the pile of books. As you walk away from the desk you stumble over a crooked floorboard.")
-
+            RemoveEnergy(5)
             AddOption("Search books", FirstBookChoice)
 
             AddOption("Find out what you tripped on", () => {
