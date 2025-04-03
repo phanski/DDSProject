@@ -135,12 +135,13 @@ function AddEnergy(amount) {
  * Transitions to another room safely, ensuring data is saved to transfer to new room
  * @param {integer} roomNumber 
  */
-function TransitionToRoom(roomNumber) {
+async function TransitionToRoom(roomNumber) {
     // Cleared to ensure timer doesn't tick while user is waiting for room to load
     clearInterval(TimerInterval)
 
     sessionStorage.setItem('GameState', JSON.stringify(GameState))
     saveGame(GameState)
+    await recordRoomCompletion()
 
     window.location.href = `../Room${roomNumber}/room.html`
 }
@@ -253,6 +254,8 @@ function InitRoom() {
     GameState.energy = loadedGameState.energy
     GameState.time = loadedGameState.time
     GameState.inventory = loadedGameState.inventory
+    sessionStorage.setItem('GameState', JSON.stringify(GameState))
+    saveGame(GameState)
 
     UpdateEnergyDisplay()    
     StartTimer()
@@ -374,6 +377,34 @@ const onPageLeave = () => {
 }
 window.addEventListener('beforeunload', onPageLeave)
 
+/**
+ * Records the user's runtime for the current room and stores it in the database
+ * @param {function} callback - Function to execute after data is stored
+ */
+async function recordRoomCompletion(callback) {
+    // Get current username from session storage
+    const username = sessionStorage.getItem('LoggedInUser') || 'unknown_user';
+    
+    // Get the current runtime in seconds
+    const runtimeSeconds = GameState.time;
+    
+    // Get current room number from the URL
+    const currentUrl = window.location.href;
+    const roomMatch = currentUrl.match(/Room(\d+)/);
+    const roomNumber = roomMatch ? roomMatch[1] : '0';
+    
+    // Create timestamp
+    const timestamp = new Date().getTime()
+    
+    // Create SQL query to insert the data
+    const insertEntryQuery = `INSERT INTO room_completions (saveID, username, room_number, runtime_seconds, completion_time) 
+                     VALUES ((SELECT SaveID FROM SaveFile WHERE Username = '${username}') ,'${username}', ${roomNumber}, ${runtimeSeconds}, '${timestamp}')`;
+    
+    // Execute the query
+    await executeDatabaseQuery(insertEntryQuery)
+    
+    console.log('Room completion recorded successfully');
+}
 /* 
 * Boilerplate code end
 */
@@ -399,7 +430,7 @@ function StartRoom() {
         if (userInput === 'pet') {
             document.getElementById('SuccessMessage').style.display = 'block';
             document.getElementById('AdditionalClue').style.display = 'none';
-            setTimeout(() => TransitionToRoom(4), 2000)
+            setTimeout(() => TransitionToRoom(1), 2000)
         } else {
             attempts++;
             if (attempts >= 3) {
@@ -444,41 +475,4 @@ function StartRoom() {
 }
 
 
-/**
- * Records the user's runtime for the current room and stores it in the database
- * @param {function} callback - Function to execute after data is stored
- */
-function recordRoomCompletion(callback) {
-    // Get current username from session storage
-    const username = sessionStorage.getItem('username') || 'unknown_user';
-    
-    // Get the current runtime in seconds
-    const runtimeSeconds = GameState.PlayerTimeSeconds;
-    
-    // Get current room number from the URL
-    const currentUrl = window.location.href;
-    const roomMatch = currentUrl.match(/Room(\d+)/);
-    const roomNumber = roomMatch ? roomMatch[1] : '0';
-    
-    // Create timestamp
-    const timestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
-    
-    // Create SQL query to insert the data
-    const sqlQuery = `INSERT INTO room_completions (username, room_number, runtime_seconds, completion_time) 
-                     VALUES ('${username}', ${roomNumber}, ${runtimeSeconds}, '${timestamp}')`;
-    
-    // Execute the query
-    executeDatabaseQuery(sqlQuery)
-        .then(result => {
-            console.log('Room completion recorded successfully');
-            if (callback && typeof callback === 'function') {
-                callback(result);
-            }
-        })
-        .catch(error => {
-            console.error('Failed to record room completion:', error);
-            if (callback && typeof callback === 'function') {
-                callback(null, error);
-            }
-        });
-}
+

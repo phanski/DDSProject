@@ -65,7 +65,7 @@ body {
 
 
 #InfoBar {
-    background-color: blue;
+    background-color: rgb(138, 10, 10);
     margin: 0.2em;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;

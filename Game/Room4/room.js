@@ -143,6 +143,7 @@ function TransitionToRoom(roomNumber) {
 
     sessionStorage.setItem('GameState', JSON.stringify(GameState))
     saveGame(GameState)
+    recordRoomCompletion()
 
     window.location.href = `../Room${roomNumber}/room.html`
 }
@@ -245,6 +246,7 @@ function StartTimer() {
  * Separated to ensure boilerplate code remains unedited
  */
 function InitRoom() {
+    
     document.getElementById("PauseButton").addEventListener('click', PauseGame)
 
     let loadedGameState = JSON.parse(sessionStorage.getItem('GameState'))
@@ -256,6 +258,9 @@ function InitRoom() {
     GameState.time = loadedGameState.time
     GameState.inventory = loadedGameState.inventory
 
+    sessionStorage.setItem('GameState', JSON.stringify(GameState))
+    saveGame(GameState)
+    
     UpdateEnergyDisplay()    
     StartTimer()
     
@@ -375,6 +380,35 @@ const onPageLeave = () => {
     saveGame(GameState)
 }
 window.addEventListener('beforeunload', onPageLeave)
+
+/**
+ * Records the user's runtime for the current room and stores it in the database
+ * @param {function} callback - Function to execute after data is stored
+ */
+async function recordRoomCompletion(callback) {
+    // Get current username from session storage
+    const username = sessionStorage.getItem('LoggedInUser') || 'unknown_user';
+    
+    // Get the current runtime in seconds
+    const runtimeSeconds = GameState.time;
+    
+    // Get current room number from the URL
+    const currentUrl = window.location.href;
+    const roomMatch = currentUrl.match(/Room(\d+)/);
+    const roomNumber = roomMatch ? roomMatch[1] : '0';
+    
+    // Create timestamp
+    const timestamp = new Date().getTime()
+    
+    // Create SQL query to insert the data
+    const insertEntryQuery = `INSERT INTO room_completions (saveID, username, room_number, runtime_seconds, completion_time) 
+                     VALUES ((SELECT SaveID FROM SaveFile WHERE Username = '${username}') ,'${username}', ${roomNumber}, ${runtimeSeconds}, '${timestamp}')`;
+    
+    // Execute the query
+    await executeDatabaseQuery(insertEntryQuery)
+    
+    console.log('Room completion recorded successfully');
+}
 
 /* 
 * Boilerplate code end
@@ -649,7 +683,10 @@ function StartRoom() {
                                         AddOption("Go through door", () => {
                                             saveGame(GameState)
                                             window.removeEventListener('beforeunload', onPageLeave)
+                                            recordRoomCompletion()
+
                                             sessionStorage.removeItem('GameState')
+                                            sessionStorage.setItem('Completiontime', GameState.time)
                                             window.location.href = `../../End Screen Credits/win.html`;
                                         });
                                         

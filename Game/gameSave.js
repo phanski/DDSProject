@@ -1,16 +1,14 @@
 // creates a new save file in database using dynamic game state variables.
 async function saveGame(gameState) {
-    const deletequery = `DELETE FROM SaveFile WHERE Username='${gameState.userName}';`
-    const insertquery = `INSERT INTO SaveFile (Energy, UserName, RoomID, Time) VALUES (${gameState.energy}, "${gameState.userName}", ${gameState.roomID}, ${gameState.time});`;
-    
-
     const params = new URLSearchParams();
     params.append("hostname", "localhost"); 
     params.append("username", "bmooney07");   
     params.append("password", "rf8DJtRFn47Ywyjg");    
     params.append("database", "CSC1034_CW_17"); 
-    params.append("query", deletequery);
-  
+    
+    const CheckExitingSaveQuery = `SELECT SaveID FROM SaveFile WHERE Username = "${gameState.userName}"`
+    params.append("query", CheckExitingSaveQuery);
+
     try {
       // Send a POST request to dbConnector.php.
       const response = await fetch('https://bmooney07.webhosting1.eeecs.qub.ac.uk/dbConnector.php', {
@@ -18,12 +16,24 @@ async function saveGame(gameState) {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: params
       });
+      const result = await response.json();
+
+      if (result.data.length > 0) {
+        //Update Save
+        const updateQuery = `UPDATE SaveFile SET Energy = ${gameState.energy}, RoomID = ${gameState.roomID}, Time = ${gameState.time} WHERE UserName = "${gameState.userName}"`;
+        params.set("query", updateQuery)
+
+      } else {
+        // Create New Save
+        const insertquery = `INSERT INTO SaveFile (Energy, UserName, RoomID, Time) VALUES (${gameState.energy}, "${gameState.userName}", ${gameState.roomID}, ${gameState.time})`;
+        console.log(insertquery)
+        params.set("query", insertquery)
+      }
       
     } catch (error) {
-      console.error("Error creating new save:", error);
+      console.error("Error checking save:", error);
     }
 
-    params.set("query", insertquery)
     try {
       // Send a POST request to dbConnector.php.
       const response = await fetch('https://bmooney07.webhosting1.eeecs.qub.ac.uk/dbConnector.php', {
@@ -44,6 +54,8 @@ async function saveGame(gameState) {
     } catch (error) {
       console.error("Error creating new save:", error);
     }
+
+
 }
 
 // save inventory items into the InventoryPart table.
