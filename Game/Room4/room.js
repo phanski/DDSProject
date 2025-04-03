@@ -726,15 +726,7 @@ function StartRoom() {
                                         SetRoomName("Corridor #8");
                                         ShowMessage('Eighth corridor. One last choice: left or right?');
                                         ClearOptions();
-                                        AddOption("Go through door", () => {
-                                            saveGame(GameState)
-                                            window.removeEventListener('beforeunload', onPageLeave)
-                                            recordRoomCompletion()
-
-                                            sessionStorage.removeItem('GameState')
-                                            sessionStorage.setItem('Completiontime', GameState.time)
-                                            window.location.href = `../../End Screen Credits/win.html`;
-    
+               
                                         // INCORRECT (Left)
                                         AddOption("Go left", () => {
                                             ShowMessage('Dead end. Almost there...');
@@ -749,7 +741,10 @@ function StartRoom() {
                                             AddOption("Go through door", () => {
                                                 saveGame(GameState)
                                                 window.removeEventListener('beforeunload', onPageLeave)
+                                                recordRoomCompletion()
+    
                                                 sessionStorage.removeItem('GameState')
+                                                sessionStorage.setItem('Completiontime', GameState.time)
                                                 window.location.href = `../../End Screen Credits/win.html`;
                                             });
                                             
@@ -766,9 +761,10 @@ function StartRoom() {
 
         // INCORRECT PATH (Right) - TRAP
         AddOption("Go right", () => {
-            ShowMessage('You get caught in a trap and debris falls from the ceiling. You lose 5 energy healing your wounds.');
-            RemoveEnergy(5);
-            DisplayMessageAfterDelay('Retracing your steps, you are back in the narrow corridor which still extends to your left and right.');
+            ShowMessage('You get caught in a trap and debris falls from the ceiling...');
+            
+            RemoveEnergy(GameState.energy);
+            // DisplayMessageAfterDelay('Retracing your steps, you are back in the narrow corridor which still extends to your left and right.');
         });
     });
 }

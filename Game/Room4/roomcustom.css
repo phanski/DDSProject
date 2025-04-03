@@ -170,21 +170,12 @@ body {
 }
 
 .OverlayButton:hover {
-    background-color: #090909;
+    
+    background-color: #00FD00;
     cursor: pointer;
 }
 
 .item {
-    /* background-color: #44444499;
-    border: 2px solid black;
-    border-radius: 9px;
-    padding: 0.5em;
-    margin: 0.5em auto;
-    width: fit-content;
-    max-width: 90%;
-    color: #aaaaaa;
-    font-family: monospace;
-    font-size: 1.2em; */
     color: #aaaaaa;
     
     border-radius: 9px;
