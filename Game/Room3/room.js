@@ -137,7 +137,7 @@ function TransitionToRoom(roomNumber) {
     sessionStorage.setItem('GameState', JSON.stringify(GameState))
     saveGame(GameState)
 
-    window.location.href = `/Game/Room${roomNumber}/room.html`
+    window.location.href = `../Room${roomNumber}/room.html`
 }
 
 /**
