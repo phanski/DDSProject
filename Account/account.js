@@ -29,6 +29,72 @@ document.getElementById("StartRun").addEventListener("click", () => {
     window.location.href = "../Game/Room5/room.html"
 })
 
+// Checks if a saved game exists for the current user.
+async function checkForSave() {
+    const userID = sessionStorage.getItem('LoggedInUser');
+    if (!userID) {
+        console.error("User ID not found in sessionStorage.");
+        return;
+    }
+    
+    // Query for the most recent save for this user.
+    const query = `SELECT * FROM SaveFile WHERE UserName = '${userID}' ORDER BY SaveID DESC LIMIT 1`;
+    
+    try {
+        const result = await executeDatabaseQuery(query);
+        if (result.data && result.data.length > 0) {
+            // A save exists; add a Resume Run button.
+            addResumeRunButton(result.data[0]);
+           
+            let TimeDisplay = document.getElementById("PlayerTime")
+            let timeSeconds = result.data[0].time % 60
+            let timeMinutes = Math.floor(result.data[0].time / 60)
+        
+            let TimerValue = `${timeMinutes}:${("" + timeSeconds).padStart(2, "0")}`
+            TimeDisplay.textContent = TimerValue
+        
+            let EnergyDisplay = document.getElementById("PlayerEnergy")
+            EnergyDisplay.textContent = result.data[0].energy
+
+
+        } else {
+            console.log("No saved game found for this user.");
+        }
+    } catch (error) {
+        console.error("Error checking for save:", error);
+    }
+}
+
+// Creates and adds the "Resume Run" button to the page.
+function addResumeRunButton(saveData) {
+    const resumeButton = document.createElement("button");
+    resumeButton.id = "ResumeRun";
+    resumeButton.textContent = "Resume Run";
+    
+    // Append the button to a container on the account page.
+    const container = document.getElementById("RunOptions");
+    container.appendChild(resumeButton);
+    
+    // When clicked, resume the saved game using values from saveData.
+    resumeButton.addEventListener("click", () => {
+        sessionStorage.setItem("GameState", JSON.stringify({
+            energy: saveData.energy, // For now, using a static value; you can update this to use dynamic data from saveData.
+            time: saveData.time,
+            userName: sessionStorage.getItem('LoggedInUser'),
+            roomID: saveData.RoomID, // Resume at the saved room.
+            inventory: [] // Later, you can also load inventory data.
+        }));
+        window.location.href = `../Game/Room${saveData.RoomID}/room.html`;
+    });
+}
+
+// Run the check for an existing save when the account page loads.
+window.addEventListener("load", () => {
+    checkForSave();
+});
+
+
+
 
 document.getElementById("Username").textContent = sessionStorage.getItem("LoggedInUser")
 

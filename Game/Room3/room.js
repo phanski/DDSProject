@@ -468,7 +468,7 @@ function StartRoom() {
       if (phase === 3) {
         keypadInput = "";
         keypadDisplay.textContent = "Current Code: ";
-      }
+      }''
     });
 
     // Submit button (handles actions for all phases)

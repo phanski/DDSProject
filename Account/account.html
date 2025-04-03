@@ -31,10 +31,10 @@
       
     
             </div>
-            <div class="section">
+            <div id="RunOptions" class="section">
                 <h2>Current Run Stats</h2>
-                <p>Current Time : 01:24</p>
-                <p>Current Health : 85/100</p>
+                <p>Current Time : <span id="PlayerTime">0.00</span></p>
+                <p>Current Energy : <span id="PlayerEnergy">0</span>/100</p>
                 <button
                     style="background-color: rgb(71, 209, 71);"
                     id="StartRun"
@@ -42,6 +42,7 @@
                     Start New Run   <i class="fa-solid fa-arrow-right"></i>
                 </button>
             </div>
+            
             <div class="section">
                 <h2>Lifetime Stats</h2>
                 <p>Fastest Time : 03:41</p>
@@ -55,5 +56,6 @@
     </div>
 </body>
 <script src="./account.js"></script>
+<script src="js/executeDatabaseQuery.js"></script>
 <script src="../Settings/Load-Settings.js"></script>
 </html>
