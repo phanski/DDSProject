@@ -66,8 +66,8 @@ function lookAtNote() {
     // Create a container for the note with the scroll image as background
     const noteContainer = document.createElement("div");
     noteContainer.style.position = "relative";
-    noteContainer.style.width = "360px";
-    noteContainer.style.height = "360px";
+    noteContainer.style.width = "690px";
+    noteContainer.style.height = "690px";
     noteContainer.style.backgroundImage = "url('Assets/scroll_no_bg.png')";
     noteContainer.style.backgroundSize = "cover";
     noteContainer.style.padding = "20px";
@@ -79,8 +79,8 @@ function lookAtNote() {
     noteParagraph.style.position = "absolute";
     
 
-    noteParagraph.style.top = "70px";
-    noteParagraph.style.left = "120px";
+    noteParagraph.style.top = "35px";
+    noteParagraph.style.left = "1600px";
 
     noteContainer.appendChild(noteParagraph);
     optionsContainer.appendChild(noteContainer);
