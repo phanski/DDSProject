@@ -43,10 +43,15 @@ function AddOption(OptionTitle, OptionAction) {
     let NewOptionTitle = document.createElement("h1")
     NewOptionTitle.textContent = OptionTitle
     NewOption.appendChild(NewOptionTitle)
-    NewOption.addEventListener("click", OptionAction)
-    
+    NewOption.style.display="none";
+    NewOption.addEventListener("click", OptionAction);
 
-    Options.appendChild(NewOption)
+    Options.appendChild(NewOption);
+    loadSetting();
+
+    setTimeout(()=>{
+        NewOption.style.display="block";
+    },68.99);
 }
 
 /**
@@ -394,11 +399,13 @@ function ShowObject(url,description){
     ClearObject();
     HideMessage(),ShowMessage("On a closer look, you can see the box has a puzzle on it.");
     let object=document.getElementById("FocusedObject");
+    object.style.height="60%";
     if (object.children.length==0){
         let child=document.createElement("img");
         child.class="ObjectContent";
         child.src=url;
         child.alt=description;
+        child.style.maxHeight,child.style.maxWidth="100%";
         child.style.width,child.style.height="100%";
         child.style.cursor="pointer";
         child.addEventListener("click",()=>{HideMessage(),showBoard();})
@@ -414,7 +421,7 @@ function HideObject(){
         console.log("");
     }
     HideMessage();
-    AddOption("Investigate the box", () => ShowObject(`https://imgs.search.brave.com/Uv7PjPwToss4YP4krNPTTauC8y1Iq7BXFAWSoknkpAI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTEv/ODE0LzU2Ny9zbWFs/bC9yb2xsLW9mLXll/bGxvdy1zY290Y2gt/dGFwZS0zZC1oaWdo/LXF1YWxpdHktcGhv/dG8tcG5nLnBuZw`,"Alt text"))
+    AddOption("Investigate the box", () => ShowObject(`../../Assets/lockbox.png`,"Alt text"))
     let object=document.getElementById("FocusedObject");
     object.style.display="none";
 }
@@ -539,7 +546,7 @@ function dragEnd(){
         tempOrder[currIndex]=temp;
         
         if (tempOrder.join("")==correctOrder.join("")){
-            setTimeout(()=>{showReward()},1000);//Play Audio to indicate success
+            setTimeout(()=>{showReward()},1000);
             
         }
     }
@@ -563,21 +570,19 @@ function resetBoard(){
 }
 
 function showReward(){
-    //Unfinished Function
     ClearObject();
-    ShowObject(`https://imgs.search.brave.com/Uv7PjPwToss4YP4krNPTTauC8y1Iq7BXFAWSoknkpAI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTEv/ODE0LzU2Ny9zbWFs/bC9yb2xsLW9mLXll/bGxvdy1zY290Y2gt/dGFwZS0zZC1oaWdo/LXF1YWxpdHktcGhv/dG8tcG5nLnBuZw`,"Alt text");
+    ShowObject(`../../Assets/key-reward.png`,"Key");
     ClearOptions();
 
     let object=document.getElementById("FocusedObject");
     object.style.pointerEvents="none";
     
-    ShowMessage("You have solved the puzzle and found a key inside the box. You can now leave the room.");
+    ShowMessage("You have solved the puzzle and found a key inside the box. It unlocks the exit.");
     AddOption("Close Box",()=>{
         HideObject(),
         HideMessage(),
         ClearOptions(),
         ShowMessage("There is nothing left to do here."),
-        AddOption("Inventory",console.log("Inventory")),
         AddOption("Leave Room",TransitionToRoom(6));
     });
 }
@@ -605,9 +610,9 @@ function RemoveOption(OptionTitle){
 function StartRoom() {
     
     
-    AddOption("Show Messsage", () => ShowMessage(RoomDescription))
-    AddOption("Hide Message", HideMessage)
-    AddOption("Investigate the box", () => ShowObject(`https://imgs.search.brave.com/Uv7PjPwToss4YP4krNPTTauC8y1Iq7BXFAWSoknkpAI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTEv/ODE0LzU2Ny9zbWFs/bC9yb2xsLW9mLXll/bGxvdy1zY290Y2gt/dGFwZS0zZC1oaWdo/LXF1YWxpdHktcGhv/dG8tcG5nLnBuZw`,"Alt text"))
+    // AddOption("Show Messsage", () => ShowMessage(RoomDescription))
+    // AddOption("Hide Message", HideMessage)
+    AddOption("Investigate the box", () => ShowObject(`../../Assets/lockbox.png`,"Lockbox"))
     
 //  LEFTOVER OPTIONS
 //  ||||||||||||||||

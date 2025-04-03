@@ -43,11 +43,18 @@ function AddOption(OptionTitle, OptionAction) {
     let NewOptionTitle = document.createElement("h1")
     NewOptionTitle.textContent = OptionTitle
     NewOption.appendChild(NewOptionTitle)
+    NewOption.style.display="none";
     NewOption.addEventListener("click", OptionAction)
     
 
-    Options.appendChild(NewOption)
+    Options.appendChild(NewOption);
+    loadSetting();
+
+    setTimeout(()=>{
+        NewOption.style.display="block";
+    },68.99);
 }
+
 
 /**
  * Removes all options from user

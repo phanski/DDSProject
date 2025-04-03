@@ -14,6 +14,10 @@ document.getElementById("LogOut").addEventListener("click", () => {
 })
 
 
+document.getElementById("Settings").addEventListener("click", ()=>{
+    window.location.href="../Settings/Settings Page.html"
+})
+
 document.getElementById("StartRun").addEventListener("click", () => {
     sessionStorage.setItem("GameState", JSON.stringify({
         energy: 100,

@@ -34,7 +34,7 @@ body {
     position: relative;
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: 12% 73% 15%;
+    grid-template-rows: auto 1fr auto;
 }
 
 #Message {

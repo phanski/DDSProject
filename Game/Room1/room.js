@@ -45,8 +45,14 @@ function AddOption(OptionTitle, OptionAction) {
     NewOption.appendChild(NewOptionTitle)
     NewOption.addEventListener("click", OptionAction)
     
+    NewOption.style.display="none";
 
     Options.appendChild(NewOption)
+    setTimeout(()=>{
+        loadSetting();
+        NewOption.style.display="block";
+    },68.5)
+
 }
 
 /**
