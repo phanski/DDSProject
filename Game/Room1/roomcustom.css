@@ -37,3 +37,7 @@
     background-color: #444444;
     cursor: pointer;
 }
+
+img {
+    height: 100px;
+}

@@ -465,7 +465,7 @@ function FirstBookChoice() {
     let focusedObjectDiv = document.getElementById("FocusedObject")
     let pageImage = document.createElement('img')
     
-    pageImage.style = "height: 100%"
+    pageImage.style = "height: 600px"
 
     AddOption("Read first page", () => {
         ClearOptions()                
@@ -510,7 +510,8 @@ function SecondBookChoice () {
     ShowMessage("There are 3 books and the ground and 3 pages ripped out")
     let focusedObjectDiv = document.getElementById("FocusedObject")
     let pageImage = document.createElement('img')
-    pageImage.style = "height: 100%"
+    pageImage.style = "height: 600px"
+    
 
     AddOption("Read first page", () => {
         ClearOptions()                
