@@ -35,15 +35,15 @@ function setVolume(value){
 }
 
 function setFontSize(value){
-    let elements=document.querySelectorAll("*:not(i)");
+    let elements=document.querySelectorAll("h1,h2,h3,h4,h5,h6,p,button,select");
     let size;
-    if (value.toLowerCase()==="Small"){
+    if (value.toLowerCase()==="small"){
         size=1;
     }else if (value.toLowerCase()==="medium"){
         size=1.5;
-    }else if (value.toLowerCase()==="Large"){
+    }else if (value.toLowerCase()==="large"){
         size=1.75;
-    }else if (value.toLowerCase()==="Extra Large"){
+    }else if (value.toLowerCase()==="extra large"){
         size=2;
     }else{
         console.error("Error Raised when fetching data");

@@ -584,7 +584,8 @@ function BoxChoice() {
             AddOption("Read note", () => {
                 let noteImage = document.createElement('img')
                 noteImage.src = "../../Assets/note.png"
-                noteImage.style = "height: 100%"
+                noteImage.style = "height: 400px"
+
                 focusedObjectDiv.appendChild(noteImage)
         
 
@@ -616,7 +617,7 @@ function NoteChoice() {
         
         let noteImage = document.createElement('img')
         noteImage.src = "../../Assets/note.png"
-        noteImage.style = "height: 100%"
+        noteImage.style = "height: 400px"
         focusedObjectDiv.appendChild(noteImage)
         focusedObjectDiv.append(document.createElement('br'))
 
