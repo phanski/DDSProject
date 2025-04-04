@@ -640,7 +640,7 @@ function NoteChoice() {
 
         AddOption("Confirm", () => {
             let inputValue = WordInput.value
-            if (inputValue !== CorrectLetters) {
+            if (inputValue.toLowerCase() !== CorrectLetters) {
                 ShowMessage("Hmm, that doesn't make sense")
                 return
                 

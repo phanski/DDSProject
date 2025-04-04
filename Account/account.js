@@ -173,11 +173,13 @@ const DatabaseConnectionData = {
 
 
 
-document.getElementById('DeleteAccount').addEventListener('click', () => {
+document.getElementById('DeleteAccount').addEventListener('click', async () => {
     let userConfirm = confirm("Are you sure you want to delete your account?")
 
     if (userConfirm) {
-        executeDatabaseQuery(`DELETE FROM User WHERE Username = "${sessionStorage.getItem('LoggedInUser')}"`)
+        await executeDatabaseQuery(`DELETE FROM InventoryPart WHERE SaveID = (SELECT SaveID FROM SaveFile WHERE Username = "${sessionStorage.getItem('LoggedInUser')}")`)
+        await executeDatabaseQuery(`DELETE FROM SaveFile WHERE Username = "${sessionStorage.getItem('LoggedInUser')}"`)
+        await executeDatabaseQuery(`DELETE FROM User WHERE Username = "${sessionStorage.getItem('LoggedInUser')}"`)
         sessionStorage.clear()
         window.location.href = "../WEBSITE/website.html"
     }

@@ -62,11 +62,8 @@
                 if (result.data.length > 0) {
                     return false
                 }
-
-
                 const RegisterQuery = `INSERT INTO User (Username, Password, volume, fontSize, fontFamily) VALUES ("${Username}","${Password}",50, "medium", "Arial");`
                 let dbResult = await executeDatabaseQuery(RegisterQuery)
-
                 return dbResult.success
             
             }
